@@ -1,0 +1,72 @@
+<%-include('../partials/adminHeader')%>
+
+
+<style>
+
+    .form-control{
+        background-color: #fff;
+        color: #2A3038;
+    }
+    .form-control:focus {
+        background-color: #fff;
+        color: #2A3038;
+    }
+
+</style>
+
+<div class="container-scroller">
+  <%-include('../partials/adminNavbar')%>
+
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial:partials/_navbar.html -->
+      
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+            <div class="col-md-12 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Edit Coupon</h4>
+                    
+                    <form class="forms-sample" method="post" action="/admin/editCouponSubmit/<%=coupon._id%>" >
+                      <div class="form-group">
+                          <label for="exampleInputUsername1">Coupon name</label>
+                          <input type="text" class="form-control" id="couponname"  value="<%=coupon.name%>" name="name" >
+                      </div>
+                      <div class="form-group">
+                          <label for="exampleInputConfirmPassword1">Coupon code</label>
+                          <input type="text" class="form-control" id="couponcode" value="<%=coupon.code%>" name="code">
+                      </div>
+                      <div class="form-group">
+                          <label for="exampleInputEmail1">Discount Amount</label>
+                          <input type="number" class="form-control" id="discount" min="1"  value="<%=coupon.discountAmount%>" name="discount">
+                      </div>
+                      <div class="form-group">
+                        <label for="exampleInputEmail1">Minimum Amount</label>
+                        <input type="number" class="form-control" id="minimum" min="1"  value="<%=coupon.minAmount%>" name="minimum">
+                    </div>
+                      <div class="form-group">
+                          <label for="exampleInputPassword1">Expiry Date</label>
+                          <input type="date" class="form-control" id="date"  value="<%=coupon.expiryDate%>" name="date">
+                      </div>
+                      <div class="form-group">
+                          <label for="exampleInputConfirmPassword1">Description</label>
+                          <input type="text" class="form-control" id="des"  value="<%=coupon.description%>" name="description">
+                      </div>
+                      
+                      <div id="error" style="color: red; display: none;">Please fill out all required fields</div>
+
+                      <button type="submit" class=" btn-primary mr-2">Submit</button>
+                  
+                  </form>
+                  
+                          
+                  </div>
+                </div>
+              </div>
+          </div>
+        </div>
+</div>
+
+
+<%-include('../partials/adminFooter')%>

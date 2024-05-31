@@ -1,0 +1,142 @@
+<%-include('../partials/adminHeader')%>
+
+<style>
+  .card-container {
+    display: flex;
+    flex-wrap: nowrap; /* Prevent wrapping to the next line */
+    overflow-x: auto; /* Add horizontal scrollbar if needed */
+  }
+  
+  .card {
+    flex: 0 0 auto; /* Allow cards to shrink if there are many */
+    margin-right: 10px; /* Adjust as needed for spacing between cards */
+  }.small-image {
+    max-width: 200px;
+    max-height: 150px;
+  }
+  .image-box {
+          width: 80px;
+          height: 100px;
+          border: 1px dashed #ccc;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-size: 14px;
+          color: #888;
+          cursor: pointer;
+          position: relative;
+          overflow: hidden;
+      }
+  
+      /* Hide the input element */
+      .image-box input[type='file'] {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          opacity: 0;
+          cursor: pointer;
+      }
+      .form-control{
+        background-color: #fff;
+        color: #2A3038;
+      }
+      .form-control:focus {
+        background-color: #fff;
+        color: #2A3038;
+      }
+  
+  </style>
+
+<div class="container-scroller">
+    <%-include('../partials/adminNavbar')%>
+
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial:partials/_navbar.html -->
+      
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+            <div class="col-md-12 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Edit Offer</h4>
+                    
+                    <form class="forms-sample" method="post" action="/admin/editOfferSubmit/<%=offers._id%>" >
+                        <div class="form-group row">
+                            <label for="Couponname" class="col-sm-3 col-form-label">offer Name</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="Couponname" name="name"  value="<%=offers.name%>">
+                                <small id="nameError" class="text-danger"></small>
+                            </div>
+                        </div>
+                
+                        <div class="form-group row">
+                            <label for="Couponcode" class="col-sm-3 col-form-label"> Starting Date</label>
+                            <div class="col-sm-9">
+                                <input type="date" class="form-control" id="Couponcode" name="startingDate" value="<%=offers.startDate%>">
+                                <small id="codeError" class="text-danger"></small>
+                            </div>
+                        </div>
+                
+                        <div class="form-group row">
+                            <label for="MinAmount" class="col-sm-3 col-form-label">Ending Date</label>
+                            <div class="col-sm-9">
+                                <input type="date" class="form-control" id="MinAmount" name="endDate" value="<%=offers.endDate%>">
+                                <small id="minError" class="text-danger"></small>
+                            </div>
+                        </div>
+                
+                        <div class="form-group row">
+                            <label for="DiscountPercent" class="col-sm-3 col-form-label">percentage</label>
+                            <div class="col-sm-9">
+                                <input type="number" class="form-control" id="DiscountPercent" name="percentage" min="1" value="<%=offers.percentage%>">
+                                <small id="discountError" class="text-danger"></small>
+                            </div>
+                        </div>         
+    
+                      <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                    <div id="error" style="color: red; display: none;">Please fill out all required fields</div>                 
+                  </form>
+                  
+                           
+                  </div>
+                </div>
+              </div>
+          </div>
+        </div>
+</div>
+
+
+<%-include('../partials/adminFooter')%>
+
+
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script>
+  
+      document.addEventListener('DOMContentLoaded', function() {
+      document.querySelector('.forms-sample').addEventListener('submit', function(event) {
+          event.preventDefault(); // Prevent form submission
+          
+        
+          let offerName = document.getElementById('Couponname').value.trim();
+          let startDate = document.getElementById('Couponcode').value.trim();
+          let endDate = document.getElementById('MinAmount').value.trim();
+          let offerPercentage = document.getElementById('DiscountPercent').value.trim();
+          let productQuantity = document.getElementById('qnt').value.trim();
+          let productDescription = document.getElementById('des').value.trim();
+          let errorElement = document.getElementById('error');
+          
+         
+          if (productName.length < 3 || productCategory === "" || productPrice === "" || productDiscountPrice === "" || productQuantity === "" || productDescription.length < 10) {
+              errorElement.style.display = 'block'; // Show error message
+          } else {
+              errorElement.style.display = 'none'; // Hide error message
+              this.submit(); // Submit the form
+          }
+      });
+  });
+</script>
+ -->

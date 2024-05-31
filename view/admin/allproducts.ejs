@@ -1,0 +1,256 @@
+
+<%-include('../partials/adminHeader')%>
+
+
+
+    <div class="container-scroller">
+      <%-include('../partials/adminNavbar')%>
+      
+      <!-- partial -->
+      <div class="container-fluid page-body-wrapper">
+        <!-- partial:partials/_navbar.html -->
+        
+        <!-- partial -->
+        <div class="main-panel">
+          <div class="content-wrapper">
+
+            <div class="col-lg-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <% if (message.length > 0) { %>
+                    <div id="message-container" class="text-success"><%= message %></div>
+                  <% } %>
+                  <h4 class="card-title">All Products</h4>
+                  
+                  <div class="table-responsive">
+                    <table class="table table-hover">
+                      <thead>
+                        <tr>
+                          <th>Name</th>
+                          <th>Price</th>
+                          <th>Category</th>
+                          <th>Stock</th>
+                          <th>Image</th>
+                          <th>Offer</th>
+                          <th>Edit</th>
+                          <th>Status</th>
+                          <th>Action</th>
+                          <th>More <i class="mdi mdi-alert-circle" style="font-size: 15px;"></i></th>
+                        </tr>
+                      </thead>
+                    <tbody>
+                    <% products.forEach((product, index) => { %>
+                        <tr>
+                          <td><%= product.Name %></td>
+                          <td><%= product.Price %></td>
+                          <td><%= product.Category.Name%></td>
+                          <td><%= product.Quantity %></td>
+                          
+                          <td>
+                            <a href="#" class="image-preview" data-src="/uploads/<%= product.Images[0] %>">
+                              <img src="/uploads/<%= product.Images[0] %>" alt="">
+                            </a>
+                          </td>
+
+                          <td>
+                            <%if(product.offer){%>
+                              <p id="offer"><%=product.offer.name%></p>
+                              <a href="" class="btn btn-danger" id="remove" onclick="removeOffer('<%=product.offer._id%>','<%=product._id%>')">
+                                remove
+                              </a>
+                            <%}else{%>
+                              <a href="" class="btn btn-success" data-toggle="modal" data-target="#offerModal<%=product._id%>">
+                                Apply
+                              </a>
+                            <%}%>
+
+                            <div class="modal fade" id="offerModal<%=product._id%>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                              <div class="modal-dialog">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel" style="color: white;">Select offer</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                      <span aria-hidden="true">&times;</span>
+                                    </button>
+                                  </div>
+                                  <div class="modal-body">
+                                    <hr>
+                                    <h3 style="color: whitesmoke;">Available Offers</h3>
+                                    <% offers.forEach((offer)=>{%>
+                                      <div class="row">
+                                        <div class="col-sm-12">
+                                          <div class="card">
+                                            <div class="card-body">
+                                              <h5 class="card-title">Name :<%=offer.name%></h5>
+                                              <p class="card-text">Offer percentage :<%=offer.percentage%>%</p>
+                                              <p class="card-text">StartingDate : <br> <%=offer.startDate.toLocaleDateString('en-US')%></p>
+                                              <p class="card-text">ExpiryDate :  <br> <%=offer.endDate.toLocaleDateString('en-US')%></p>
+                                              <button id="offerapply_<%=offer._id%>" onclick="applyoffer('<%=offer._id%>', '<%=product._id%>', 'offerapply_<%=offer._id%>')" class="btn btn-primary">Apply Offer</button>
+                                              <br>
+                                              <a href="#" style="display: none;" class="text-success" id="mesgoffer">Offer added</a>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      
+                                    <%})%>
+                                  </div>
+
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </td>  
+
+                          <td><a class="btn btn-primary mr-2" href="/admin/editproduct/<%=product._id%>"><i class="mdi mdi-pencil"></i>Edit</a></td>
+                          <%if(product.Status === 'active'){%>
+                            <td><i class="text-success"><%= product.Status %></i></td>
+                          <%}else{%>
+                            <td><i class="text-danger"><%= product.Status %></i></td>
+                          <%}%>
+                          <td>
+                            <% if (product.Status === 'active') { %>
+                              <a class="btn btn-danger" href="/admin/blockproduct/<%= product._id %>"><i class="mdi mdi-close-outline"></i>Block</a>
+                            <% } else { %>
+                              <a class="btn btn-success" href="/admin/unblockproduct/<%= product._id %>">Unblock</a>
+                            <% } %>
+                          </td>
+
+                          <td>
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal<%=product._id%>">
+                              Show
+                            </button>
+                          </td> 
+
+
+                          <div class="modal fade" id="exampleModal<%=product._id%>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="exampleModalLabel">Description</h5>
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                                </div>
+                                <div class="modal-body">
+                                  <%=product.Description %>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                               
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          
+                        </tr>
+                        <% }) %>
+                        
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <div>
+                    <a href="/admin/addproducts">
+                      <button type="button" class="btn btn-primary btn-rounded btn-fw">Add product</button>
+                    </a>  
+                  </div>
+
+                </div>
+
+                <nav aria-label="Page navigation" style="margin-left: 30px;">
+                  <ul class="pagination">
+                      <% if (totalPages > 1) { %>
+                          <% if (currentPage > 1) { %>
+                              <li class="page-item">
+                                  <a class="page-link" href="?page=<%= currentPage - 1 %>" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                  </a>
+                              </li>
+                          <% } %>
+              
+                          <% for (let i = 1; i <= totalPages; i++) { %>
+                              <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                                  <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                              </li>
+                          <% } %>
+              
+                          <% if (currentPage < totalPages) { %>
+                              <li class="page-item">
+                                  <a class="page-link" href="?page=<%= currentPage + 1 %>" aria-label="Next">
+                                      <span aria-hidden="true">&raquo;</span>
+                                  </a>
+                              </li>
+                          <% } %>
+                      <% } %>
+                  </ul>
+              </nav>
+
+              </div>
+              
+              <div id="image-preview-modal" class="modal">
+                <span class="close">&times;</span>
+                <img class="modal-content" id="modal-image">
+              </div>
+            </div>
+          </div>
+          <!-- content-wrapper ends -->
+
+          <!-- partial:partials/_footer.html -->
+          
+          <!-- partial -->
+        </div>
+        <!-- main-panel ends -->
+      </div>
+      <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+    <%-include('../partials/adminFooter')%>
+
+
+<script>
+
+        function applyoffer(offerId,productId){
+          fetch('/admin/applyOffer',{
+            method:"POST",
+            headers:{
+              'Content-Type': 'application/json',
+            },
+            body:JSON.stringify({offerId,productId})
+          }).then(response => response.json())
+                .then(data => {
+                  if(data.success){
+
+                    window.location.reload()
+
+                  }
+                }).catch(error => console.error('Error:', error));
+        }
+
+
+        function removeOffer(offerId,productId){
+          fetch('/admin/removeOffer',{
+            method : 'POST',
+            headers : {
+              'Content-Type' : 'application/json'
+            },
+            body : JSON.stringify({offerId,productId})
+          }).then(response => response.json())
+              .then(data =>{
+                if(data.success){
+                  window.location.reload()
+                }
+              }).catch(error => console.error('Error : ',error))
+        }
+
+</script>
+  
+
+
+
+
+
+
+    

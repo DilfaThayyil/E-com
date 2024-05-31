@@ -1,0 +1,88 @@
+<%-include('../partials/adminHeader')%>
+
+<style>
+  .form-control{
+    background-color: #fff;
+    color: #2A3038;
+  }
+  .form-control:focus {
+    background-color: #fff;
+    color: #2A3038;
+  }
+</style>
+
+
+<div class="container-scroller">
+  <%-include('../partials/adminNavbar')%>
+
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial:partials/_navbar.html -->
+      
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+          <div class="col-md-12 grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="card-title">Edit Category</h4>
+                
+                <form class="forms-sample" id="editCategoryForm" method="post" action="/admin/editcategorysubmit/<%=category._id%>">
+                  <div class="form-group">
+                    <label for="categoryname">Category name</label>
+                    <input type="text" class="form-control" id="categoryName" placeholder="Category name" value="<%=category.Name%>" name="name">
+                    <input type="hidden" id="originalCategoryName" value="<%= category.Name %>">
+                    <div id="error" style="color: red; display: none;">Please fill out name field</div>
+                  </div>
+                  
+                  
+                  <div class="form-group">
+                    <label for="categorydescription">Description</label>
+                    <input type="text" class="form-control" id="categoryDescription" placeholder="Description" value="<%=category.Description%>" name="description">
+                  </div>
+                  <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                  <button class="btn btn-dark">Cancel</button>
+                  <% if(err){%> 
+                    <p class="text-danger"><%=err%></p>
+                    <% } %>
+                </form>
+              </div>
+            </div>
+          </div>
+          </div>
+        </div>
+</div>
+
+
+<%-include('../partials/adminFooter')%>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+ <script>
+
+
+  
+
+
+  // Function to handle form submission
+  document.getElementById("editCategoryForm").addEventListener("submit", function(event) {
+      let categoryName = document.getElementById("categoryName").value.trim();
+      let categoryDescription = document.getElementById("categoryDescription").value.trim();
+      
+
+      if (!categoryName || !categoryDescription ) {
+          event.preventDefault(); 
+          document.getElementById("error").style.display = "block";
+          return false;
+      } else {
+          document.getElementById("error").style.display = "none";
+          return true;
+      }
+  });
+  
+</script> 
+
+
+
+
+
+

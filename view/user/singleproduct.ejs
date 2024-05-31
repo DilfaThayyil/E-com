@@ -1,0 +1,409 @@
+<%-include('../partials/header')%>
+<%-include('../partials/navbar')%>
+<%-include('../partials/mobileNavbar')%>
+
+
+    <div class="page-wrapper">
+        <main class="main">
+            <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
+                <div class="container d-flex align-items-center">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/allproducts">Products</a></li>
+            
+                    </ol>
+
+                    
+                </div><!-- End .container -->
+            </nav><!-- End .breadcrumb-nav -->
+
+            <div class="page-content">
+                <div class="container">
+                    <div class="product-details-top">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="product-gallery product-gallery-vertical">
+                                    <div class="row">
+                                        
+                                        <figure class="product-main-image">
+                                            <img id="product-zoom" src="/uploads/<%= product.Images[0] %>" data-zoom-image="/uploads/<%= product.Images[0] %>" alt="product image" style="height: 500px;">
+
+                                            <a href="#" id="btn-product-gallery" class="btn-product-gallery">
+                                                <i class="icon-arrows"></i>
+                                            </a>
+                                        </figure><!-- End .product-main-image -->
+
+                                        <div id="product-zoom-gallery" class="product-image-gallery">
+
+                                            <%for(let i=0;i<product.Images.length;i++){%>
+                                                <a class="" href="#" data-image="/uploads/<%= product.Images[i] %>" data-zoom-image="/uploads/<%= product.Images[i] %>">
+                                                    <img src="/uploads/<%=product.Images[i]%>" alt="product side">
+                                            </a>
+                                            <%}%>
+                                            
+                                        </div><!-- End .product-image-gallery -->
+                                       
+                                    </div><!-- End .row -->
+                                </div><!-- End .product-gallery -->
+                            </div><!-- End .col-md-6 -->
+
+                            <% if (product) { %>
+                            <div class="col-md-6">
+                                <div class="product-details">
+                                    <h1 class="product-title"><%=product.Name%></h1><!-- End .product-title -->
+
+                                    <div class="ratings-container">
+                                        <div class="ratings">
+                                            <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val -->
+                                        </div><!-- End .ratings -->
+                                        <a class="ratings-text" href="#product-review-link" id="review-link">( 2 Reviews )</a>
+                                    </div><!-- End .rating-container -->
+
+                                    <div class="product-price">
+                                        <s style="font-size: small;"> ₹<%= product.Price %></s>&nbsp; &nbsp;
+                                    
+                                        <% 
+                                            const productPrice = parseFloat(product.Price) || 0;
+                                            const productOffer = product.offer ? parseFloat(product.offer.percentage) || 0 : 0;
+                                            const categoryOffer = product.Category && product.Category.offer ? parseFloat(product.Category.offer.percentage) || 0 : 0;
+                                    
+                                            let finalPrice = productPrice;
+                                    
+                                            if (product.offer) {
+                                                finalPrice = Math.floor(productPrice - (productPrice * productOffer / 100));
+                                            } else if (product.Category && product.Category.offer) {
+                                                finalPrice = Math.floor(productPrice - (productPrice * categoryOffer / 100));
+                                            }
+                                        %>
+                                    
+                                        ₹<%= finalPrice %>
+                                    </div><!-- End .product-price -->
+                                    
+                                    
+                                    <div class="product-content">
+                                        <p><%=product.Description%></p>
+
+                                        <div>
+                                            <p style="color: #c96;">Category : <a ><%=product.Category.Name%></a></p>
+                                        </div>
+
+                                        <div class="">
+                                            <label for="qty" style="color: #c96;">Qty:</label>
+                                            <div class="product-details-quantity">
+                                                <input type="number" id="qty" class="form-control" value="1" min="1" max="<%=product.Quantity%>" step="1" data-decimals="0" required>
+                                            </div><!-- End .product-details-quantity -->
+                                        </div><br>
+                                    </div><!-- End .product-content -->
+
+                                    
+
+                                    
+
+                                    <div class="product-details-action">
+                                        
+                                        <%if(product.Quantity>=1){%>
+                                          
+                                            <a onclick="addToCart('<%=product._id%>')" class="btn-product btn-cart"><span>add to cart</span></a>
+                                            <%}else{%>
+                                            <a href="#" class="btn-product btn-cart"><span>out of stock</span></a>
+                                        <%}%> 
+                                        <div>
+
+                                        </div>
+                                        <div class="details-action-wrapper">
+                                            <a onclick="addToWishlist('<%=product._id%>')" class="btn-product btn-wishlist" title="Wishlist"><span>Add to Wishlist</span></a>
+                                        </div><!-- End .details-action-wrapper -->                                       
+                                    </div><!-- End .product-details-action -->
+                                </div><!-- End .product-details -->
+                                <% } else { %>
+                                    <div>Product not found.</div>
+                                <% } %>
+                            </div><!-- End .col-md-6 -->
+                          
+                        </div><!-- End .row -->
+                    </div><!-- End .product-details-top -->
+
+                    <div class="product-details-tab">
+                        <ul class="nav nav-pills justify-content-center" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="product-desc-link" data-toggle="tab" href="#product-desc-tab" role="tab" aria-controls="product-desc-tab" aria-selected="true">Description</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="product-shipping-link" data-toggle="tab" href="#product-shipping-tab" role="tab" aria-controls="product-shipping-tab" aria-selected="false">Shipping & Returns</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="product-review-link" data-toggle="tab" href="#product-review-tab" role="tab" aria-controls="product-review-tab" aria-selected="false">Reviews (2)</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane fade show active" id="product-desc-tab" role="tabpanel" aria-labelledby="product-desc-link">
+                                <div class="product-desc-content">
+                                    <h3>Product Information</h3>
+                                    <p>
+                                        <%=product.Description%>
+                                    </p>
+
+                                </div><!-- End .product-desc-content -->
+                            </div><!-- .End .tab-pane -->
+                            <div class="tab-pane fade" id="product-shipping-tab" role="tabpanel" aria-labelledby="product-shipping-link">
+                                <div class="product-desc-content">
+                                    <h3>Delivery & returns</h3>
+                                    <p>We deliver to over 100 countries around the world. For full details of the delivery options we offer, please view our <a href="#">Delivery information</a><br>
+                                    We hope you’ll love every purchase, but if you ever need to return an item you can do so within a month of receipt. For full details of how to make a return, please view our <a href="#">Returns information</a></p>
+                                </div><!-- End .product-desc-content -->
+                            </div><!-- .End .tab-pane -->
+                            <div class="tab-pane fade" id="product-review-tab" role="tabpanel" aria-labelledby="product-review-link">
+                                <div class="reviews">
+                                    <h3>Reviews (2)</h3>
+                                    <div class="review">
+                                        <div class="row no-gutters">
+                                            <div class="col-auto">
+                                                <h4><a href="#">Samanta J.</a></h4>
+                                                <div class="ratings-container">
+                                                    <div class="ratings">
+                                                        <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val -->
+                                                    </div><!-- End .ratings -->
+                                                </div><!-- End .rating-container -->
+                                                <span class="review-date">6 days ago</span>
+                                            </div><!-- End .col -->
+                                            <div class="col">
+                                                <h4>Good, perfect size</h4>
+
+                                                <div class="review-content">
+                                                    <p>Good product . high quality .</p>
+                                                </div><!-- End .review-content -->
+
+                                                <div class="review-action">
+                                                    <a href="#"><i class="icon-thumbs-up"></i>Helpful (2)</a>
+                                                    <a href="#"><i class="icon-thumbs-down"></i>Unhelpful (0)</a>
+                                                </div><!-- End .review-action -->
+                                            </div><!-- End .col-auto -->
+                                        </div><!-- End .row -->
+                                    </div><!-- End .review -->
+
+                                    <div class="review">
+                                        <div class="row no-gutters">
+                                            <div class="col-auto">
+                                                <h4><a href="#">John Doe</a></h4>
+                                                <div class="ratings-container">
+                                                    <div class="ratings">
+                                                        <div class="ratings-val" style="width: 100%;"></div><!-- End .ratings-val -->
+                                                    </div><!-- End .ratings -->
+                                                </div><!-- End .rating-container -->
+                                                <span class="review-date">5 days ago</span>
+                                            </div><!-- End .col -->
+                                            <div class="col">
+                                                <h4>Very good</h4>
+
+                                                <div class="review-content">
+                                                    <p>Highly recommended one . available in all sizes </p>
+                                                </div><!-- End .review-content -->
+
+                                                <div class="review-action">
+                                                    <a href="#"><i class="icon-thumbs-up"></i>Helpful (0)</a>
+                                                    <a href="#"><i class="icon-thumbs-down"></i>Unhelpful (0)</a>
+                                                </div><!-- End .review-action -->
+                                            </div><!-- End .col-auto -->
+                                        </div><!-- End .row -->
+                                    </div><!-- End .review -->
+                                </div><!-- End .reviews -->
+                            </div><!-- .End .tab-pane -->
+                        </div><!-- End .tab-content -->
+                    </div><!-- End .product-details-tab -->
+
+                    <h2 class="title text-center mb-4">You May Also Like</h2><!-- End .title text-center -->
+
+                    <div class="owl-carousel owl-simple carousel-equal-height carousel-with-shadow" data-toggle="owl" 
+                        data-owl-options='{
+                            "nav": false, 
+                            "dots": true,
+                            "margin": 20,
+                            "loop": false,
+                            "responsive": {
+                                "0": {
+                                    "items":1
+                                },
+                                "480": {
+                                    "items":2
+                                },
+                                "768": {
+                                    "items":3
+                                },
+                                "992": {
+                                    "items":4
+                                },
+                                "1200": {
+                                    "items":4,
+                                    "nav": true,
+                                    "dots": false
+                                }
+                            }
+                        }'>
+                            <%recommend.forEach(recommend =>{%>
+                        <div class="product product-7 text-center">
+                            <figure class="product-media">
+                                <span class="product-label label-new">New</span>
+                                <a href="<%=recommend._id%>">
+                                    <img src="/uploads/<%=recommend.Images[0]%>" alt="Product image" class="product-image">
+                                </a>
+
+                                <div class="product-action-vertical">
+                                    <a onclick="addToWishlist('<%=recommend._id%>')" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
+                                    <!-- <a href="popup/quickView.html" class="btn-product-icon btn-quickview" title="Quick view"><span>Quick view</span></a>
+                                    <a href="#" class="btn-product-icon btn-compare" title="Compare"><span>Compare</span></a> -->
+                                </div><!-- End .product-action-vertical -->
+
+                                <div class="product-action">
+                                    <%if(recommend.Quantity>=1){%>
+                                        <a onclick="addToCart2('<%=recommend._id%>')" class="btn-product btn-cart"><span>add to cart</span></a>
+                                        <%}else{%>
+                                        <a href="#" class="btn-product btn-cart"><span>out of stock</span></a>
+                                    <%}%>                                 
+                                </div><!-- End .product-action -->
+                            </figure><!-- End .product-media -->
+
+                            <div class="product-body">
+                                <div class="product-cat">
+                                    <a href="#"><%=recommend.Category.Name%></a>
+                                </div><!-- End .product-cat -->
+                                <h3 class="product-title"><a href="product.html"><%=recommend.Name%></a></h3><!-- End .product-title -->
+                                <div class="product-price">
+                                    ₹<%=recommend.DiscountPrice%>
+                                </div><!-- End .product-price -->
+                                <div class="ratings-container">
+                                    <div class="ratings">
+                                        <div class="ratings-val" style="width: 20%;"></div><!-- End .ratings-val -->
+                                    </div><!-- End .ratings -->
+                                    <span class="ratings-text">( 2 Reviews )</span>
+                                </div><!-- End .rating-container -->
+                            </div><!-- End .product-body -->
+                        </div><!-- End .product -->
+                      <%})%>  
+                        
+                    </div><!-- End .owl-carousel -->
+                </div><!-- End .container -->
+            </div><!-- End .page-content -->
+        </main><!-- End .main -->
+
+        
+    </div><!-- End .page-wrapper -->
+    <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
+
+
+
+<%-include('../partials/footer')%>
+<%-include('../partials/footerbar')%>
+
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script>
+
+
+
+    const addToCart = async (productId,quantity) => {
+        try {
+            const quantity = document.getElementById('qty').value
+            console.log(quantity);
+            const response = await fetch(`/addtocart/${productId}/${quantity}`, {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json' 
+            },
+            
+            });
+            const data = await response.json();
+            if (data.error) {
+                swal({
+                title: "Error!",
+                text: data.error,
+                icon: "error",
+                button: "OK",
+            });
+            } else if (data.message) {
+            swal({
+                title: "Success!",
+                text: data.message,
+                icon: "success",
+                button: "OK",
+            }).then((value) => {
+                window.location.reload(); 
+            });
+                
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+        
+
+    const addToCart2 = async (productId) => {
+        try {
+            const quantity = 1
+            const response = await fetch(`/addtocart/${productId}/${quantity}`, {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json' 
+            },
+            
+            });
+            const data = await response.json();
+            if (data.error) {
+                swal({
+                title: "Error!",
+                text: data.error,
+                icon: "error",
+                button: "OK",
+            });
+            } else if (data.message) {
+            swal({
+                title: "Success!",
+                text: data.message,
+                icon: "success",
+                button: "OK",
+            }).then((value) => {
+                window.location.reload(); 
+            });
+                
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+
+    const addToWishlist = async (productId) => {
+        try {
+            const response = await fetch(`/addtowishlist/${productId}`, {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json' 
+            },
+            
+            });
+            const data = await response.json();
+            if (data.error) {
+                swal({
+                title: "Error!",
+                text: data.error,
+                icon: "error",
+                button: "OK",
+            });
+            } else if (data.message) {
+            swal({
+                title: "Success!",
+                text: data.message,
+                icon: "success",
+                button: "OK",
+            }).then((value) => {
+                window.location.reload(); 
+            });
+                
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
+
+   
+    
+</script>

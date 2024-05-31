@@ -1,0 +1,84 @@
+<%-include('../partials/adminHeader')%>
+
+<style>
+  .form-control{
+    background-color: #fff;
+    color: #2A3038;
+  }
+  .form-control:focus {
+    background-color: #fff;
+    color: #2A3038;
+  }
+</style>
+
+
+<div class="container-scroller">
+  <%-include('../partials/adminNavbar')%>
+
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial:partials/_navbar.html -->
+      
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+            <div class="col-md-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Add Category</h4>
+    
+                        <form class="forms-sample" id="categoryForm" method="post" action="/admin/addCategorySubmit">
+                          
+                            <div class="form-group">
+                                <label for="exampleInputUsername1">Category name</label>
+                                <input type="text" class="form-control" id="categoryName" placeholder="Category name" name="name">
+                                <span id="name-error" style="color: red;"></span>
+                            </div>
+    
+    
+                            <div class="form-group">
+                                <label for="exampleInputConfirmPassword1">Description</label>
+                                <input type="text" class="form-control" id="dec" placeholder="Description" name="description">
+                                <span id="description-error" style="color: red;"></span>
+                            </div>
+                            <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                            <% if (typeof messages !== 'undefined' && messages.error) { %>
+                              <div class="text text-danger" role="alert">
+                                  <%= messages.error %>
+                              </div>
+                          <% } %>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%-include('../partials/adminFooter')%>
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+      let form = document.getElementById('categoryForm');
+      let errorDiv = document.getElementById('error');
+
+      function validateForm(event) {
+          let categoryName = document.getElementById('categoryName').value;
+          let description = document.getElementById('dec').value;
+          let nameError = document.getElementById('name-error');
+          let descriptionError = document.getElementById('description-error');
+
+          nameError.textContent = categoryName.trim() ? "" : "Category name cannot be empty";
+          descriptionError.textContent = description.trim() ? "" : "Description cannot be empty";
+
+          if (!categoryName.trim() || !description.trim()) {
+              event.preventDefault();
+              errorDiv.style.display = "block";
+          } else {
+              errorDiv.style.display = "none";
+          }
+      }
+
+      form.addEventListener('submit', validateForm);
+  });
+</script>

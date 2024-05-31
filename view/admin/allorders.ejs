@@ -1,0 +1,205 @@
+<%-include('../partials/adminHeader')%>
+    <div class="container-scroller">
+      <!-- partial:partials/_sidebar.html -->
+      <%-include('../partials/adminNavbar')%>
+
+      <!-- partial -->
+      <div class="container-fluid page-body-wrapper">
+        <!-- partial:partials/_navbar.html -->
+        
+        <!-- partial -->
+        <div class="main-panel">
+          <div class="content-wrapper">
+
+            <div class="col-lg-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">All orders</h4>
+                  
+                  <div class="table-responsive">
+                    <table class="table table-hover">
+                      <thead>
+                        <tr>
+                          <th>No</th>
+                          <th>Product</th>
+                          <th>Order placed on</th>
+                          <th>Customer</th>
+                          <th>Email</th>
+                          <th>Status</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                       
+                        <% let index = 0; %>
+                        <% orders.forEach((order) => { %>
+                          <% if (order.products && order.products.length > 0) { %>
+                              <% order.products.forEach((product) => { %>
+                                
+                        <tr>
+                          <td><%=++index%></td>
+                          <td><%=product.products.Name%></td>
+                          <% const formattedDate = new Date(order.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }); %>
+                          <td><%= formattedDate%></td>
+                          <td><%=order.userid.Name%></td>
+                          <td><%=order.userid.Email%></td>
+                          <%if(product.Status=='placed'){%>
+                            <td><i class="text-primary"><%=product.Status%></i></td>
+                          <%}else if(product.Status=='shipped'){%>
+                            <td><i class="text-warning"><%=product.Status%></i></td>
+                          <%}else if(product.Status=='delivered'){%>
+                            <td><i class="text-success"><%=product.Status%></i></td>
+                          <%}else if(product.Status=='cancelled'){%>
+                            <td><i class="text-danger"><%=product.Status%></i></td>
+                          <%}%>
+                          
+                          <td>
+                            <%if(product.Status!=='cancelled' && product.Status!=='returned' && product.Status!=='request return' && product.Status!=='delivered'){%>
+                            <div class="dropdown">
+                              <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Status
+                              </button>
+                              <div class="dropdown-menu te" href="#" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="#" onclick="updateStatus('shipped', '<%= order._id %>','<%= product.products._id %>')">Shipped</a>
+                                <a class="dropdown-item" href="#" onclick="updateStatus('delivered', '<%= order._id %>','<%= product.products._id %>')">Delivered</a>
+                                <a class="dropdown-item" href="#" onclick="updateStatus('cancelled', '<%= order._id %>','<%= product.products._id %>')">Cancelled</a>
+                              </div>
+                            </div>
+                            <%}%>
+                          </td>
+                          
+                          
+                          <td>
+                            <a href="/admin/orderDetails/<%=order._id%>/<%=product.products._id%>" class="btn btn-primary">Detail</a>
+                          </td>
+                          
+                          
+                        </tr>
+                        
+                        <%})%>
+                        <%}%>
+                        <%})%>
+
+                        
+                                              
+                      </tbody>
+                      
+
+                    </table>
+
+                    <nav aria-label="Page navigation" style="margin-left: 30px">
+                      <ul class="pagination">
+                          <% if (totalPages > 1) { %>
+                              <% if (currentPage > 1) { %>
+                                  <li class="page-item">
+                                      <a class="page-link" href="?page=<%= currentPage - 1 %>" aria-label="Previous">
+                                          <span aria-hidden="true">&laquo;</span>
+                                      </a>
+                                  </li>
+                              <% } %>
+                  
+                              <% for (let i = 1; i <= totalPages; i++) { %>
+                                  <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                                    <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                                  </li>
+                              <% } %>
+                  
+                              <% if (currentPage < totalPages) { %>
+                                  <li class="page-item">
+                                      <a class="page-link" href="?page=<%= currentPage + 1 %>" aria-label="Next">
+                                          <span aria-hidden="true">&raquo;</span>
+                                      </a>
+                                  </li>
+                              <% } %>
+                          <% } %>
+                      </ul>
+                    </nav>                    
+                    
+                  </div>
+
+                  
+
+                </div>
+                
+              </div>
+
+              
+            </div>
+
+            
+
+          </div>
+
+          
+          
+          <!-- content-wrapper ends -->
+          <!-- partial:partials/_footer.html -->
+          
+          <!-- partial -->
+        </div>
+        
+        <!-- main-panel ends -->
+      </div>
+
+      
+      <!-- page-body-wrapper ends -->
+    </div>
+    
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+    <%-include('../partials/adminFooter')%>
+
+
+<script>
+
+      
+
+function updateStatus(status, orderId, productId) {
+    fetch('/admin/updateStatus', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            status: status,
+            orderId: orderId,
+            productId: productId,
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to update status');
+        }
+        
+        console.log('Status updated successfully');
+        wiwndow.location.reload()
+    })
+    .catch(error => {
+        console.error('Error updating status:', error);
+    });
+}
+
+  
+
+
+
+  function cancelOrder(orderId) {
+    fetch(`/admin/cancelOrder/${orderId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => {
+    if (response.ok) {              
+      window.location.reload();
+    } else {
+      throw new Error('Failed to cancel order');
+    }
+    })
+    .catch(error => {
+      console.error('Error cancelling order:', error);
+    });
+  }
+</script>
+  

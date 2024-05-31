@@ -1,0 +1,215 @@
+<%-include('../partials/header')%>
+<%-include('../partials/navbar')%>
+<%-include('../partials/mobileNavbar')%>
+
+<div class="page-wrapper">
+    <main class="main">
+        <div class="page-header text-center" style="background-image: url('user/assets/images/page-header-bg.jpg')">
+            <div class="container">
+                <h1 class="page-title">Shopping Cart<span>Shop</span></h1>
+            </div><!-- End .container -->
+        </div><!-- End .page-header -->
+
+        <div class="page-content">
+            <div class="cart">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-9">
+                            <table class="table table-cart table-mobile">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Price</th>
+                                        <th>Quantity</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                    <%if(cart && cart.products) { %>
+                                    <% cart.products.forEach((product) => { %>
+                                    <tr>
+                                        <td class="product-col">
+                                            <div class="product">
+                                                <figure class="product-media">
+                                                    <a href="/product/<%= product.productId._id %>">
+                                                        <img src="/uploads/<%= product.productId.Images[0] %>" alt="Product image">
+                                                    </a>
+                                                </figure>
+                                                <h3 class="product-title">
+                                                    <a href="/product/<%= product.productId._id %>"><%= product.productId.Name %></a>
+                                                </h3><!-- End .product-title -->
+                                            </div><!-- End .product -->
+                                        </td>
+                                            
+                                        <td class="price-col">
+                                            
+                                            <%
+                                                let finalPrice
+                                                const productPrice = parseFloat(product.productId.Price) || 0;
+                                                const productOffer = product.productId.offer ? parseFloat(product.productId.offer.percentage) || 0 : 0;
+                                                const categoryOffer = product.productId.Category && product.productId.Category.offer ? parseFloat(product.productId.Category.offer.percentage) || 0 : 0;                                        
+
+                                                if (product.productId.offer) {
+                                                    finalPrice = Math.floor(productPrice - (productPrice * productOffer / 100));
+                                                } else if (product.productId.Category && product.productId.Category.offer) {
+                                                    finalPrice = Math.floor(productPrice - (productPrice * categoryOffer / 100));
+                                                }
+                                            
+                                            %>
+                                            ₹<%= finalPrice %>
+                                        
+                                        </td>
+                                        <td class="quantity-col">
+                                            <div class="cart-product-quantity">
+                                                <input type="number" id="qnt-<%= product.productId._id %>" class="form-control" value="<%= product.quantity %>" min="1" max="<%=product.productId.Quantity%>" step="1" data-decimals="0" required onchange="updateQuantity('<%= product.productId._id %>')">
+                                            </div><!-- End .cart-product-quantity -->
+                                        </td>
+                                        
+                                        <td class="total-col" id="total-<%= product.productId._id %>"><%= product.totalPrice %></td>
+                                        <td class="remove-col"><button onclick="removeFromCart('<%= product.productId._id %>')" class="btn-remove"><i class="icon-close"></i></button></td>
+                                    </tr>
+                                    <% }) %>
+                                    <% } else { %>
+                                    <tr>
+                                        <td colspan="5">Your cart is empty.</td>
+                                    </tr>
+                                    <% } %>
+                                </tbody>
+                            </table><!-- End .table table-wishlist -->
+
+                            <div class="cart-bottom" hidden>
+                                <div class="cart-discount">
+                                    <form action="#">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" required placeholder="coupon code">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-outline-primary-2" type="submit"><i class="icon-long-arrow-right"></i></button>
+                                            </div><!-- .End .input-group-append -->
+                                        </div><!-- End .input-group -->
+                                    </form>
+                                </div><!-- End .cart-discount -->
+
+                                <a href="#" class="btn btn-outline-dark-2"><span>UPDATE CART</span><i class="icon-refresh"></i></a hidden>
+                            </div><!-- End .cart-bottom -->
+                        </div><!-- End .col-lg-9 -->
+                        <aside class="col-lg-3">
+                            <div class="summary summary-cart">
+                                <h3 class="summary-title">Cart Total</h3><!-- End .summary-title -->
+
+                                <table class="table table-summary">
+                                    <tbody>
+                                        <tr class="summary-subtotal">
+                                            <td>Subtotal:</td>
+                                            <td id="subtotal"><%= subtotal %></td>
+                                        </tr><!-- End .summary-subtotal -->
+                                        <tr class="summary-shipping">
+                                            <td>Shipping:</td>
+                                            <td>&nbsp;</td>
+                                        </tr>
+
+                                        <tr class="summary-shipping-row">
+                                            <td>
+                                                <div class="custom-control custom-radio">
+                                                    <input type="radio" id="free-shipping" name="shipping" class="custom-control-input">
+                                                    <label class="custom-control-label" for="free-shipping">Free Shipping</label>
+                                                </div><!-- End .custom-control -->
+                                            </td>
+                                            <td>$0.00</td>
+                                        </tr><!-- End .summary-shipping-row -->
+
+                                        <tr class="summary-total">
+                                            <td>Total:</td>
+                                            <td id="total"><%= subtotal %></td>
+                                        </tr><!-- End .summary-total -->
+                                    </tbody>
+                                </table><!-- End .table table-summary -->
+
+                                <a href="/checkout" class="btn btn-outline-dark-2 btn-block mb-3"><span>PROCEED TO CHECKOUT</span><i class="icon-refresh"></i></a>
+                            </div><!-- End .summary -->
+                        </aside><!-- End .col-lg-3 -->
+                    </div><!-- End .row -->
+                </div><!-- End .container -->
+            </div><!-- End .cart -->
+        </div><!-- End .page-content -->
+    </main><!-- End .main -->
+</div><!-- End .page-wrapper -->
+
+<%-include('../partials/footer')%>
+<%-include('../partials/footerbar')%>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script>
+
+
+    function updateQuantity(productId) {
+        const newQuantity = document.getElementById(`qnt-${productId}`).value;
+        fetch(`/updatequantity/${productId}/${newQuantity}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to update product quantity');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Server response:', data); 
+            const totalPrice = data.productprice;
+            const subtotal = data.totalPrice;
+            const total = data.totalPrice;
+
+            const totalCell = document.getElementById(`total-${productId}`);
+            if (totalCell) {
+                console.log('total cell found:', totalCell); 
+                const formattedTotalPrice = parseFloat(totalPrice).toFixed(2);
+                totalCell.textContent = `${formattedTotalPrice}`;
+            } else {
+                console.error('Total cell not found for product ID:', productId);
+            }
+            const subtotalCell = document.getElementById('subtotal');
+            const TotalCell = document.getElementById('total');
+            if (subtotalCell && TotalCell) {
+                subtotalCell.textContent = subtotal;
+                TotalCell.textContent = total;
+            } else {
+                console.error('Subtotal or Total cell not found');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+
+	
+
+    function removeFromCart(productid) {
+        fetch(`/removeFromCart/${productid}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }	 
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to remove product from cart');
+            }
+            return response.json();
+        })
+        .then(data => {
+            const rowToRemove = document.querySelector(`tr[data-product-id="${productid}"]`);
+            if (rowToRemove) {
+                rowToRemove.remove();
+            }
+            swal.fire("Success", data.message || "Product removed from cart successfully" , "success").then(()=>{
+                window.location.reload()
+            });
+        })
+        .catch(error => {
+            swal.fire("Error", error.message || "Failed to remove product from cart", "error");
+        });
+    }
+</script>

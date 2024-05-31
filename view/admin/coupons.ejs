@@ -1,0 +1,245 @@
+
+<%-include('../partials/adminHeader')%>
+
+<style>
+  .swal2-modal .swal2-title{
+    color: green;
+  }
+  .swal2-modal .swal2-text{
+    color: black;
+  }
+  </style>
+
+
+    <div class="container-scroller">
+      <!-- partial:partials/_sidebar.html -->
+      <%-include('../partials/adminNavbar')%>
+
+      <!-- partial -->
+      <div class="container-fluid page-body-wrapper">
+        <!-- partial:partials/_navbar.html -->
+        
+        <!-- partial -->
+        <div class="main-panel">
+          <div class="content-wrapper">
+
+            <div class="col-lg-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <%if(message.length > 0){%>
+                    <div id="message-container" class="text-success"><%=message%></div>
+                  <%}%>
+                  <h4 class="card-title">All Coupons</h4>
+                  
+                  <div class="table-responsive">
+                    <table class="table table-hover">
+                      <thead>
+                        <tr>
+                          <th>No.</th>
+                          <th>Coupon Name</th>
+                          <th>Coupon Code</th>
+                          <th>Expr Date</th>
+                          <th>More info</th>
+                          <th>Modify</th>
+                          <th>List/Unlist</th>
+                        </tr>
+                      </thead>
+                    <tbody>
+                      <%coupons.forEach((coupon,index)=>{%>
+                      
+                        <tr>
+                          <td><%=index+1%></td>
+                          <td><%=coupon.name%></td>
+                          <td><%=coupon.code%></td>
+                          <% const formattedDate = new Date(coupon.expiryDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }); %>
+                          <td><%=formattedDate%></td>
+                          <td>
+                            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#exampleModal<%=coupon._id%>">
+                              <i class="mdi mdi-alert-circle-outline" style="font-size: 15px;"></i>
+                            </button>
+                          </td> 
+                          <div class="modal fade" id="exampleModal<%=coupon._id%>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="exampleModalLabel">Description</h5>
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                                </div>
+                                <div class="modal-body">
+                                   <%=coupon.description%> <br>
+                                   Discount Amount : <%=coupon.discountAmount%> <br>
+                                   Minimum Amount : <%=coupon.minAmount%>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <td>
+                            <a class="btn btn-primary mr-2" href="/admin/editCoupon/<%=coupon._id%>"><i class="mdi mdi-pencil"></i></a>
+                          </td>
+                          <td>
+                            <%if(coupon.status === true){%>
+                              <a class="btn btn-danger" onclick="blockCoupon('<%=coupon._id%>')"><i class="mdi mdi-close-outline"></i>Block</a>
+                            <%}else{%>
+                              <a class="btn btn-success" onclick="unBlockCoupon('<%=coupon._id%>')">unblock</a>
+                            <%}%> 
+                          </td>
+                          <td>
+                            <a onclick="deleteCoupon('<%=coupon._id%>')"><i class="mdi mdi-delete" style="font-size: 20px; color: red;"></i></a>
+                          </td>
+
+                          
+                          
+
+
+                       <%})%>
+
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <div>
+                    <a href="/admin/addCoupons">
+                      <button type="button" class="btn btn-primary btn-rounded btn-fw">Add Coupon</button>
+                    </a>  
+                  </div>
+
+                </div>
+
+                
+
+              </div>
+              
+              <div id="image-preview-modal" class="modal">
+                <span class="close">&times;</span>
+                <img class="modal-content" id="modal-image">
+              </div>
+            </div>
+          </div>
+          <!-- content-wrapper ends -->
+
+          <!-- partial:partials/_footer.html -->
+          
+          <!-- partial -->
+        </div>
+        <!-- main-panel ends -->
+      </div>
+      <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+    <%-include('../partials/adminFooter')%>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+
+
+    
+
+
+    function blockCoupon(couponId) {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'You are about to block this Coupon!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, block it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          block(couponId, 'block');
+        }
+      });
+    }
+
+    function unBlockCoupon(couponId) {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'You are about to unblock this coupon!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, unblock it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          block(couponId, 'unblock');
+        }
+      });
+    }
+  
+    function block(couponId, action) {
+      fetch(`/admin/blockCoupon`, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({ couponId, action }),
+      })
+      .then(response => response.json())
+      .then((data) => {
+        if (data.success) {
+          Swal.fire('Success!', 'Coupon has been blocked successfully.', 'success')
+            .then(() => {
+              window.location.reload();
+            });
+        } else {
+          Swal.fire('Error!', 'Something went wrong. Please try again later.', 'error');
+        }
+      });
+    }
+
+
+    function deleteCoupon(couponId){
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'You won\'t be able to revert this!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          fetch(`/admin/deleteCoupon/${couponId}`, {
+            method: 'DELETE', 
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+
+          })
+          .then(data => {
+            window.location.reload()
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+        }
+      });
+    }    
+
+
+</script>
+
+  
+
+
+
+
+
+
+    

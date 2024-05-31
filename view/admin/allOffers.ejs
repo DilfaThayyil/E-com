@@ -1,0 +1,103 @@
+
+<%-include('../partials/adminHeader')%>
+
+    <div class="container-scroller">
+      <!-- partial:partials/_sidebar.html -->
+      <%-include('../partials/adminNavbar')%>
+
+      <!-- partial -->
+      <div class="container-fluid page-body-wrapper">
+        <!-- partial:partials/_navbar.html -->
+        
+        <!-- partial -->
+        <div class="main-panel">
+          <div class="content-wrapper">
+
+            <div class="col-lg-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <% if (message.length > 0) { %>
+                    <div id="message-container" class="text-success"><%= message %></div>
+                  <% } %>
+                  <h4 class="card-title">All Products</h4>
+                  
+                  <div class="table-responsive">
+                    <table class="table table-hover">
+                      <thead>
+                        <tr>
+                            <th scope="col">No</th>
+                            <th scope="col">Offer Name</th>
+                            <th scope="col">Percentage</th>
+                            <th scope="col">StartingDate</th>
+                            <th scope="col">EndDate</th>
+                            <th scope="col">Edit</th>
+                        </tr>
+                      </thead>
+                    <tbody>
+                    <% offers.forEach((offer, index) => { %>
+                        <tr>
+                            <th scope="row"><%= index +1 %> </th>
+                            <td><%=offer.name%></td>
+                            <td><%=offer.percentage%>%</td>
+                            <td><%=offer.startDate.toLocaleDateString('en-US')%></td>
+                            <td><%=offer.endDate.toLocaleDateString('en-US')%></td>
+                            <td>
+                                <a href="/admin/editOffer/<%=offer._id%>" class="btn btn-danger">edit</a>
+                            </td>
+    
+                           
+                            <td hidden>
+                               
+                                <% if (offer.Status === "active") { %>
+                                    <button id="button_<%= offer._id %>" class="btn btn-primary mb-2" style="width: 100%;" onclick="changeStatus('<%= offer._id %>','unlist')">Unlist</button>
+                                <% } else { %>
+                                    <button id="button_<%= offer._id %>" class="btn btn-primary mb-2" style="width: 100%;" onclick="changeStatus('<%= offer._id %>','list')">List</button>
+                                <% } %>
+                                
+                            </td>
+                        
+                          </tr>
+                        <% }) %>
+                        
+                      </tbody>
+                      <% if(locals.message){%>
+                        <p class="text-danger"><%=message%></p>
+                      <%}%>
+                    </table>
+                  </div>
+
+                  <div>
+                    <a href="/admin/addOffer">
+                      <button type="button" class="btn btn-primary btn-rounded btn-fw">Add new Offer</button>
+                    </a>  
+                  </div>
+
+                </div>
+              </div>
+              
+            </div>
+          </div>
+          <!-- content-wrapper ends -->
+
+          <!-- partial:partials/_footer.html -->
+          
+          <!-- partial -->
+        </div>
+        <!-- main-panel ends -->
+      </div>
+      <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+    <%-include('../partials/adminFooter')%>
+
+
+
+  
+
+
+
+
+
+
+    

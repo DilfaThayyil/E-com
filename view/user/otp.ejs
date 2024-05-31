@@ -1,0 +1,203 @@
+<%-include('../partials/header')%>
+<%-include('../partials/navbar')%>
+
+                  <div class="login-page bg-image pt-8 pb-8 pt-md-12 pb-md-12 pt-lg-17 pb-lg-17" style="background-image: url('/user/assets/images/backgrounds/login-bg.jpg')">
+                    <div class="container">
+                      <div class="form-box">
+                        <div class="form-tab">
+                          <ul class="nav nav-pills nav-fill" role="tablist">
+
+                        <li class="nav-item">
+                            <a class="nav-link active" id="register-tab-2" data-toggle="tab" href="#register-2" role="tab" aria-controls="register-2" aria-selected="true">OTP</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                    <div class="tab-pane fade show active" id="register-2" role="tabpanel" aria-labelledby="register-tab-2">
+
+                        <form id="otpForm" >
+                          <div class="form-group">
+                            <label for="otp-input">Enter 4-Digit OTP *</label>
+                            <div class="otp-input-container">
+                                <input type="text" id="digit1" maxlength="1" pattern="[0-9]" inputmode="numeric" required style="padding: 10px; font-size: 16px; text-align: center; width: 50px; margin: 10px;">
+                                <input type="text" id="digit2" maxlength="1" pattern="[0-9]" inputmode="numeric" required style="padding: 10px; font-size: 16px; text-align: center; width: 50px; margin: 10px;">
+                                <input type="text" id="digit3" maxlength="1" pattern="[0-9]" inputmode="numeric" required style="padding: 10px; font-size: 16px; text-align: center; width: 50px; margin: 10px;">
+                                <input type="text" id="digit4" maxlength="1" pattern="[0-9]" inputmode="numeric" required style="padding: 10px; font-size: 16px; text-align: center; width: 50px; margin: 10px;">
+                            </div>
+                        </div>
+                          </div>
+                            <div class="form-footer">
+                                <button type="submit" class="btn btn-outline-primary-2">
+                                    <span>Continue</span>
+                                    <i class="icon-long-arrow-right"></i>
+                                </button>
+                                
+                                <div id="timer"></div>
+                             
+                                <!-- Existing error messages -->
+                                <div>
+                                    <p id="otpSentMessage" style="color: red;"></p>
+                                    <p id="timer"></p>
+                                    <p class="text-danger" id="error-message">
+                                        <% if (msg) { %>
+                                          <p class="text-success" id="email"> <%= msg %></p>
+                                          <% } %>
+                                    </p>
+                                    <% if(locals.errmsg) { %>
+                                        <p class="text-danger mb-3"><%= errmsg%></p>
+                                    <% } %>
+                                </div>
+                                
+
+                                <!-- Existing privacy policy checkbox -->
+
+                            </div><!-- End .form-footer -->
+                        </form>
+                        <button style="display: none;"  id="resend" class="btn btn-outline-primary-2" onclick="resend()">Resend<i class="icon-long-arrow-right"></i></button>
+                        <!-- ... (Existing social login buttons) ... -->
+                    </div><!-- .End .tab-pane -->
+         </div><!-- End .tab-content -->
+       </div><!-- End .form-tab -->
+     </div><!-- End .form-box -->
+   </div><!-- End .container -->
+</div><!-- End .login-page section-bg -->
+</main>
+
+<%-include('../partials/footer')%>
+
+<script>
+  const inputs = document.querySelectorAll('.otp-input-container input');
+
+    inputs.forEach((input, index) => {
+      input.addEventListener('input', (event) => {
+          const target = event.target;
+          const value = target.value.trim();
+          if (/^\d$/.test(value)) { 
+              if (index < inputs.length - 1) {
+                  inputs[index + 1].focus();
+              }
+          } else if (value === '') { 
+              if (index > 0) {
+                  inputs[index - 1].focus();
+              }
+          } else { 
+              target.value = value.replace(/\D/g, '');
+          }
+      });
+
+      input.addEventListener('keydown', (event) => {
+          const target = event.target;
+          if (event.keyCode === 8 && target.value.length === 0) { 
+              if (index > 0) {
+                  inputs[index - 1].focus();
+              }
+          }
+      });
+  });
+</script>
+
+<script>
+    
+    let timeRemaining = 120;
+    let timerElement = document.getElementById('timer');
+    
+    
+    let timerInterval = setInterval(function() {
+
+        timeRemaining--;
+
+        let minutes = Math.floor(timeRemaining / 60);
+        let seconds = timeRemaining % 60;
+
+        timerElement.innerHTML = 'Time remaining: ' + minutes + ' minutes ' + seconds + ' seconds';
+
+        if (timeRemaining <= 0) {
+            clearInterval(timerInterval);
+            timerElement.innerHTML = 'Time is up!';
+            let email=document.getElementById('email')
+            email.style.display='none'
+            document.getElementById('resend').style.display="block"
+
+
+        }
+    }, 1000)
+
+
+    document.getElementById('otpForm').addEventListener('submit', async function (event) {
+    event.preventDefault(); 
+    let digit1=document.getElementById('digit1').value
+    let digit2=document.getElementById('digit2').value
+    let digit3=document.getElementById('digit3').value
+    let digit4=document.getElementById('digit4').value
+    const otpData = { digit1, digit2, digit3, digit4 }
+    console.log(otpData);
+    try {
+        const response = await fetch('/otpSubmit', {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json' 
+            },
+            body: JSON.stringify(otpData)
+            
+        });
+        const data = await response.json(); 
+       
+        if (data.success) {
+            window.location.href = '/'; 
+        } else {
+            const errorMessage = document.getElementById('error-message');
+            errorMessage.innerText = data.message;
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+});
+
+
+async function resend(){
+    console.log("helo");
+    const response = await   fetch('/resendotp', {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json' 
+            },
+            
+            
+        })
+
+        const data = await response.json(); 
+        if(data.success){
+          
+            document.getElementById('resend').style.display="none"
+            const msg=document.getElementById('email')
+            msg.textContent="Please check your mail"
+            let timeRemaining = 120;
+         let timerElement = document.getElementById('timer');
+    
+    
+    let timerInterval = setInterval(function() {
+
+        timeRemaining--;
+
+        let minutes = Math.floor(timeRemaining / 60);
+        let seconds = timeRemaining % 60;
+
+        timerElement.innerHTML = 'Time remaining: ' + minutes + ' minutes ' + seconds + ' seconds';
+
+        if (timeRemaining <= 0) {
+            clearInterval(timerInterval);
+            timerElement.innerHTML = 'Time is up!';
+            let email=document.getElementById('email')
+            email.style.display='none'
+            document.getElementById('resend').style.display="block"
+
+
+        }
+    }, 1000)
+
+        }
+
+}
+
+
+</script>
+

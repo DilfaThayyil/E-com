@@ -1,0 +1,553 @@
+<%-include('../partials/header')%>
+<%-include('../partials/navbar')%>
+<%-include('../partials/mobileNavbar')%>
+
+
+
+<main class="main">
+    <div class="page-header text-center" style="background-image: url('/user/assets/images/page-header-bg.jpg')">
+        <div class="container">
+            <h1 class="page-title">Checkout</h1>
+        </div><!-- End .container -->
+    </div><!-- End .page-header -->
+
+    <div class="page-content mt-5">
+        <div class="checkout">
+            <div class="container">
+                
+
+              <div class="row" style="margin-top: 5em;">
+                <div class="col-lg-9">
+                        <form action="/addressSubmit" method="POST" onsubmit="return validateForm()">
+                                <select id="addressSelect" class="selectpicker" style="max-width: 200px; min-width: 200px;"   onchange="updateSelectedAddress()">
+                                    <% if (user && user.Addresses && user.Addresses.length > 0) { %>
+                                        <% user.Addresses.forEach(Address => { %>
+
+                                        <option >
+
+                                          <%= ` ${Address.name},  ${Address.phone},
+                                           ${Address.address},
+                                           ${Address.pincode}, 
+                                           ${Address.state} ,
+                                          ${Address.city},
+                                           ${Address.email}` %>
+                                        </option>
+                                      <% }); %>
+                                    <% } else { %>
+                                      
+                                    <% } %>
+                                  </select> <br>
+                                   <p id="addr" class="text-danger"></p>
+                            
+                            <div id="selectedAddress" style="max-width: 400px;"></div>
+
+                            <div class="modal fade" id="modalAddAddress" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                  <div class="modal-content">
+                                    <div class="modal-header text-center">
+                                      <h4 class="modal-title w-100 font-weight-bold">Enter the details</h4>
+                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                      </button>
+                                    </div>
+                                    <div class="modal-body mx-3">
+                                      <div class="md-form mb-5">
+                                        <label data-error="wrong" data-success="right" for="formname">Name</label>
+                                        <input type="text" id="formname" class="form-control validate" name="name">
+                                        <span id="nameError" class="text-danger"></span>
+                                      </div>
+        
+                                      <div class="md-form mb-5">
+                                        <label data-error="wrong" data-success="right" for="formphone">Phone</label>
+                                        <input type="text" id="formphone" class="form-control validate" name="phone">
+                                        <span id="phoneError" class="text-danger"></span>
+                                      </div>
+        
+                                      <div class="md-form mb-5">
+                                        <label data-error="wrong" data-success="right" for="formemail">Email</label>
+                                        <input type="text" id="formemail" class="form-control validate" name="email">
+                                        <span id="emailError" class="text-danger"></span>
+                                      </div>
+        
+                                      <div class="md-form mb-5">
+                                        <label data-error="wrong" data-success="right" for="formaddress">Address</label>
+                                        <input type="text" id="formaddress" class="form-control validate" name="address">
+                                        <span id="addressError" class="text-danger"></span>
+                                      </div>
+                                      <div class="md-form mb-5">
+                                        <label data-error="wrong" data-success="right" for="formpincode">Pincode</label>
+                                        <input type="text" id="formpincode" class="form-control validate" name="pincode">
+                                        <span id="pincodeError" class="text-danger"></span>
+                                      </div>
+        
+                                      <div class="md-form mb-5">
+                                        <label data-error="wrong" data-success="right" for="formstate">State</label>
+                                        <input type="text" id="formstate" class="form-control validate" name="state">
+                                        <span id="stateError" class="text-danger"></span>
+                                      </div>
+        
+                                      <div class="md-form mb-5">
+                                        <label data-error="wrong" data-success="right" for="formcity">City</label>
+                                        <input type="text" id="formcity" class="form-control validate" name="city">
+                                        <span id="cityError" class="text-danger"></span>
+                                      </div>
+        
+                                    </div>
+                                    <div class="modal-footer d-flex justify-content-center">
+                                      <button type="submit" class="btn btn-primary">Submit</button>
+                                    </div>
+                                  </div>
+                                </div>
+                            </div>
+
+                        </form>
+                        <!-- Your select element -->
+
+                          <div id="selectedAddress"></div>                
+
+
+                        <div>
+                            <a href="" class="btn btn-primary btn-rounded mb-4 mt-3" data-toggle="modal" data-target="#modalAddAddress" >Add Address</a>
+                            
+                        </div>
+                        <p id="address-success" style="display: none;">Address updated successfully</p>
+
+                        <% if (user && user.Addresses && user.Addresses.length > 0) { %>
+                            <% user.Addresses.forEach(Address => { %>
+
+                        <div class="modal fade" id="editAddressModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="editModalLabel">Edit Address</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                    <div class="modal-body">
+                                        <form  id="editAddressForm">
+                                            <div class="form-group">
+                                                <label for="editName">Name</label>
+                                                <input type="text" class="form-control" id="editname" value="<%=Address.name%>" name="name" required>
+                                            </div>
+                                            
+                                            <div class="form-group">
+                                                <label for="editPhone">Phone</label>
+                                                <input type="text" class="form-control" id="editphone" value="<%=Address.phone%>" name="phone" required>
+                                            </div>
+        
+                                            <div class="form-group">
+                                                <label for="editEmail">Email</label>
+                                                <input type="text" class="form-control" id="editemail" value="<%=Address.email%>" name="email" required>
+                                            </div>
+        
+                                            <div class="form-group">
+                                                <label for="editAddress">Address</label>
+                                                <input type="text" class="form-control" id="editaddress" value="<%=Address.address%>" name="address" required>
+                                            </div>
+        
+                                            <div class="form-group">
+                                                <label for="editPincode">Pincode</label>
+                                                <input type="text" class="form-control" id="editpincode" value="<%=Address.pincode%>" name="pincode" required>
+                                            </div>
+        
+                                            <div class="form-group">
+                                                <label for="editState">State</label>
+                                                <input type="text" class="form-control" id="editstate" value="<%=Address.state%>" name="state" required>
+                                            </div>
+        
+                                            <div class="form-group">
+                                                <label for="editCity">City</label>
+                                                <input type="text" class="form-control" id="editcity" value="<%=Address.city%>" name="city" required>
+                                            </div>
+                                            <input type="hidden" id="editAddressId" name="addressId">
+                                            <button type="submit" class="btn btn-primary" onclick="addressEdit()">Save Changes</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                            <%})%>
+                        <%}%>    
+                
+                        <div class="checkout-discount" >
+                            <form id="couponForm">
+                                <input type="text" class="form-control"  required id="checkout-discount-input" placeholder="Have a coupon? Click here to enter your code">
+                                <label for="checkout-discount-input" class="text-truncate"></span></label>
+                                <button class="btn btn-primary mt-4" type="submit">Apply</button>
+                                <a class="btn btn-outline-primary-2 mt-4" id="cancelcoupon" onclick="cancelcoupon()" style="display: none;">Clear</a>
+                            </form>
+                            <p id="already" class="text-danger"></p>
+                            <p id="applied" class="text-success"></p>
+                        </div><!-- End .checkout-discount -->
+
+                        </div><!-- End .col-lg-9 -->
+                        <aside class="col-lg-3">
+                            <div class="summary">
+                                <h3 class="summary-title">Your Order</h3><!-- End .summary-title -->
+
+                                <table class="table table-summary">
+                                    <thead>
+                                        <tr>
+                                            <th>Product</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% cartData.products.forEach(product => { %>
+                                    <tr>
+                                        <td><a href="#"><%= product.productId.Name %></a></td>
+                                        <td><%= product.totalPrice %> </td>
+                                    </tr>
+                                    <% }); %>
+                                    <tr class="summary-subtotal">
+                                        <td>Subtotal:</td>
+                                        <td>₹<%=subtotal%></td>
+                                    </tr><!-- End .summary-subtotal -->
+                                    <tr>
+                                        <td>Shipping:</td>
+                                        <td id="shipping">₹50</td>
+                                    </tr>
+                                    
+                                    
+                                    <tr id="display1" >
+                                        <td  id="Name"></td>
+                                        <td id="success" class="text-success"></td>
+                                    </tr> 
+                                    <tr id="display2">
+                                        <td id="msg"></td>
+                                        <input type="text" id="couponcode" hidden>
+                                        <td id="org"></td>
+                                    </tr>
+                                    
+                                    <tr class="summary-total">
+                                        <td id="offer">Total:</td>
+                                        <td >₹<span id="discount"><%=totalPrice%></span></td>
+                                    </tr> <!--End .summary-total-->
+
+                                </tbody>
+                                </table><!-- End .table table-summary -->
+                                
+                                <select name="paymentMethod" id="payment">
+                                    <%if(totalPrice < 1000){%>
+                                        <option value="Cash on delivery" >Cash on delivery</option>
+                                    <%}%>
+                                    <option value="Razorpay">Razorpay</option>
+                                    <%if(user.wallet > totalPrice){%>
+                                        <option value="wallet">Wallet</option>
+                                    <%}%>
+                                </select>
+                        
+
+                                <button  class="btn btn-outline-primary-2 btn-order btn-block" onclick="sendSelection()">
+                                    <span class="btn-text">Place Order</span>
+                                    <span class="btn-hover-text">Proceed to Checkout</span>
+                                </button>
+                                
+                            </div><!-- End .summary -->
+                        </aside><!-- End .col-lg-3 -->
+                    </div><!-- End .row -->
+                
+                
+            </div><!-- End .container -->
+        </div><!-- End .checkout -->
+    </div><!-- End .page-content -->
+</main><!-- End .main -->
+
+
+
+
+
+
+
+
+</div>
+
+<%-include('../partials/footer')%>
+<%-include('../partials/footerbar')%>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>  
+
+
+    document.getElementById('display1').style.display = 'none';
+    document.getElementById('display2').style.display = 'none';
+
+	document.getElementById('couponForm').addEventListener('submit', async function (event) {
+        event.preventDefault();
+
+        const couponCode = document.getElementById('checkout-discount-input').value.trim();
+        const checkprice=document.getElementById('discount').textContent
+
+        try {
+            const response = await fetch('/applyCoupon', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ couponCode,checkprice }),
+            });
+
+            if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            console.log(data);
+            if (data.success) {
+                document.getElementById('cancelcoupon').style.maxWidth = "150px"; 
+                document.getElementById('applied').innerHTML="Coupon successfully Added"
+                document.getElementById('cancelcoupon').style.display="block"
+                document.getElementById('display1').style.display = 'table-row';
+                document.getElementById('display2').style.display = 'table-row';
+                document.getElementById('couponcode').value=data.couponid
+                document.getElementById('success').innerHTML=data.success
+                document.getElementById('Name').innerHTML="Coupon Name :"
+                document.getElementById('msg').innerHTML=" Old Price:"
+                document.getElementById('org').innerHTML= `₹ ${data.totalPriceTotal}`
+                document.getElementById('org').style.textDecoration = 'line-through';
+                document.getElementById('offer').innerHTML="Offer Price"
+                document.getElementById('discount').innerHTML= ` ${data.discountedPrice}`
+            } else if (data.already) {
+            document.getElementById('already').innerHTML=data.already   
+            } else if(data.minimum) {
+                document.getElementById('already').innerHTML=data.minimum
+            }else{
+                document.getElementById('already').innerHTML=data.error
+            }
+        } catch (error) {
+            document.getElementById('already').innerHTML='Already Used'
+        console.error('Error:', error);
+        }
+    });
+
+
+    function cancelcoupon (){
+        document.getElementById('checkout-discount-input').value=null
+        window.location.reload()
+    }
+
+
+
+    function validateForm() {
+        let name = document.getElementById("formname").value;
+        let phone = document.getElementById("formphone").value;
+        let email = document.getElementById("formemail").value;
+        let address = document.getElementById("formaddress").value;
+        let pincode = document.getElementById("formpincode").value;
+        let state = document.getElementById("formstate").value;
+        let city = document.getElementById("formcity").value;
+
+        document.getElementById("nameError").innerText = "";
+        document.getElementById("phoneError").innerText = "";
+        document.getElementById("emailError").innerText = "";
+        document.getElementById("addressError").innerText = "";
+        document.getElementById("pincodeError").innerText = "";
+        document.getElementById("stateError").innerText = "";
+        document.getElementById("cityError").innerText = "";
+
+        let isValid = true;
+
+        if (name === "") {
+            document.getElementById("nameError").innerText = "Name is required";
+            isValid = false;
+        }
+
+        if (phone === "") {
+            document.getElementById("phoneError").innerText = "Phone is required";
+            isValid = false;
+        }
+
+        if (email === "") {
+            document.getElementById("emailError").innerText = "Email is required";
+            isValid = false;
+        }else if (!validateEmail(email)) {
+            document.getElementById("emailError").innerText = "Invalid email format";
+            isValid = false;
+        }
+
+        if (address === "") {
+            document.getElementById("addressError").innerText = "Address is required";
+            isValid = false;
+        }
+
+        if (pincode === "") {
+            document.getElementById("pincodeError").innerText = "Pincode is required";
+            isValid = false;
+        }
+
+        if (state === "") {
+            document.getElementById("stateError").innerText = "State is required";
+            isValid = false;
+        }
+
+        if (city === "") {
+            document.getElementById("cityError").innerText = "City is required";
+            isValid = false;
+        }
+
+
+        return isValid;
+    }
+
+    function validateEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+
+    document.getElementById("formphone").addEventListener("input", function(event) {
+        let input = this.value.replace(/\D/g, ''); 
+        this.value = input; 
+    });
+
+    $('input').keydown(function(event) {
+        if (event.keyCode == 13) {
+            event.preventDefault();
+            var inputs = $(this).closest('form').find(':input');
+            var idx = inputs.index(this);
+            if (idx == inputs.length - 1) {
+                inputs[0].select();
+            } else {
+                inputs[idx + 1].focus();
+            }
+        }
+    });
+
+    
+
+	function updateSelectedAddress() {
+	  let selectedOption = document.getElementById('addressSelect').value;
+  
+	  document.getElementById('selectedAddress').textContent = `Selected Address: ${selectedOption}`;
+	}
+  
+	function setDefaultAddress() {
+	  let defaultOption = document.querySelector('#addressSelect option:not([disabled])');
+	  if (defaultOption) {
+		let defaultAddress = defaultOption.textContent;
+		document.getElementById('selectedAddress').textContent = `Selected Address: ${defaultAddress}`;
+	  }
+	}
+  
+	    window.onload = setDefaultAddress;
+
+        function sendSelection() {
+
+            const selectedValue = document.getElementById("addressSelect").value;
+		    let  total=document.getElementById('discount').textContent.trim()
+            total = parseFloat(total)
+            total += 50 //adding up the shipping charge
+            const couponid = document.getElementById('checkout-discount-input').value
+            const paymentMethod = document.getElementById('payment').value
+            if(isNaN(total)){
+                console.log('invalid total value',total)
+                return
+            }
+
+		    if(!selectedValue){
+			    let message=document.getElementById('addr').innerHTML="Please Select the Address"
+			    return
+		    }
+            fetch('/placeOrder', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    selectedValue: selectedValue,
+				    total:total,
+                    couponid:couponid,
+                    paymentMethod:paymentMethod
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Backend response:', data);
+
+                if (data.success) {
+                    Swal.fire({
+                        title: 'Order Placed Successfully!',
+                        icon: 'success',
+                        showConfirmButton: false,
+                        timer: 2000 
+
+                    }).then(()=>{
+                        window.location.href=`/vieworder/${data.order._id}`
+                    })
+                }else if(data.Razorpay){
+                    const options ={
+                        "key": "rzp_test_QmkTPpR7YwgsmH", // Enter the Key ID generated from the Dashboard
+                        "amount": data.Razorpay.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                        "currency": "INR",
+                        "name": "E-comm",
+                        "description": "Test Transaction",
+                        "image": "https://example.com/your_logo",
+                        "order_id": data.Razorpay.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+                        "handler": function (response){
+                            verifyPayment(response,data.Razorpay)
+                            },
+                            "prefill": {
+                                "name": "Gaurav Kumar",
+                                "email": "gaurav.kumar@example.com",
+                                "contact": "9000090000"
+                            },
+                            "notes": {
+                                "address": "Razorpay Corporate Office"
+                            },
+                            "theme": {
+                                "color": "#3399cc"
+                            }
+                    }
+                    
+                    let rzp1 = new Razorpay(options);
+                    rzp1.open()
+                } else {
+                    Swal.fire({
+                        title: 'Order Processing Failed',
+                        text: 'An error occurred while processing the order.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                        
+                }
+            })
+            .catch(error => {
+            console.error('Error:', error);
+        });
+        }    
+    
+    
+    
+        function verifyPayment(payment, order) {
+            console.log(payment);
+            fetch('/verifyPayment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ payment, order })
+            })
+            .then(response => response.json())
+            .then(response => {
+                if (response.payment) {
+                    Swal.fire({
+                        title: 'Order Placed Successfully!',
+                        icon: 'success',
+                        showConfirmButton: false,
+                        timer: 2000 // Set the duration for the alert
+                    });
+                    const orderid = order.receipt;
+                    setTimeout(() => {
+                        window.location.href = `/vieworder/${orderid}`;
+                    }, 2000);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+
+
+
+</script>

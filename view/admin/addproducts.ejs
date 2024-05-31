@@ -1,0 +1,190 @@
+<%-include('../partials/adminHeader')%>
+
+<style>
+  .form-control{
+    background-color: #fff;
+    color: #2A3038;
+  }
+  .form-control:focus {
+    background-color: #fff;
+    color: #2A3038;
+  }
+</style>
+
+
+<div class="container-scroller">
+  <%-include('../partials/adminNavbar')%>
+
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial:partials/_navbar.html -->
+      
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+          <div class="col-md-12 grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="card-title">Add Products</h4>
+                
+                <form class="forms-sample" method="post" action="/admin/addProductsSubmit" enctype="multipart/form-data" onsubmit="return validateForm()">
+                  <div class="form-group">
+                      <label for="productname">Product name</label>
+                      <input type="text" class="form-control" id="productName" placeholder="Product name" name="productname">
+                      <span id="nameError" class="text-danger"></span>
+                  </div>
+                  <div class="form-group">
+                      <label for="categoryname">Category</label>
+                      <select name="categoryname" id="categoryName" class="form-control">
+                          <% category.forEach(category =>{ %>
+                          <option value="<%=category._id%>"><%=category.Name%></option>
+                          <% }) %>
+                      </select>
+                  </div>
+                  <div class="form-group">
+                      <label for="price">Price</label>
+                      <input type="number" class="form-control" id="productPrice" placeholder="Price" name="price">
+                      <span id="priceError" class="text-danger"></span>
+                  </div>
+                  <div class="form-group">
+                    <label for="discountprice">Discount Price</label>
+                    <input type="number" class="form-control" id="productDiscountPrice" placeholder="Discount Price" name="discountPrice">
+                    <span id="discountError" class="text-danger"></span>
+                </div>
+                  <div class="form-group">
+                      <label for="quantity">Stock</label>
+                      <input type="number" class="form-control" id="productQuantity" placeholder="Quantity" name="quantity">
+                      <span id="stockError" class="text-danger"></span>
+                  </div>
+                  <div class="form-group">
+                      <label for="exampleInputConfirmPassword1">Description</label>
+                      <input type="text" class="form-control" id="productDescription" placeholder="Description" name="description">
+                      <span id="descriptionError" class="text-danger"></span>
+                  </div>
+              
+                  <div class="form-group row">
+                    <label for="productDate" class="col-sm-3 col-form-label">Images</label>
+                    <input type="file" class="form-control" id="productImages" name="images" multiple="multiple" >
+                    <span id="imagesError" class="text-danger"></span>
+            
+                    <!-- Image preview container -->
+                    <div id="image-preview-container" class="mt-3"></div>
+                </div>          
+
+                  <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                  <div id="error" style="color: red; display: none;">Please fill out all required fields</div>
+              </form>
+              </div>
+            </div>
+          </div>
+          </div>
+        </div>
+</div>
+
+<%-include('../partials/adminFooter')%>
+
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<script>
+
+        function validateForm(){
+            document.getElementById("nameError").textContent = "";
+            document.getElementById("priceError").textContent = "";
+            document.getElementById("stockError").textContent = "";
+            document.getElementById("discountError").textContent = "";
+            document.getElementById("descriptionError").textContent = "";
+            document.getElementById("imagesError").textContent = ""
+            
+            let productName = document.getElementById("productName").value;
+            let productPrice = document.getElementById("productPrice").value;
+            let productQuantity = document.getElementById("productQuantity").value;
+            let discountAmount = document.getElementById("productDiscountPrice").value;
+            let productDescription = document.getElementById("productDescription").value;
+            let productImages = document.getElementById("productImages").files;
+            let errorElement = document.getElementById('error');
+           
+            if (productName.trim() === "") {
+                document.getElementById("nameError").textContent = "Product Name is required";
+                errorElement.style.display = 'block';
+                return false; 
+            }
+
+             
+            if (productPrice.trim() === "") {
+                document.getElementById("priceError").textContent = "Price is required";
+                errorElement.style.display = 'block';
+                return false; 
+            }
+
+            if (discountAmount.trim() === "") {
+                document.getElementById("discountError").textContent = "Discount Amount is required";
+                errorElement.style.display = 'block';
+                return false; 
+            }
+            
+            if(productQuantity.trim() === ""){
+              document.getElementById("stockError").textContent = "stock number is required "
+              errorElement.style.display = 'block';
+              return false;
+            }
+
+            if (productDescription.trim() === "") {
+                document.getElementById("descriptionError").textContent = "Product Description is required";
+                errorElement.style.display = 'block';
+                return false; 
+            }else if(productDescription.length < 10){
+              document.getElementById("descriptionError").textContent = " Description must be atleast 10 characters";
+              errorElement.style.display = 'block';
+              return false; 
+            }
+
+
+          if (!productImages.length) {
+              document.getElementById("imagesError").textContent = "Product images are required.";
+                errorElement.style.display = 'block';
+                return false;
+          } else if (productImages.length < 4 || productImages.length > 4) {
+                document.getElementById("imagesError").textContent = "Exactly 4 images are required.";
+                errorElement.style.display = 'block';
+                return false;
+          }
+
+          errorElement.style.display = 'none'
+          return true; 
+
+        }  
+
+
+      document.getElementById('productImages').addEventListener('change', function(event) {
+      document.getElementById('image-preview-container').innerHTML = '';
+
+      let files = event.target.files;
+
+      for (let i = 0; i < files.length; i++) {
+          let file = files[i];
+
+          let reader = new FileReader();
+
+          reader.onload = (function(file) {
+              return function(event) {
+                let img = document.createElement('img');
+                    img.className = 'img-thumbnail';
+                    img.style.maxHeight = '160px';
+                    img.style.maxWidth = '160px'; 
+                    img.src = event.target.result;
+                  
+                  document.getElementById('image-preview-container').appendChild(img);
+              };
+          })(file);
+
+          reader.readAsDataURL(file);
+      }
+    });
+
+
+  
+</script>
+

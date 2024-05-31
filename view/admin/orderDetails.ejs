@@ -1,0 +1,218 @@
+<%-include('../partials/adminHeader')%>
+
+<style>
+   thead{
+    background-color: aliceblue;
+  }
+  .table tbody td {
+      padding: 5px; 
+  }
+  
+</style>
+
+
+    <div class="container-scroller">
+      <!-- partial:partials/_sidebar.html -->
+      <%-include('../partials/adminNavbar')%>
+
+      <!-- partial -->
+      <div class="container-fluid page-body-wrapper">
+        <!-- partial:partials/_navbar.html -->
+        
+        <!-- partial -->
+        <div class="main-panel">
+          <div class="content-wrapper">
+            <div class="row">
+              <div class="col-12 grid-margin stretch-card">
+                <div class="card " style="background-color: white; border: none;">
+                  <div class="card-body py-0 px-0 px-sm-3">
+                    <div class="row align-items-center">
+                      
+                      <div class="col-5 col-sm-7 col-xl-8 p-0">
+                        <h6 class="text-dark"><strong>Order Date:</strong> <%= order.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) %></h6>
+                        <p class="text-dark"><strong>Order ID:</strong> <%= order._id %></p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-sm-4 ">
+                <div class="card" style="background-color: white; border: none;">
+                  <div class="card-body">
+                    <h5 class="text-dark">
+                      <span>Customer</span>
+                      <i class="mdi mdi-account ml-2"></i>
+                    </h5>
+                    <div class="row">
+                      <div class="col-8 col-sm-12 col-xl-8 ">
+                        <div class="align-items-center">
+                          <p class="text-dark"><%=user.Name%> <br>
+                            <%=user.Email%>
+                          </p>
+                        </div>
+                      </div>
+                      
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4 ">
+                <div class="card "style="background-color: white; border: none;">
+                  <div class="card-body">
+                    <h5 class="text-dark">
+                      <span>Order info</span>
+                      <i class="mdi mdi-information ml-2"></i>
+                    </h5>
+                    <div class="row">
+                      <div class="col-8 col-sm-12 col-xl-8 ">
+                        <div class="align-items-center">
+                          <p class="text-dark">shipping <br>
+                            Payment Method : COD
+                          </p>
+                        </div>
+                      </div>
+                      
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4 ">
+                <div class="card " style="background-color: white; border: none;">
+                  <div class="card-body">
+                    <h5 class="text-dark">
+                       <span>Deliver to</span>
+                      <i class="mdi mdi-truck-delivery ml-2"></i>
+                    </h5>
+                    <div class="row">
+                      <div class="col-8 col-sm-12 col-xl-8 ">
+                        <div class="align-items-center">
+                          <% let addres=order.address.split(',') %>
+                          <p class="text-dark">Full name : <%=addres[0]%><br>
+                          Address : <%=addres[1]%><br>
+                          City :  <%=addres[2]%> <br>
+                          State : <%=addres[3]%> <br>
+                          Pincode :<%=addres[4]%>
+                          </p>
+                        </div>
+                      </div>
+                      
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row ">
+              <div class="col-12 ">
+                    <div class="table-responsive">
+                      <table class="table ">
+                        <thead>
+                          <tr>
+                            
+                            <th>Product</th>
+                            <th>Unit price</th>
+                            <th>Quantity</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Return reason</th>
+                            <th>Return status</th>
+
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            
+                            <td>
+                              <img src="/uploads/<%=productDetails.Images[0]%>" alt="image" />
+                              <span class="pl-2"><%=productDetails.Name%></span>
+                            </td>
+                            <td><%=productDetails.DiscountPrice%></td>
+                            <td><%= product.quantity %></td>
+                            <td><%= product.total %></td>
+                            <td><%= product.Status %></td>
+                            <td><%=product.reason%></td>
+                            
+                            <td>
+                            <% if(product.Status=='request return'){ %>
+                              <button class="btn btn-danger" onclick="returnproduct('<%=order._id%>','<%=product._id%>')">
+                                Approve Return
+                              </button>
+                            <%}else{%>
+                              
+                            <%}%>
+                          </td>                            
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="col-md-6 offset-md-6 text-right">
+                      <div class="text-dark " style="margin-top: 10px;" >
+                          <div><span style="margin-right: 100px ;">subtotal:</span> ₹<%=product.total%></div>
+                          <div><span style="margin-right: 100px ;">shipping cost:</span> ₹0.00</div>
+                          <div><span style="margin-right: 100px ;">Grand total:</span><strong>₹<%=product.total%></strong></div>
+                      </div>
+                    </div>
+                
+              </div>
+            </div>
+            
+            
+          </div>
+          <!-- content-wrapper ends -->
+          <!-- partial:partials/_footer.html -->
+          
+          <!-- partial -->
+        </div>
+        <!-- main-panel ends -->
+      </div>
+      <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+    <%-include('../partials/adminFooter')%>
+
+
+    <script>
+
+           async  function returnproduct(orderId,productId){
+
+               
+               try {
+                  const response = await fetch(`/admin/approveReturnRequest/${orderId}/${productId}`, {
+                      method: 'POST',
+                      headers: {
+                          'Content-Type': 'application/json'
+                      },
+                      body: JSON.stringify({})
+                  });
+  
+                  if (!response.ok) {
+                      throw new Error('Failed to approve return request');
+                  }
+  
+                  const data = await response.json();
+  
+                  if (data.success) {
+                    Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: 'Return request approved successfully',
+                    confirmButtonText: 'OK'
+                    });
+                  } else {
+                    Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Failed to approve return request',
+                    confirmButtonText: 'OK'
+                    });
+                  }
+              } catch (error) {
+                  console.error('Error:', error.message);
+                  alert('Failed to approve return request');
+              }
+          
+            } 
+  </script>

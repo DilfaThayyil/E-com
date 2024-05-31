@@ -1,0 +1,269 @@
+<%-include('../partials/adminHeader')%>
+
+<style>
+  .card-container {
+    display: flex;
+    flex-wrap: nowrap; /* Prevent wrapping to the next line */
+    overflow-x: auto; /* Add horizontal scrollbar if needed */
+  }
+  
+  .card {
+    flex: 0 0 auto; /* Allow cards to shrink if there are many */
+    margin-right: 10px; /* Adjust as needed for spacing between cards */
+  }.small-image {
+    max-width: 200px;
+    max-height: 150px;
+  }
+  .image-box {
+          width: 80px;
+          height: 100px;
+          border: 1px dashed #ccc;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-size: 14px;
+          color: #888;
+          cursor: pointer;
+          position: relative;
+          overflow: hidden;
+      }
+  
+      /* Hide the input element */
+      .image-box input[type='file'] {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          opacity: 0;
+          cursor: pointer;
+      }
+      .form-control{
+        background-color: #fff;
+        color: #2A3038;
+      }
+      .form-control:focus {
+        background-color: #fff;
+        color: #2A3038;
+      }
+  
+  </style>
+
+<div class="container-scroller">
+  <%-include('../partials/adminNavbar')%>
+
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial:partials/_navbar.html -->
+      
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+            <div class="col-md-12 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Edit Product</h4>
+                    
+                    <form class="forms-sample" method="post" action="/admin/editProductSubmit/<%=product._id%>" >
+                      <div class="form-group">
+                          <label for="exampleInputUsername1">Product name</label>
+                          <input type="text" class="form-control" id="productname" placeholder="Product name" value="<%=product.Name%>" name="name" >
+                      </div>
+                      <div class="form-group">
+                          <label for="exampleInputConfirmPassword1">Category</label>
+                          <select class="form-control "  id="productCategory" name="category" required>
+                            <% category.forEach(category => { %>
+                              <option value="<%= category._id %>" <%= (category._id.toString() === product.Category.toString()) ? 'selected' : '' %>><%= category.Name %></option>
+                            <% }); %>
+                          </select>
+                      </div>
+                      <input type="text" id="proid" value="<%=product._id%>" hidden>
+                      <div class="form-group">
+                          <label for="exampleInputEmail1">Price</label>
+                          <input type="number" class="form-control" id="productprice" min="1" placeholder="Price" value="<%=product.Price%>" name="price">
+                      </div>
+                      <div class="form-group">
+                        <label for="exampleInputEmail1">Discount Price</label>
+                        <input type="number" class="form-control" id="dis" min="1" placeholder="Discount Price" value="<%=product.DiscountPrice%>" name="discountprice">
+                    </div>
+                      <div class="form-group">
+                          <label for="exampleInputPassword1">Stock</label>
+                          <input type="number" class="form-control" id="qnt" min="1"  placeholder="Quantity" value="<%=product.Quantity%>" name="quantity">
+                      </div>
+                      <div class="form-group">
+                          <label for="exampleInputConfirmPassword1">Description</label>
+                          <input type="text" class="form-control" id="des" placeholder="Description" value="<%=product.Description%>" name="description">
+                      </div>
+                      <div class="form-group row">
+                        <label for="productDate" class="col-sm-3 col-form-label" hidden>Images</label>
+                        <input type="file" class="form-control" id="productimages" name="images" multiple="multiple" hidden >
+                        <small id="imagesError" class="text-danger"></small>
+                
+                        <!-- Image preview container -->
+                        <div id="image-preview-container" class="mt-3"></div>
+                    </div>
+                    <div id="error" style="color: red; display: none;">Please fill out all required fields</div>
+
+                      <button type="submit" class=" btn-primary mr-2">Submit</button>
+                  
+                  </form>
+                  <form action="/admin/update/<%= product._id %>" method="POST" enctype="multipart/form-data">
+                    <div class="card-container mt-4" style="display: flex; flex-wrap: nowrap; overflow-x: auto;">
+                      <% product.Images.forEach((image, index) => { %>
+                        <div class="card mr-3" style="flex: 0 0 auto;">
+                          <img src="/uploads/<%= image %>" class="card-img-top small-image" id="image<%= index %>">
+                          <div class="card-body">
+                            <p class="card-text">Image <%= index + 1 %></p>
+                            <button class="btn btn-danger" onclick="deleteImage(event, '<%= image %>', '<%= index %>','<%= product._id %>' )">remove</button>
+                          </div>
+                        </div>
+                      <% }); %>
+                    </div>
+                  </form>
+                  <% if (product.Images.length < 4) { %>
+                    <div class="card mr-3" style="flex: 0 0 auto;">
+                      <form id="addImageForm">
+                        <input type="file" name="image" id="imageInput">
+                        <button class="btn btn-success" style="height: 40px;" type="button" onclick="addImage()">Submit</button>
+                      </form>
+                    </div>
+                  <% } %>          
+                  </div>
+                </div>
+              </div>
+          </div>
+        </div>
+</div>
+
+
+<%-include('../partials/adminFooter')%>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script>
+  function deleteImage(event, imgid, index, productid) {
+    event.preventDefault();
+  
+    // Display a confirmation alert
+    swal({
+      title: "Are you sure?",
+      text: "Once deleted, you will not be able to recover this image!",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+        // User clicked the "Delete" button
+  
+        fetch(`/admin/deleteimage/${imgid}/${index}/${productid}`, {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+        .then(response => {
+          if (response.ok) {
+            console.log('Image deleted successfully');
+  
+            // Update the src attribute of the corresponding <img> element
+            const imgElement = document.getElementById(`image${index}`);
+            if (imgElement) {
+              // Update the src attribute without appending a timestamp
+              imgElement.src = `/uploads/${imgid}`;
+            }
+  
+            // Show a success message
+            swal("Poof! Your image has been deleted!", {
+              icon: "success",
+            });
+  
+            // Optionally, reload the page after a short delay
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+          } else {
+            console.error('Failed to delete image');
+            // Show an error message
+            swal("Oops! Something went wrong.", {
+              icon: "error",
+            });
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          // Show an error message
+          swal("Oops! Something went wrong.", {
+            icon: "error",
+          });
+        });
+      } else {
+        // User clicked the "Cancel" button or closed the alert
+        // Do nothing or handle as needed
+      }
+    });
+  }
+  
+  
+    function addImage() {
+        // Get the form and image input elements
+        const form = document.getElementById('addImageForm');
+        const imageInput = document.getElementById('imageInput');
+        const proid= document.getElementById('proid').value
+        console.log(proid);
+        // Create a FormData object to append the image file
+        const formData = new FormData(form);
+        formData.append('productId', proid); // Replace with your actual product ID
+  
+        // Make an AJAX request to add the new image
+        fetch('/admin/addImage', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Handle the response from the server
+            console.log('Image added successfully:', data)
+  
+        window.location.reload()
+  
+            // Reset the form (optional)
+            form.reset();
+        })
+        .catch(error => {
+            // Handle errors
+            console.error('There was a problem adding the image:', error.message);
+        });
+    }
+  </script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      document.querySelector('.forms-sample').addEventListener('submit', function(event) {
+          event.preventDefault(); // Prevent form submission
+          
+        
+          let productName = document.getElementById('productname').value.trim();
+          let productCategory = document.getElementById('productCategory').value.trim();
+          let productPrice = document.getElementById('productprice').value.trim();
+          let productDiscountPrice = document.getElementById('dis').value.trim();
+          let productQuantity = document.getElementById('qnt').value.trim();
+          let productDescription = document.getElementById('des').value.trim();
+          let errorElement = document.getElementById('error');
+          
+         
+          if (productName.length < 3 || productCategory === "" || productPrice === "" || productDiscountPrice === "" || productQuantity === "" || productDescription.length < 10) {
+              errorElement.style.display = 'block'; // Show error message
+          } else {
+              errorElement.style.display = 'none'; // Hide error message
+              this.submit(); // Submit the form
+          }
+      });
+  });
+</script>
+

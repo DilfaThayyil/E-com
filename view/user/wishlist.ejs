@@ -1,0 +1,159 @@
+<%-include('../partials/header')%>
+<%-include('../partials/navbar')%>
+<%-include('../partials/mobileNavbar')%>
+
+    <div class="page-wrapper">
+        <main class="main">
+        	<div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
+        		<div class="container">
+        			<h1 class="page-title">Wishlist<span>Shop</span></h1>
+        		</div><!-- End .container -->
+        	</div><!-- End .page-header -->
+            <div class="page-content">
+            	<div class="container">
+					<table class="table table-wishlist table-mobile">
+						<thead>
+							<tr>
+								<th class="text text-dark">Product</th>
+								<th class="text text-dark">Price</th>
+								<th class="text text-dark ">Offer Price</th>
+                                <th class="text text-dark ">Description</th>
+								<th></th>
+							</tr>
+						</thead>
+
+						<tbody>
+                            <%if(wishlist && wishlist.products){%>
+                                <%wishlist.products.forEach((product)=>{%>
+                                    <tr>
+                                        <td class="product-col">
+                                            <div class="product">
+                                                <figure class="product-media">
+                                                    <a href="/product/<%=product.productId._id%>">
+                                                        <img src="/uploads/<%=product.productId.Images[0]%>" alt="Product image">
+                                                    </a>
+                                                </figure>
+        
+                                                <h3 class="product-title">
+                                                    <a href="/product/<%=product.productId._id%>"><%=product.productId.Name%></a>
+                                                </h3><!-- End .product-title -->
+                                            </div><!-- End .product -->
+                                        </td>
+                                        
+                                        <td class="price-col">
+                                            <a href="/product/<%=product.productId._id%>">
+                                                <%=product.productId.Price%>
+                                            </a>
+                                        </td>
+
+                                        <td>
+                                            <a href="/product/<%=product.productId._id%>">
+                                                <%
+                                                let finalPrice
+                                                const productPrice = parseFloat(product.productId.Price) || 0;
+                                                const productOffer = product.productId.offer ? parseFloat(product.productId.offer.percentage) || 0 : 0;
+                                                const categoryOffer = product.productId.Category && product.productId.Category.offer ? parseFloat(product.productId.Category.offer.percentage) || 0 : 0;                                        
+
+                                                if (product.productId.offer) {
+                                                    finalPrice = Math.floor(productPrice - (productPrice * productOffer / 100));
+                                                } else if (product.productId.Category && product.productId.Category.offer) {
+                                                    finalPrice = Math.floor(productPrice - (productPrice * categoryOffer / 100));
+                                                }
+                                            
+                                            %>
+                                            ₹<%= finalPrice %>
+                                            </a>
+                                        </td>
+
+                                        <td><button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#exampleModal<%=product.productId._id%>">
+                                            Click me
+                                          </button>
+                                        </td>               
+                                        <div class="modal fade" id="exampleModal<%=product.productId._id%>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                          <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                              <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Product Description</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                  <span aria-hidden="true">&times;</span>
+                                                </button>
+                                              </div>
+                                              <div class="modal-body">
+                                                <%=product.productId.Description %>
+                                              </div>
+                                              <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                             
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        
+                                        <td class="action-col" hidden>
+                                            <div class="dropdown">
+                                            <button class="btn btn-block btn-outline-primary-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="icon-list-alt"></i>Select Options
+                                            </button>
+        
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="#">First option</a>
+                                                <a class="dropdown-item" href="#">Another option</a>
+                                                <a class="dropdown-item" href="#">The best option</a>
+                                              </div>
+                                            </div>
+                                        </td>
+                                        <td class="remove-col"><button onclick="removeFromWishlist('<%=product.productId._id%>')" class="btn btn-outline-primary-2">Remove<i class="icon-close"></i></button></td>
+                                    </tr>
+                                <%})%>
+                            <%}%>
+							
+							
+						</tbody>
+					</table><!-- End .table table-wishlist -->
+            	</div><!-- End .container -->
+            </div><!-- End .page-content -->
+        </main><!-- End .main -->
+    </div><!-- End .page-wrapper -->
+
+<%-include('../partials/footer')%>
+<%-include('../partials/footerbar')%>
+    
+
+<script>
+
+
+    function removeFromWishlist(productId){
+        fetch(`/removeFromWish/${productId}`,{
+            method: 'DELETE' ,
+            headers: {
+                'Content-Type' : 'application/json'
+            }
+        })
+        .then(response=>{
+            if(!response.ok){
+                throw new Error('Failed to remove product from wishlist')
+            }
+            return response.json()
+        })
+        .then(data=>{
+            const rowToRemove = document.querySelector(`tr[data-product-id="${productId}"]`);
+            if (rowToRemove) {
+                rowToRemove.remove();
+            }
+            Swal.fire({
+                title: "Success",
+                text: data.message || "Product removed from wishlist successfully",
+                icon: "success",
+                confirmButtonText: "OK"
+            }).then(() => {
+                window.location.reload();
+            });
+        })
+        .catch(error => {
+            Swal.fire("Error", error.message || "Failed to remove product from wishlist", "error");
+        });
+
+    }
+
+
+</script>

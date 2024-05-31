@@ -1,0 +1,564 @@
+<%-include('../partials/header') %>
+<%-include('../partials/mobileNavbar') %>
+
+
+    <div class="page-wrapper">
+        <header class="header header-11">
+            <div class="header-middle sticky-header">
+                <div class="container">
+                    <div class="header-left">
+                        <nav class="main-nav">
+                            <ul class="menu sf-arrows">
+                                <li class="megamenu-container active">
+                                    <a href="/">Home</a>
+                                </li>
+                                <li>
+                                    <a href="/allproducts">Shop</a>
+                                </li>
+                                <li >
+                                    <a href="/contact">Contact</a>
+                                </li>
+                                <li >
+                                    <a href="/aboutUs">About Us</a>
+                                </li>
+                                <li >
+                                    <a href="/userProfile">My Account</a>
+                                </li>                                
+                            </ul><!-- End .menu -->
+                        </nav><!-- End .main-nav -->
+        
+                        <button class="mobile-menu-toggler">
+                            <span class="sr-only">Toggle mobile menu</span>
+                            <i class="icon-bars"></i>
+                        </button>
+                    </div><!-- End .header-left -->
+        
+                    <div class="header-center">
+                        <a href="index.html" class="logo">
+                            <img src="/user/assets/images/demos/demo-18/logo.png" alt="Molla Logo" width="82" height="25">
+                        </a>
+                    </div><!-- End .header-center -->
+        
+                    <div class="header-right">
+                        <div class="header-search header-search-extended header-search-visible">
+                            <a href="#" class="search-toggle" role="button"><i class="icon-search"></i></a>
+                            <form>
+                                <div class="header-search-wrapper">
+                                    <label for="q" class="sr-only">Search</label>
+                                    <input type="text" class="form-control" name="q" id="search-item" placeholder="Search product ..." 
+                                    onkeyup="search()" required>
+                                    <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
+                                </div><!-- End .header-search-wrapper -->
+                            </form>
+                        </div><!-- End .header-search -->
+                        
+                        <a href="/wishlist" class="wishlist-link" >
+                            <i class="icon-heart-o"></i>
+                            <span class="wishlist-count">0</span>
+                        </a>
+        
+                        <div class="dropdown cart-dropdown">
+                            <a href="/cart" class="dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false" data-display="static">
+                                <i class="icon-shopping-cart"></i>
+                                <!-- <span class="cart-count"></span> -->
+                            </a>
+                            
+                            <div class="dropdown">
+                                <a  class="dropdown-toggle p-4" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  <i class="fa-regular fa-user fa-sm " style="color: #ffffff; "></i> <!-- Icon here -->
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right mt-2" aria-labelledby="dropdownMenu2" style="width: 40px;" >
+                                    
+                                 <% if(user){%>
+                                    <P><%=user%></P>
+                                    <a href="/userProfile">Profile</a>
+                                    <a href="/logout">Logout</a>
+                                    <%}else{%>
+                                        <a href="/login">Login</a>
+                                    <%}%>
+
+                                </div>
+                              </div>
+                                            
+                        </div><!-- End .cart-dropdown -->
+                    </div><!-- End .header-right -->
+                </div><!-- End .container -->
+            </div><!-- End .header-middle -->
+        </header><!-- End .header -->    
+
+        <main class="main">
+            <div class="intro-slider-container mb-3 mb-lg-5">
+                <div class="intro-slider owl-carousel owl-theme owl-nav-inside owl-light" data-toggle="owl" data-owl-options='{"dots": true, "nav": false}'>
+                    <div class="intro-slide" style="background-image: url(/user/assets/images/demos/demo-18/slider/slide-1.jpg);">
+                        <div class="container">
+                            <div class="intro-content text-center">
+                                <h3 class="intro-subtitle cross-txt text-primary">SEASONAL PICKS</h3><!-- End .h3 intro-subtitle -->
+                                <h1 class="intro-title text-white">Summer Sale</h1><!-- End .intro-title -->
+                                <div class="intro-text text-white">up to 70% off</div><!-- End .intro-text -->
+                                <div class="intro-action cross-txt">
+                                    <a href="category.html" class="btn btn-outline-white">
+                                        <span>Discover More</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div><!-- End .intro-content -->
+                    </div><!-- End .intro-slide -->
+
+                    <div class="intro-slide" style="background-image: url(/user/assets/images/demos/demo-18/slider/slide-2.jpg);">
+                        <div class="container">
+                            <div class="intro-content text-center">
+                                <h3 class="intro-subtitle text-primary cross-txt">Women's Accessories</h3><!-- End .h3 intro-subtitle -->
+                                <h1 class="intro-title text-white">Save up to</h1><!-- End .intro-title -->
+                                <div class="intro-text text-white">30-50% off</div><!-- End .intro-text -->
+                                <div class="intro-action cross-txt">
+                                    <a href="/allproducts" class="btn btn-outline-white">
+                                        <span>Discover More</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div><!-- End .intro-content -->
+                    </div><!-- End .intro-slide -->
+                </div><!-- End .intro-slider owl-carousel owl-simple -->
+
+                <span class="slider-loader text-white"></span><!-- End .slider-loader -->
+            </div><!-- End .intro-slider-container -->
+
+            <div class="container banners">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="banner banner-hover">
+                            <a href="/">
+                                <img src="/user/assets/images/demos/demo-18/banners/banner-1.jpg" alt="Banner">
+                            </a>
+
+                            <div class="banner-content">
+                                <h3 class="banner-title text-white"><a href="/allproducts">Sweatshirts & Hoodies</a></h3><!-- End .banner-title -->
+                                <a href="/allproducts" class="banner-link">Shop Now <i class="icon-long-arrow-right"></i></a>
+                            </div><!-- End .banner-content -->
+                        </div><!-- End .banner -->
+                    </div><!-- End .col-lg-6 -->
+
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="banner banner-hover">
+                            <a href="/allproducts">
+                                <img src="/user/assets/images/demos/demo-18/banners/banner-2.jpg" alt="Banner">
+                            </a>
+
+                            <div class="banner-content">
+                                <h3 class="banner-title text-white"><a href="/allproducts">Men’s Jacket</a></h3><!-- End .banner-title -->
+                                <a href="/allproducts" class="banner-link">Shop Now <i class="icon-long-arrow-right"></i></a>
+                            </div><!-- End .banner-content -->
+                        </div><!-- End .banner -->
+                    </div><!-- End .col-sm-6 -->
+
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="banner banner-hover">
+                            <a href="/allproducts">
+                                <img src="/user/assets/images/demos/demo-18/banners/banner-3.jpg" alt="Banner">
+                            </a>
+
+                            <div class="banner-content">
+                                <h3 class="banner-title text-white"><a href="/allproducts">Women’s jackets</a></h3><!-- End .banner-title -->
+                                <a href="/allproducts" class="banner-link">Shop Now <i class="icon-long-arrow-right"></i></a>
+                            </div><!-- End .banner-content -->
+                        </div><!-- End .banner -->
+
+                        <div class="banner banner-hover">
+                            <a href="/allproducts">
+                                <img src="/user/assets/images/demos/demo-18/banners/banner-4.jpg" alt="Banner">
+                            </a>
+
+                            <div class="banner-content">
+                                <h3 class="banner-title text-white"><a href="/allproducts">Accessories</a></h3><!-- End .banner-title -->
+                                <a href="/allproducts" class="banner-link">Shop Now <i class="icon-long-arrow-right"></i></a>
+                            </div><!-- End .banner-content -->
+                        </div><!-- End .banner -->
+                    </div><!-- End .col-sm-6 -->
+                </div><!-- End .row -->
+            </div><!-- End .container -->
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-9">
+                        <h2 class="title">Recent Arrivals</h2><!-- End .title -->
+                        <div class="products-container mb-7" id="product-list">
+                            <div class="row ">
+
+
+                                <%product.forEach((product)=>{%>
+
+                               
+                                <div class="col-6 col-md-4">
+                                    <div class="product product-4" >
+                                        <figure class="product-media">
+                                            <%if(product.offer){%>
+                                                <span class="product-label label-new"><%=product.offer.percentage%>% offer</span>
+                                            <%}else if(product.Category.offer){%>
+                                                <span class="product-label label-new"><%=product.Category.offer.percentage%>% offer</span>
+                                            <%}%>
+                                            <a href="/product/<%=product._id%>">
+                                                <img src="/uploads/<%=product.Images[0]%>" alt="Product image" class="product-image">
+                                                <img src="/uploads/<%=product.Images[1]%>" alt="Product image" class="product-image-hover">
+                                            </a>
+
+                                            <div class="product-action-vertical" >
+                                                <a onclick="addToWishlist('<%=product._id%>')" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
+                                                <!-- <a href="popup/quickView.html" class="btn-product-icon btn-quickview" title="Quick view"><span>Quick view</span></a> -->
+                                            </div><!-- End .product-action -->
+
+                                            <div class="product-action">
+                                                <%if(product.Quantity>=1){%>
+                                                    <a onclick="addToCart('<%=product._id%>')" class="btn-product btn-cart"><span>add to cart</span></a>
+                                                    <%}else{%>
+                                                    <a href="#" class="btn-product btn-cart"><span>out of stock</span></a>
+                                                <%}%>                                             
+                                            </div><!-- End .product-action -->
+                                        </figure><!-- End .product-media -->
+
+                                        <div class="product-body">
+                                            <div class="product-cat">
+                                                <a href="#"><%=product.Category.Name%></a>
+                                            </div><!-- End .product-cat -->
+                                            <h3 class="product-title"><a href="/product/<%=product._id%>"><%=product.Name%></a></h3><!-- End .product-title -->
+                                            <div class="product-price">
+                                                <s style="font-size: small;"> ₹<%= product.Price %></s>&nbsp; &nbsp;
+                                            
+                                                <% 
+                                                    const productPrice = parseFloat(product.Price) || 0;
+                                                    const productOffer = product.offer ? parseFloat(product.offer.percentage) || 0 : 0;
+                                                    const categoryOffer = product.Category && product.Category.offer ? parseFloat(product.Category.offer.percentage) || 0 : 0;
+                                            
+                                                    let finalPrice = productPrice;
+                                            
+                                                    if (product.offer) {
+                                                        finalPrice = Math.floor(productPrice - (productPrice * productOffer / 100));
+                                                    } else if (product.Category && product.Category.offer) {
+                                                        finalPrice = Math.floor(productPrice - (productPrice * categoryOffer / 100));
+                                                    }
+                                                %>
+                                            
+                                                ₹<%= finalPrice %>
+                                            </div><!-- End .product-price -->
+                                            <div class="product-nav product-nav-dots">
+                                                
+                                            </div><!-- End .product-nav -->
+                                        </div><!-- End .product-body -->
+                                    </div><!-- End .product -->
+                                </div><!-- End .col-sm-6 col-md-4 -->
+
+                              
+                                <%})%>
+                              
+
+                               
+                            </div><!-- End .row -->
+
+                            <div class="more-container text-center mt-0 mb-0">
+                                <a href="/allproducts" class="btn btn-outline-primary-2 btn-more">
+                                    <span >View more Products</span>
+                                </a>
+                            </div><!-- End .more-container -->
+                        </div><!-- End .products -->
+                    </div><!-- End .col-lg-9 -->
+
+                    
+                </div><!-- End .row -->
+
+                <hr class="mt-0 mb-4">
+                <h2 class="title text-center brands">Shop by Brands</h2><!-- End .title -->
+
+                <div class="owl-carousel mt-3 mb-4 owl-simple" data-toggle="owl" 
+                    data-owl-options='{
+                        "nav": false, 
+                        "dots": true,
+                        "margin": 30,
+                        "loop": false,
+                        "responsive": {
+                            "0": {
+                                "items":2
+                            },
+                            "420": {
+                                "items":3
+                            },
+                            "600": {
+                                "items":4
+                            },
+                            "900": {
+                                "items":5
+                            },
+                            "1024": {
+                                "items":6
+                            },
+                            "1200": {
+                                "items":6,
+                                "nav": true,
+                                "dots": false
+                            }
+                        }
+                    }'>
+                    <a href="#" class="brand">
+                        <img src="/user/assets/images/brands/1.png" alt="Brand Name">
+                    </a>
+
+                    <a href="#" class="brand">
+                        <img src="/user/assets/images/brands/2.png" alt="Brand Name">
+                    </a>
+
+                    <a href="#" class="brand">
+                        <img src="/user/assets/images/brands/3.png" alt="Brand Name">
+                    </a>
+
+                    <a href="#" class="brand">
+                        <img src="/user/assets/images/brands/4.png" alt="Brand Name">
+                    </a>
+
+                    <a href="#" class="brand">
+                        <img src="/user/assets/images/brands/5.png" alt="Brand Name">
+                    </a>
+
+                    <a href="#" class="brand">
+                        <img src="/user/assets/images/brands/6.png" alt="Brand Name">
+                    </a>
+
+                    <a href="#" class="brand">
+                        <img src="/user/assets/images/brands/7.png" alt="Brand Name">
+                    </a>
+                </div><!-- End .owl-carousel -->
+            </div><!-- End .container -->
+
+            
+        </main><!-- End .main -->
+
+        <footer class="footer footer-dark">
+            <div class="icon-boxes-container">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="icon-box icon-box-side">
+                                <span class="icon-box-icon">
+                                    <i class="icon-rocket"></i>
+                                </span>
+
+                                <div class="icon-box-content">
+                                    <h3 class="icon-box-title">Free Shipping</h3><!-- End .icon-box-title -->
+                                    <p>Orders $50 or more</p>
+                                </div><!-- End .icon-box-content -->
+                            </div><!-- End .icon-box -->
+                        </div><!-- End .col-sm-6 col-lg-3 -->
+                        
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="icon-box icon-box-side">
+                                <span class="icon-box-icon">
+                                    <i class="icon-rotate-left"></i>
+                                </span>
+
+                                <div class="icon-box-content">
+                                    <h3 class="icon-box-title">Free Returns</h3><!-- End .icon-box-title -->
+                                    <p>Within 30 days</p>
+                                </div><!-- End .icon-box-content -->
+                            </div><!-- End .icon-box -->
+                        </div><!-- End .col-sm-6 col-lg-3 -->
+
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="icon-box icon-box-side">
+                                <span class="icon-box-icon">
+                                    <i class="icon-info-circle"></i>
+                                </span>
+
+                                <div class="icon-box-content">
+                                    <h3 class="icon-box-title">Get 20% Off 1 Item</h3><!-- End .icon-box-title -->
+                                    <p>When you sign up</p>
+                                </div><!-- End .icon-box-content -->
+                            </div><!-- End .icon-box -->
+                        </div><!-- End .col-sm-6 col-lg-3 -->
+
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="icon-box icon-box-side">
+                                <span class="icon-box-icon">
+                                    <i class="icon-life-ring"></i>
+                                </span>
+
+                                <div class="icon-box-content">
+                                    <h3 class="icon-box-title">We Support</h3><!-- End .icon-box-title -->
+                                    <p>24/7 amazing services</p>
+                                </div><!-- End .icon-box-content -->
+                            </div><!-- End .icon-box -->
+                        </div><!-- End .col-sm-6 col-lg-3 -->
+                    </div><!-- End .row -->
+                </div><!-- End .container -->
+            </div><!-- End .icon-boxes-container -->
+            <div class="footer-middle">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="widget widget-about">
+                                <img src="/user/assets/images/demos/demo-18/logo-footer.png" class="footer-logo" alt="Footer Logo" width="82" height="25">
+                                <p>Praesent dapibus, neque id cursus ucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. </p>
+
+                                <div class="social-icons">
+                                    <a href="#" class="social-icon" title="Facebook" target="_blank"><i class="icon-facebook-f"></i></a>
+                                    <a href="#" class="social-icon" title="Twitter" target="_blank"><i class="icon-twitter"></i></a>
+                                    <a href="#" class="social-icon" title="Instagram" target="_blank"><i class="icon-instagram"></i></a>
+                                    <a href="#" class="social-icon" title="Youtube" target="_blank"><i class="icon-youtube"></i></a>
+                                    <a href="#" class="social-icon" title="Pinterest" target="_blank"><i class="icon-pinterest"></i></a>
+                                </div><!-- End .soial-icons -->
+                            </div><!-- End .widget about-widget -->
+                        </div><!-- End .col-sm-6 col-lg-3 -->
+
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="widget">
+                                <h4 class="widget-title">Useful Links</h4><!-- End .widget-title -->
+
+                                <ul class="widget-list">
+                                    <li><a href="about.html">About Molla</a></li>
+                                    <li><a href="#">How to shop on Molla</a></li>
+                                    <li><a href="#">FAQ</a></li>
+                                    <li><a href="contact.html">Contact us</a></li>
+                                    <li><a href="login.html">Log in</a></li>
+                                </ul><!-- End .widget-list -->
+                            </div><!-- End .widget -->
+                        </div><!-- End .col-sm-6 col-lg-3 -->
+
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="widget">
+                                <h4 class="widget-title">Customer Service</h4><!-- End .widget-title -->
+
+                                <ul class="widget-list">
+                                    <li><a href="#">Payment Methods</a></li>
+                                    <li><a href="#">Money-back guarantee!</a></li>
+                                    <li><a href="#">Returns</a></li>
+                                    <li><a href="#">Shipping</a></li>
+                                    <li><a href="#">Terms and conditions</a></li>
+                                    <li><a href="#">Privacy Policy</a></li>
+                                </ul><!-- End .widget-list -->
+                            </div><!-- End .widget -->
+                        </div><!-- End .col-sm-6 col-lg-3 -->
+
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="widget">
+                                <h4 class="widget-title">My Account</h4><!-- End .widget-title -->
+
+                                <ul class="widget-list">
+                                    <li><a href="#">Sign In</a></li>
+                                    <li><a href="cart.html">View Cart</a></li>
+                                    <li><a href="#">My Wishlist</a></li>
+                                    <li><a href="#">Track My Order</a></li>
+                                    <li><a href="#">Help</a></li>
+                                </ul><!-- End .widget-list -->
+                            </div><!-- End .widget -->
+                        </div><!-- End .col-sm-6 col-lg-3 -->
+                    </div><!-- End .row -->
+                </div><!-- End .container -->
+            </div><!-- End .footer-middle -->
+
+            <div class="footer-bottom">
+                <div class="container">
+                    <p class="footer-copyright">Copyright © 2019 Molla Store. All Rights Reserved.</p><!-- End .footer-copyright -->
+                    <figure class="footer-payments">
+                        <img src="/user/assets/images/payments.png" alt="Payment methods" width="272" height="20">
+                    </figure><!-- End .footer-payments -->
+                </div><!-- End .container -->
+            </div><!-- End .footer-bottom -->
+        </footer><!-- End .footer -->
+    </div><!-- End .page-wrapper -->
+    
+
+<%-include('../partials/footer') %>
+
+
+
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script>
+
+       
+    const search = () => {
+        const searchBox = document.getElementById("search-item").value.toUpperCase()
+        const storeItems = document.getElementById("product-list")
+        const product = document.querySelectorAll(".product")
+        const pname = document.getElementsByTagName("h3")
+
+        for(let i=0;i<pname.length;i++){
+            let match = product[i].getElementsByTagName('h3')[0]
+
+            if(match){
+                let textValue = match.textContent || match.innerHTML
+                if(textValue.toUpperCase().indexOf(searchBox) > -1){
+                    product[i].style.display = ""
+                }else{
+                    product[i].style.display = "none"
+                }
+            }
+        }
+    }
+    
+
+
+    const addToCart = async (productId,quantity) => {
+        try {
+            const quantity = 1
+            const response = await fetch(`/addtocart/${productId}/${quantity}`, {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json' 
+            },
+            
+            });
+            const data = await response.json();
+            if (data.error) {
+                swal({
+                title: "Error!",
+                text: data.error,
+                icon: "error",
+                button: "OK",
+            });
+            } else if (data.message) {
+            swal({
+                title: "Success!",
+                text: data.message,
+                icon: "success",
+                button: "OK",
+            }).then((value) => {
+                window.location.reload(); 
+            });
+                
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+    
+    
+    const addToWishlist = async (productId) => {
+        try {
+            const response = await fetch(`/addtowishlist/${productId}`, {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json' 
+            },
+            
+            });
+            const data = await response.json();
+            if (data.error) {
+                swal({
+                title: "Error!",
+                text: data.error,
+                icon: "error",
+                button: "OK",
+            });
+            } else if (data.message) {
+            swal({
+                title: "Success!",
+                text: data.message,
+                icon: "success",
+                button: "OK",
+            }).then((value) => {
+                window.location.reload(); 
+            });
+                
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
+</script>

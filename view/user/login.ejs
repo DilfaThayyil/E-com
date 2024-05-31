@@ -1,0 +1,279 @@
+
+<%-include('../partials/header')%>
+<%-include('../partials/navbar')%>
+<%-include('../partials/mobileNavbar')%>
+   
+   
+   
+   <div class="page-wrapper">
+       
+
+        <main class="main">
+            <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
+                <div class="container">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item"><a href="#">Pages</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Login</li>
+                    </ol>
+                </div><!-- End .container -->
+            </nav><!-- End .breadcrumb-nav -->
+
+            <div class="login-page bg-image pt-8 pb-8 pt-md-12 pb-md-12 pt-lg-17 pb-lg-17" style="background-image: url('/user/assets/images/backgrounds/login-bg.jpg')">
+            	<div class="container">
+            		<div class="form-box">
+            			<div class="form-tab">
+	            			<ul class="nav nav-pills nav-fill">
+							    <li class="nav-item">
+							        <a class="nav-link" id="signin-tab-2" >Sign In</a>
+							    </li>
+							</ul>
+							
+							<div class="tab-content">    
+							    <div class="tab-pane fade show active" id="register-2" role="tabpanel" aria-labelledby="register-tab-2">
+									<%if(msg){%>
+										<p class="text-danger"><%=msg%></p>
+									<%}%>
+									<p id="passwordError" class="text-danger"></p>
+							    	<form id="loginForm" action="/loginSubmit" method="post">
+										<div class="form-group">
+											<label for="register-email-2">Your email address *</label>
+											<input type="email" class="form-control" id="register-email-2" name="email" required>
+											<span id="email-error" style="color: red;"></span>
+										</div><!-- End .form-group -->
+									
+										<div class="form-group">
+											<label for="register-password-2">Password *</label>
+											<div class="input-group">
+												<input type="password" class="form-control" id="register-password-2" name="password" required>
+												<div id="password-error" style="color: red;"></div>
+
+												<div class="input-group-append">
+													<span class="input-group-text" id="toggle-password">
+														<i class="fas fa-eye" id="toggle-icon"></i>
+													</span>
+												</div>
+											</div>
+										</div>										
+									
+										<div class="form-footer">
+											<button type="submit" class="btn btn-outline-primary-2">
+												<span>SIGN IN</span>
+												<i class="icon-long-arrow-right"></i>
+											</button>
+									
+											<div class="custom-control custom-checkbox">
+												<a href="/register">Don't have an account ?</a>
+											</div><!-- End .custom-checkbox -->
+										</div><!-- End .form-footer -->
+									</form>
+									
+							    	<div class="form-choice">
+								    	<p class="text-center"></p>
+								    	<div class="row">
+								    		<div class="col-sm-6">
+								    			<a href="/auth/google" class="btn btn-login btn-g">
+								    				<i class="icon-google"></i>
+								    				Login With Google
+								    			</a>
+								    		</div><!-- End .col-6 -->
+											<div class="col-sm-6">
+								    			<button type="button" class="btn btn-link" data-toggle="modal" data-target="#resetPasswordModal" 
+												 onclick="openResetModal()">Forgot Password?</button>
+								    		</div><!-- End .col-6 -->
+								    		<div id="resetPasswordModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="resetPasswordModalLabel" aria-hidden="true">
+												<div class="modal-dialog" role="document">
+													<div class="modal-content">
+														<div class="modal-header">
+															<h5 class="modal-title" id="resetPasswordModalLabel">Reset Password</h5>
+															<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																<span aria-hidden="true">&times;</span>
+															</button>
+														</div>
+														<div class="modal-body">
+															<form id="resetPasswordForm" action="/forgotPassword" method="post">
+																<div class="form-group">
+																	<label for="reset-email">Email address</label>
+																	<input type="text"  name="email" class="form-control" id="reset-email" required>
+																	<small id="reset-email-error" class="form-text text-danger"></small>
+																</div>
+																<div id="resetMessage" class="text-center">Please check your Email</div>
+																<button type="submit" class="btn btn-primary">Submit</button>
+															</form>
+														</div>
+													</div>
+												</div>
+											</div>
+											
+								    	</div><!-- End .row -->
+							    	</div><!-- End .form-choice -->
+							    </div><!-- .End .tab-pane -->
+							</div><!-- End .tab-content -->
+						</div><!-- End .form-tab -->
+            		</div><!-- End .form-box -->
+            	</div><!-- End .container -->
+            </div><!-- End .login-page section-bg -->
+        </main><!-- End .main -->
+
+        <footer class="footer">
+        	<div class="footer-middle">
+	            <div class="container">
+	            	<div class="row">
+	            		<div class="col-sm-6 col-lg-3">
+	            			<div class="widget widget-about">
+	            				<img src="/user/assets/images/logo.png" class="footer-logo" alt="Footer Logo" width="105" height="25">
+	            				<p>Praesent dapibus, neque id cursus ucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. </p>
+
+	            				<div class="social-icons">
+	            					<a href="#" class="social-icon" target="_blank" title="Facebook"><i class="icon-facebook-f"></i></a>
+	            					<a href="#" class="social-icon" target="_blank" title="Twitter"><i class="icon-twitter"></i></a>
+	            					<a href="#" class="social-icon" target="_blank" title="Instagram"><i class="icon-instagram"></i></a>
+	            					<a href="#" class="social-icon" target="_blank" title="Youtube"><i class="icon-youtube"></i></a>
+	            					<a href="#" class="social-icon" target="_blank" title="Pinterest"><i class="icon-pinterest"></i></a>
+	            				</div><!-- End .soial-icons -->
+	            			</div><!-- End .widget about-widget -->
+	            		</div><!-- End .col-sm-6 col-lg-3 -->
+
+	            		<div class="col-sm-6 col-lg-3">
+	            			<div class="widget">
+	            				<h4 class="widget-title">Useful Links</h4><!-- End .widget-title -->
+
+	            				<ul class="widget-list">
+	            					<li><a href="about.html">About Molla</a></li>
+	            					<li><a href="#">How to shop on Molla</a></li>
+	            					<li><a href="#">FAQ</a></li>
+	            					<li><a href="contact.html">Contact us</a></li>
+	            					<li><a href="login.html">Log in</a></li>
+	            				</ul><!-- End .widget-list -->
+	            			</div><!-- End .widget -->
+	            		</div><!-- End .col-sm-6 col-lg-3 -->
+
+	            		<div class="col-sm-6 col-lg-3">
+	            			<div class="widget">
+	            				<h4 class="widget-title">Customer Service</h4><!-- End .widget-title -->
+
+	            				<ul class="widget-list">
+	            					<li><a href="#">Payment Methods</a></li>
+	            					<li><a href="#">Money-back guarantee!</a></li>
+	            					<li><a href="#">Returns</a></li>
+	            					<li><a href="#">Shipping</a></li>
+	            					<li><a href="#">Terms and conditions</a></li>
+	            					<li><a href="#">Privacy Policy</a></li>
+	            				</ul><!-- End .widget-list -->
+	            			</div><!-- End .widget -->
+	            		</div><!-- End .col-sm-6 col-lg-3 -->
+
+	            		<div class="col-sm-6 col-lg-3">
+	            			<div class="widget">
+	            				<h4 class="widget-title">My Account</h4><!-- End .widget-title -->
+
+	            				<ul class="widget-list">
+	            					<li><a href="#">Sign In</a></li>
+	            					<li><a href="cart.html">View Cart</a></li>
+	            					<li><a href="#">My Wishlist</a></li>
+	            					<li><a href="#">Track My Order</a></li>
+	            					<li><a href="#">Help</a></li>
+	            				</ul><!-- End .widget-list -->
+	            			</div><!-- End .widget -->
+	            		</div><!-- End .col-sm-6 col-lg-3 -->
+	            	</div><!-- End .row -->
+	            </div><!-- End .container -->
+	        </div><!-- End .footer-middle -->
+
+	        <div class="footer-bottom">
+	        	<div class="container">
+	        		<p class="footer-copyright">Copyright © 2019 Molla Store. All Rights Reserved.</p><!-- End .footer-copyright -->
+	        		<figure class="footer-payments">
+	        			<img src="/user/assets/images/payments.png" alt="Payment methods" width="272" height="20">
+	        		</figure><!-- End .footer-payments -->
+	        	</div><!-- End .container -->
+	        </div><!-- End .footer-bottom -->
+        </footer><!-- End .footer -->
+    </div><!-- End .page-wrapper -->
+    <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
+
+   
+
+
+  <%-include('../partials/footer')%>
+
+
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+
+  <script>
+    function togglePasswordVisibility() {
+        let passwordInput = document.getElementById('register-password-2');
+        let toggleIcon = document.getElementById('toggle-icon');
+
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            toggleIcon.classList.remove('fa-eye');
+            toggleIcon.classList.add('fa-eye-slash');
+        } else {
+            passwordInput.type = "password";
+            toggleIcon.classList.remove('fa-eye-slash');
+            toggleIcon.classList.add('fa-eye');
+        }
+    }
+
+    document.getElementById('toggle-password').addEventListener('click', function () {
+        togglePasswordVisibility();
+    });
+
+
+
+
+  document.addEventListener("DOMContentLoaded", function() {
+	function preventSpace(event) {
+        if (event.keyCode === 32) {
+            event.preventDefault();
+        }
+    }
+	document.getElementById("register-email-2").addEventListener("keydown", preventSpace);
+	document.getElementById("register-password-2").addEventListener("keydown", preventSpace);
+
+    document.getElementById("loginForm").addEventListener("submit", function(event) {
+        let email = document.getElementById("register-email-2").value.trim();
+        let password = document.getElementById("register-password-2").value.trim();
+        let errorElement = document.getElementById("error");
+
+		let hasUppercase = /[A-Z]/.test(password);
+        let hasLowercase = /[a-z]/.test(password);
+        let hasNumber = /\d/.test(password);
+        let hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+        if (email === "" || password === "") {
+            errorElement.innerText = "Email and password are required";
+            errorElement.style.display = "block";
+            event.preventDefault(); 
+
+        } else if (password.length < 8) {
+            errorElement.innerText = "Password must be at least 8 characters long";
+            errorElement.style.display = "block";
+            event.preventDefault(); 
+
+		} else if (!hasUppercase || !hasLowercase || !hasNumber || !hasSpecialChar) {
+            errorElement.innerText = "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character";
+            errorElement.style.display = "block";
+            event.preventDefault();
+        } else {
+            errorElement.style.display = "none";
+			moveCursorToNextInput(event.target);
+        }
+    });
+  })  
+  function moveCursorToNextInput(currentInput) {
+        let form = currentInput.closest('form');
+        let inputs = Array.from(form.querySelectorAll('input'));
+        let index = inputs.indexOf(currentInput);
+        let nextInput = inputs[index + 1];
+
+        if (nextInput) {
+            nextInput.focus();
+        }
+    }
+
+
+
+</script>

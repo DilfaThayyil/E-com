@@ -1,0 +1,155 @@
+<%-include('../partials/adminHeader')%>
+
+<style>
+  .form-control{
+    background-color: #fff;
+    color: #2A3038;
+  }
+  .form-control:focus {
+    background-color: #fff;
+    color: #2A3038;
+  }
+</style>
+
+
+<div class="container-scroller">
+  <%-include('../partials/adminNavbar')%>
+
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial:partials/_navbar.html -->
+      
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+          <div class="col-md-12 grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="card-title">Add Coupon</h4>
+                
+                <form class="forms-sample" method="post" action="/admin/addCouponSubmit" onsubmit="return validateForm()">
+                  <div class="form-group">
+                      <label for="couponName">Coupon Name</label>
+                      <input type="text" class="form-control" id="couponName" placeholder="Coupon Name" name="couponName">
+                      <span id="nameError" class="text-danger"></span>
+                  </div>
+                  <div class="form-group">
+                    <label for="couponCode">Coupon Code</label>
+                    <input type="text" class="form-control" id="couponCode" placeholder="Coupon Code" name="couponCode">
+                    <span id="codeError" class="text-danger"></span>
+                  </div>
+                  <div class="form-group">
+                      <label for="discountAmount">Discount Amount</label>
+                      <input type="number" class="form-control" id="discountAmount" placeholder="Discount Amount" name="discountAmount">
+                      <span id="discountError" class="text-danger"></span>
+                  </div>
+                  <div class="form-group">
+                    <label for="minAmount">Min Amount</label>
+                    <input type="number" class="form-control" id="minAmount" placeholder="Min Amount" name="MinAmount">
+                    <span id="minError" class="text-danger"></span>
+                </div>
+                  <div class="form-group">
+                      <label for="couponDescription">Coupon Description</label>
+                      <input type="text" class="form-control" id="couponDescription" placeholder="Coupon Description" name="couponDescription">
+                      <span id="descriptionError" class="text-danger"></span>
+                  </div>
+                  <div class="form-group">
+                      <label for="exprDate">Expr Date</label>
+                      <input type="date" class="form-control" id="exprDate" placeholder="Expr Date" name="exprDate">
+                      <span id="expiryDateError" class="text-danger"></span>
+                  </div>
+              
+                  
+              
+                  <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                  <div id="error" style="color: red; display: none;">Please fill out all required fields</div>
+
+              
+              </form>
+              </div>
+            </div>
+          </div>
+          </div>
+        </div>
+</div>
+
+<%-include('../partials/adminFooter')%>
+
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<!-- Your existing form code -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<script>
+  
+  function validateForm() {
+            
+            document.getElementById("nameError").textContent = "";
+            document.getElementById("codeError").textContent = "";
+            document.getElementById("minError").textContent = "";
+            document.getElementById("discountError").textContent = "";
+            document.getElementById("descriptionError").textContent = "";
+            document.getElementById("expiryDateError").textContent = "";
+            
+            
+            let couponName = document.getElementById("couponName").value;
+            let couponCode = document.getElementById("couponCode").value;
+            let minAmount = document.getElementById("minAmount").value;
+            let discountAmount = document.getElementById("discountAmount").value;
+            let couponDescription = document.getElementById("couponDescription").value;
+            let expiryDate = document.getElementById("exprDate").value;
+
+             
+            if (couponName.trim() === "") {
+                document.getElementById("nameError").textContent = "Coupon Name is required";
+                errorElement.style.display = 'block';
+                return false; 
+            }
+
+             
+            if (couponCode.trim() === "") {
+                document.getElementById("codeError").textContent = "Coupon Code is required";
+                errorElement.style.display = 'block';
+                return false; 
+            }
+
+            if (discountAmount.trim() === "") {
+                document.getElementById("discountError").textContent = "Discount Amount is required";
+                errorElement.style.display = 'block';
+                return false; 
+            }else if(discountAmount < 1){
+                document.getElementById("discountError").textContent = "Enter a valid Discount Amount";
+                errorElement.style.display = 'block';
+                return false;
+            }
+            
+            if(minAmount.trim() === ""){
+              document.getElementById("minError").textContent = "Minimum Amount is required"
+              errorElement.style.display = 'block';
+              return false
+            }
+
+            if (couponDescription.trim() === "") {
+                document.getElementById("descriptionError").textContent = "Coupon Description is required";
+                errorElement.style.display = 'block';
+                return false; 
+            }else if(couponDescription.length < 10){
+              document.getElementById("descriptionError").textContent = " Description must be atleast 10 characters";
+              errorElement.style.display = 'block';
+              return false; 
+            }
+
+            if (expiryDate.trim() === "") {
+                document.getElementById("expiryDateError").textContent = "Expiry Date is required";
+                errorElement.style.display = 'block';
+                return false; 
+            }
+
+            errorElement.style.display = 'none'
+            return true; 
+  }
+
+
+</script>
+

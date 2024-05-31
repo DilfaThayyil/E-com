@@ -1,0 +1,180 @@
+<%-include('../partials/header')%>
+<%-include('../partials/navbar')%>
+<%-include('../partials/mobileNavbar')%>
+   
+<div class="page-wrapper">
+    <main class="main">
+        <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
+            <div class="container">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                    <li class="breadcrumb-item"><a href="#">Pages</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Register</li>
+                </ol>
+            </div><!-- End .container -->
+        </nav><!-- End .breadcrumb-nav -->
+
+        <div class="login-page bg-image pt-8 pb-8 pt-md-12 pb-md-12 pt-lg-17 pb-lg-17" style="background-image: url('/user/assets/images/backgrounds/login-bg.jpg')">
+            <div class="container">
+                <div class="form-box">
+                    <div class="form-tab">
+                        <ul class="nav nav-pills nav-fill" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="register-tab-2" data-toggle="tab" href="#register-2" role="tab" aria-controls="register-2" aria-selected="true">Register</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane fade" id="signin-2" role="tabpanel" aria-labelledby="signin-tab-2"></div>
+                            <div class="tab-pane fade show active" id="register-2" role="tabpanel" aria-labelledby="register-tab-2">
+                                <form id="registerForm" action="/registerSubmit" method="post">
+                                    <% if (typeof messages !== 'undefined' && messages.error) { %>
+                                        <div class="alert alert-danger" role="alert">
+                                            <%= messages.error %>
+                                        </div>
+                                    <% } %>
+                                    <p class="text-danger"><%=msg%></p>
+                                    <div class="form-group">
+                                        <label for="register-name-2">Name</label>
+                                        <input type="text" class="form-control" id="register-name-2" name="name" required>
+                                        <span id="name-error" style="color: red;"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="register-email-2">Your email address *</label>
+                                        <input type="email" class="form-control" id="register-email-2" name="email" required>
+                                        <span id="email-error" style="color: red;"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="register-mobileNumber-2">Mobile number</label>
+                                        <input type="tel" class="form-control" id="register-mobileNumber-2" name="mobileNumber" required>
+                                        <span id="mobile-error" style="color: red;"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="register-password-2">Password *</label>
+                                        <input type="password" class="form-control" id="register-password-2" name="password" required>
+                                        <span id="password-error" style="color: red;"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="confirm-password">Confirm Password *</label>
+                                        <input type="password" class="form-control" id="confirm-password" required>
+                                        <span id="confirm-password-error" style="color: red;"></span>
+                                    </div>
+                                    <div class="form-check mb-4">
+                                        <input class="form-check-input" type="checkbox" id="showPasswordCheckbox" onclick="togglePasswordVisibility()" style="margin-top: 7px;">
+                                        <label class="form-check-label" for="showPasswordCheckbox" style="margin-left: 5px;">Show Password</label>
+                                    </div>
+                                    <input type="text" value="<%=Referral%>" name="Referral" hidden  placeholder="enter referral id">
+                                    <div class="form-footer">
+                                        <button type="submit" id="registerBtn" class="btn btn-outline-primary-2">
+                                            <span>SIGN UP</span>
+                                            <i class="icon-long-arrow-right"></i>
+                                        </button>
+                                        <div class="form-group">
+                                            <a href="/login">Already have an account ?</a>
+                                        </div>
+                                    </div>
+                                </form>
+                                <div class="form-choice">
+                                    <p class="text-center">or sign up with</p>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <% if (Referral) { %>
+                                                <a href="/auth/google?referralCode=<%= Referral %>" class="btn btn-login btn-g">
+                                                    <i class="icon-google"></i>
+                                                    Sign up With Google
+                                                </a>
+                                            <% } else { %>
+                                                <a href="/auth/google" class="btn btn-login btn-g">
+                                                    <i class="icon-google"></i>
+                                                    Sign up With Google
+                                                </a>
+                                            <% } %>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<%-include('../partials/footer')%>
+<%-include('../partials/footerbar')%>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+    let form = document.getElementById('registerForm');
+    let err = document.getElementById('err');
+
+    function preventSpace(event) {
+        if (event.keyCode === 32) {
+            event.preventDefault();
+        }
+    }
+
+    function preventNonNumeric(event) {
+        if (!/[0-9]/.test(event.key)) {
+            event.preventDefault();
+        }
+    }
+
+    let inputs = document.querySelectorAll('input[type=text], input[type=email], input[type=tel], input[type=password]');
+
+    inputs.forEach(function(input) {
+        input.addEventListener('keypress', preventSpace);
+    });
+
+    let mobileNumberInput = document.getElementById('register-mobileNumber-2');
+    mobileNumberInput.addEventListener('keypress', preventNonNumeric);
+
+    function validateForm(event) {
+        let name = document.getElementById('register-name-2').value;
+        let email = document.getElementById('register-email-2').value;
+        let mobileNumber = document.getElementById('register-mobileNumber-2').value.replace(/\D/g, ''); // Remove non-numeric characters
+        let password = document.getElementById('register-password-2').value;
+        let confirmPassword = document.getElementById('confirm-password').value;
+        let nameError = document.getElementById('name-error');
+        let emailError = document.getElementById('email-error');
+        let mobileError = document.getElementById('mobile-error');
+        let passwordError = document.getElementById('password-error');
+        let confirmPasswordError = document.getElementById('confirm-password-error');
+
+        let nameValid = name.length >= 3 && !/\d/.test(name);
+        let emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        let mobileValid = /^\d{10}$/.test(mobileNumber);
+        let passwordValid = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password);
+        let confirmPasswordValid = confirmPassword === password;
+
+        nameError.textContent = nameValid ? "" : "Name must be at least 3 characters long and cannot contain numbers";
+        emailError.textContent = emailValid ? "" : "Invalid email format";
+        mobileError.textContent = mobileValid ? "" : "Mobile number must be 10 digits long and contain only numeric characters";
+        passwordError.textContent = passwordValid ? "" : "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character";
+        confirmPasswordError.textContent = confirmPasswordValid ? "" : "Passwords do not match";
+
+        if (!nameValid || !emailValid || !mobileValid || !passwordValid || !confirmPasswordValid) {
+            event.preventDefault();
+            err.textContent = "Please fill all fields correctly";
+        }
+    }
+
+    form.addEventListener('submit', validateForm);
+    });
+
+
+
+    function togglePasswordVisibility() {
+        let passwordInput = document.getElementById('register-password-2');
+        let confirmPasswordInput = document.getElementById('confirm-password');
+
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            confirmPasswordInput.type = "text";
+        } else {
+            passwordInput.type = "password";
+            confirmPasswordInput.type = "password";
+        }
+    }
+</script>
