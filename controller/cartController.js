@@ -34,11 +34,12 @@ const cart = async(req,res)=>{
             return res.render('cart', { cart: null, totalPrice: 0, subtotal: 0 });
         }
 
-        const totalPrice = cart.products.reduce((total, product) => {
+        let totalPrice = cart.products.reduce((total, product) => {
             return total + product.totalPrice;
         }, 0);
         subtotal = totalPrice
-        
+        let shipping = 50
+        totalPrice = totalPrice+shipping
         res.render('cart',{cart,totalPrice,subtotal })
     }catch(err){
         console.log(err);
@@ -168,6 +169,8 @@ const updateCart = async (req, res) => {
             return total + product.totalPrice;
         }, 0);
         subtotal = totalPrice
+        let shipping = 50
+        totalPrice = totalPrice+shipping
         res.json({success:true, cart: userCart, productprice ,subtotal, totalPrice}); 
     } catch (error) {
         console.error(error);
@@ -184,10 +187,12 @@ const checkout = async (req,res)=>{
             path:"products.productId",
             model:"Products"
         })
-        const totalPrice = cartData.products.reduce((total, product) => {
+        let totalPrice = cartData.products.reduce((total, product) => {
             return total + product.totalPrice;
         }, 0);
         subtotal = totalPrice
+        let shipping = 50
+        totalPrice = totalPrice+shipping 
         res.render('checkout',{user,cartData,totalPrice,subtotal})
     }catch(err){
         console.log(err);

@@ -63,6 +63,8 @@
                                     <figure class="product-media">
                                         <%if(product.offer){%>
                                             <span class="product-label label-new"><%=product.offer.percentage%>% offer</span>
+                                        <%}else if(product.Category.offer){%>
+                                            <span class="product-label label-new"><%=product.Category.offer.percentage%>% offer</span>
                                         <%}%>
                                         <a href="/product/<%=product._id%>">
                                             <img src="/uploads/<%=product.Images[0]%>" alt="Product image" class="product-image">

@@ -108,19 +108,28 @@
                                             <td>&nbsp;</td>
                                         </tr>
 
-                                        <tr class="summary-shipping-row">
+                                        <!-- <tr class="summary-shipping-row">
                                             <td>
                                                 <div class="custom-control custom-radio">
                                                     <input type="radio" id="free-shipping" name="shipping" class="custom-control-input">
                                                     <label class="custom-control-label" for="free-shipping">Free Shipping</label>
-                                                </div><!-- End .custom-control -->
-                                            </td>
+                                                </div>End .custom-control -->
+                                            <!-- </td>
                                             <td>$0.00</td>
-                                        </tr><!-- End .summary-shipping-row -->
+                                        </tr>End .summary-shipping-row -->
+
+                                        <tr class="summary-shipping-row">
+                                            <td>
+                                                <div>
+                                                    <label id="shipping">Shipping Charge</label>
+                                                </div>
+                                            </td>
+                                            <td>₹ 50.00</td>
+                                        </tr>
 
                                         <tr class="summary-total">
                                             <td>Total:</td>
-                                            <td id="total"><%= subtotal %></td>
+                                            <td id="total"><%=totalPrice%></td>
                                         </tr><!-- End .summary-total -->
                                     </tbody>
                                 </table><!-- End .table table-summary -->

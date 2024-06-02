@@ -70,7 +70,7 @@
                       <div class="col-8 col-sm-12 col-xl-8 ">
                         <div class="align-items-center">
                           <p class="text-dark">shipping <br>
-                            Payment Method : COD
+                            Payment Method : <%=order.paymentMode%>
                           </p>
                         </div>
                       </div>
@@ -149,8 +149,8 @@
                     </div>
                     <div class="col-md-6 offset-md-6 text-right">
                       <div class="text-dark " style="margin-top: 10px;" >
-                          <div><span style="margin-right: 100px ;">subtotal:</span> ₹<%=product.total%></div>
-                          <div><span style="margin-right: 100px ;">shipping cost:</span> ₹0.00</div>
+                          <!-- <div><span style="margin-right: 100px ;">subtotal:</span> ₹<%=product.total%></div> -->
+                          <!-- <div><span style="margin-right: 100px ;">shipping cost:</span> ₹0.00</div> -->
                           <div><span style="margin-right: 100px ;">Grand total:</span><strong>₹<%=product.total%></strong></div>
                       </div>
                     </div>

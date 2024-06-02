@@ -47,6 +47,7 @@ const storage = multer.diskStorage({
 
 
 adminRouter.get('/',adminController.dashboard)
+
 adminRouter.get('/login',adminMiddleware.isLoged,adminController.login)
 adminRouter.post('/loginsubmit',adminController.loginSubmit)
 

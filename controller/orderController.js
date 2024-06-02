@@ -45,7 +45,8 @@ const generateRazorpay =(orderId , adjustedAmount)=>{
 const placeOrder = async (req, res) => {
     try {
         const userid = req.session.user
-        const { selectedValue, total ,couponid ,paymentMethod} = req.body;
+        const { selectedValue,total,couponid ,paymentMethod} = req.body;
+        
         
         console.log(req.body)
 
@@ -92,9 +93,9 @@ const placeOrder = async (req, res) => {
 
       if(paymentMethod === 'wallet'){
         newOrder.paymentStatus='wallet'
-        await newOrder.save()
-        const orderSaved = await newOrder.save().then(async()=>{
+        await newOrder.save().then(async()=>{
           await Cart.deleteOne({userid:userid})
+          res.json({ success: true, order: newOrder });
         })
         const user = await User.findOne({_id:userid})
         user.wallet=user.wallet-total
@@ -106,6 +107,7 @@ const placeOrder = async (req, res) => {
         }
         user.walletHistory.push(transaction)
         await user.save()
+
       }
       
       if(paymentMethod === 'Cash on delivery'){
@@ -119,8 +121,18 @@ const placeOrder = async (req, res) => {
         const minimumAmount = 100
         const adjustedAmount = Math.max(totalPrice,minimumAmount)
         generateRazorpay(newOrder._id,adjustedAmount).then(async(response)=>{
-          await newOrder.save()
-          res.json({ Razorpay: response ,order: newOrder });
+          // await newOrder.save()
+          // await Cart.deleteOne({userid:userid})
+        const  order={
+            userid: userid,
+            address: selectedValue,
+            total: total,
+            date: new Date(),
+            products: products,
+            status: 'placed',
+            paymentMode:paymentMethod
+        }
+          res.json({ Razorpay: response ,order: order });
         })
       }
   } catch (error) {
@@ -135,17 +147,17 @@ const placeOrder = async (req, res) => {
 const verifyPayment = async(req,res)=>{
   try{
     const userId = req.session.user
-    const {payment,order} = req.body
+    const {payment,order,userOrder} = req.body
     const orderId = order.receipt
     let hmac= crypto.createHmac('sha256','XEwHXRnbP4kAiT17e5nWBbLk')
     hmac.update(payment.razorpay_order_id+'|'+payment.razorpay_payment_id)
     hmac=hmac.digest('hex')
     if(hmac===payment.razorpay_signature){
-       const order = await Order.findById(orderId)
-        order.paymentStatus="Razorpay"
-        await order.save();
+      userOrder.paymentStatus="Razorpay"
+      const saveOrder=new Order(userOrder)
+       await saveOrder.save()        
         const cart= await Cart.deleteOne({userid:userId})
-        res.json({payment:true})
+        res.json({payment:true,orderId:saveOrder._id})
       }
    
   }catch(err){
@@ -272,6 +284,7 @@ const returnRequest = async (req, res) => {
 const applyCoupon = async (req, res) => {
   try {
     const userId = req.session.user;
+    console.log(req.session.user);
     const { couponCode, checkprice } = req.body;
     console.log(req.body);
     
@@ -329,58 +342,7 @@ const applyCoupon = async (req, res) => {
   }
 };
 
-// const invoiceDownload= async (req,res)=>{
-//   try {
-//     const orderId = req.params.id;
-//     const ordercheck = await Order.findOne({ _id: orderId });
 
-//     if (!ordercheck) {
-//         return res.status(404).send('Order not found');
-//     }
-
-//     const products = ordercheck.products.map(product => ({
-//         quantity: product.quantity,
-//         description: product.Description,
-//         price: product.total,
-//         total: product.total
-//     }));
-//     const data = {
-//         "currency": "USD",
-//         "marginTop": 25,
-//         "marginRight": 25,
-//         "marginLeft": 25,
-//         "marginBottom": 25,
-//         "logo": "https://www.easyinvoice.cloud/img/logo.png",
-//         "sender": {
-//             "company": "E-comm"
-
-//         },
-//         "client": {
-//             "company":ordercheck.address
-//         },
-//         "invoiceNumber": `INV-${orderId}`, 
-//         "invoiceDate": new Date(ordercheck.date).toLocaleDateString('en-US'),
-//         "products": products,
-//         "bottomNotice": "Kindly pay your invoice within 15 days."
-//     };
-
-//     const result = await easyinvoice.createInvoice(data);
-
-//     if (!result.pdf || !result.pdf.length) {
-//         throw new Error('Failed to generate PDF document.');
-//     }
-
-//     const fileName = `invoice-${orderId}.pdf`;
-
-//     res.setHeader('Content-Type', 'application/pdf');
-//     res.setHeader('Content-Disposition', `attachment; filename=${fileName}`);
-//     res.setHeader('Content-Length', result.pdf.length);
-//     res.send(Buffer.from(result.pdf, 'base64'));
-// } catch (err) {
-//     console.error(err);
-//     res.status(500).send('Internal Server Error');
-// }
-// }
 
 
 const invoiceDownload = async (req, res) => {

@@ -74,18 +74,20 @@
                 </div>
               </div>
             </div>
+
+            <%metrics.forEach((metrics)=>{%>
             <div class="row">
-              <div class="col-sm-4 grid-margin">
+              <div class="col-sm-3 grid-margin">
                 <div class="card">
                   <div class="card-body">
                     <h5>Revenue</h5>
                     <div class="row">
                       <div class="col-8 col-sm-12 col-xl-8 my-auto">
                         <div class="d-flex d-sm-block d-md-flex align-items-center">
-                          <h2 class="mb-0">₹1,50,000</h2>
+                          <h2 class="mb-0">₹<%=metrics.overallOrderAmount%></h2>
                           <p class="text-success ml-2 mb-0 font-weight-medium">  </p>
                         </div>
-                        <h6 class="text-muted font-weight-normal">  Since last month</h6>
+                        <h6 class="text-muted font-weight-normal"> </h6>
                       </div>
                       <div class="col-4 col-sm-12 col-xl-4 text-center text-xl-right">
                         <i class="icon-lg mdi mdi-credit-card text-success ml-auto"></i>
@@ -94,17 +96,17 @@
                   </div>
                 </div>
               </div>
-              <div class="col-sm-4 grid-margin">
+              <div class="col-sm-3 grid-margin">
                 <div class="card">
                   <div class="card-body">
                     <h5>Overall Sales</h5>
                     <div class="row">
                       <div class="col-8 col-sm-12 col-xl-8 my-auto">
                         <div class="d-flex d-sm-block d-md-flex align-items-center">
-                          <h2 class="mb-0">50</h2>
+                          <h2 class="mb-0"><%=metrics.overallSalesCount%></h2>
                           <p class="text-success ml-2 mb-0 font-weight-medium"> </p>
                         </div>
-                        <h6 class="text-muted font-weight-normal"> Since last month</h6>
+                        <h6 class="text-muted font-weight-normal"></h6>
                       </div>
                       <div class="col-4 col-sm-12 col-xl-4 text-center text-xl-right">
                         <i class="icon-lg mdi mdi-wallet-travel text-primary ml-auto"></i>
@@ -113,17 +115,17 @@
                   </div>
                 </div>
               </div>
-              <div class="col-sm-4 grid-margin">
+              <div class="col-sm-3 grid-margin">
                 <div class="card">
                   <div class="card-body">
                     <h5>Total Users</h5>
                     <div class="row">
                       <div class="col-8 col-sm-12 col-xl-8 my-auto">
                         <div class="d-flex d-sm-block d-md-flex align-items-center">
-                          <h2 class="mb-0">10</h2>
+                          <h2 class="mb-0"><%=totalUsers%></h2>
                           <p class="text-danger ml-2 mb-0 font-weight-medium"> </p>
                         </div>
-                        <h6 class="text-muted font-weight-normal">Since last month</h6>
+                        <h6 class="text-muted font-weight-normal"></h6>
                       </div>
                       <div class="col-4 col-sm-12 col-xl-4 text-center text-xl-right">
                         <i class="icon-lg mdi mdi-account-multiple text-danger ml-auto"></i>
@@ -132,30 +134,52 @@
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="row">
-              <div class="col-md-6 grid-margin stretch-card">
-                  <div class="card">
-                      <div class="card-body">
-                          <h4 class="card-title">Sales Chart</h4>
-                          <div class="filter-buttons">
-                              <button class="filter-button active" data-filter="yearly">Yearly</button>
-                              <button class="filter-button" data-filter="monthly">Monthly</button>
-                              <button class="filter-button" data-filter="weekly">Weekly</button>
-                          </div>
-                          <canvas id="sales-chart"></canvas>
+              <div class="col-sm-3 grid-margin">
+                <div class="card">
+                  <div class="card-body">
+                    <h5>Overall discount</h5>
+                    <div class="row">
+                      <div class="col-8 col-sm-12 col-xl-8 my-auto">
+                        <div class="d-flex d-sm-block d-md-flex align-items-center">
+                          <h2 class="mb-0">₹<%=metrics.overallDiscount%></h2>
+                          <p class="text-success ml-2 mb-0 font-weight-medium">  </p>
+                        </div>
+                        <h6 class="text-muted font-weight-normal"> </h6>
                       </div>
+                      <div class="col-4 col-sm-12 col-xl-4 text-center text-xl-right">
+                        <i class="icon-lg mdi mdi-ticket-percent text-secondary ml-auto"></i>
+                      </div>
+                    </div>
                   </div>
+                </div>
               </div>
             </div>
-            <div class="row ">
-              <div class="col-6 grid-margin">
-                <div class="card">
+            <%})%>
+              <div  >
+                  <div class="content-wrapper">
+                      <div class="row">
+                          <div class="col-md-12 grid-margin stretch-card">
+                              <div class="card">
+                                  <div class="card-body">
+                                      <h4 class="card-title">Sales Chart</h4>
+                                      <div class="filter-buttons">
+                                          <button class="filter-button active col-4" data-filter="yearly">Yearly</button>
+                                          <button class="filter-button col-4" data-filter="monthly">Monthly</button>
+                                          <button class="filter-button col-4" data-filter="weekly">Weekly</button>
+                                      </div>
+                                      <canvas id="myChart" style="max-width: 1100px; height: 300px;"></canvas>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+              </div>
+              <div class="col-12 grid-margin d-lg-flex">
+                <div class="col-lg-6 col-md-12 col-sm-12">         
+                         <div class="card">
                   <div class="card-body">
                     <h4 class="card-title">Top 5 Best selling products</h4>
                     <div class="table-responsive">
                       <table class="table">
-                          
                         <thead>
                           <tr>
                             <th>No.</th>
@@ -164,7 +188,7 @@
                           </tr>
                         </thead>
                         <tbody>
-                                <%mergedProducts.forEach((product,index)=>{%>
+                                <%top5MergedProducts.forEach((product,index)=>{%>
                               <tr>
                                 <td><%=index+1%></td>
                                 <td>
@@ -173,7 +197,6 @@
                                 </td>
                                 <td><%=product.totalQuantity%></td>
                                   <%})%>
-
                               </tr>
                         </tbody>
                       </table>
@@ -181,36 +204,40 @@
                   </div>
                 </div>
               </div>
-              <div class="col-6 grid-margin">
-                <div class="card">
-                  <div class="card-body">
-                    <h4 class="card-title">Top 3 Best selling categories</h4>
-                    <div class="table-responsive">
-                      <table class="table">
-                        <thead>
-                          <tr>
-                            <th>No.</th>
-                            <th>Category</th>
-                            <th>count</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <%mergedCategories.forEach((category,index)=>{%>
-                          <tr>
-                            <td><%=index+1%></td>
-                            <td>
-                              <span class="pl-2"><%=category.name%></span>
-                            </td>
-                            <td><%=category.totalQuantity%></td>   
-                            <%})%>
 
-                          </tr>
-                        </tbody>
-                      </table>
+                <div class="col-6 grid-margin">
+                  <div class="card">
+                    <div class="card-body">
+                      <h4 class="card-title">Top 3 Best selling categories</h4>
+                      <div class="table-responsive">
+                        <table class="table">
+                          <thead>
+                            <tr>
+                              <th>No.</th>
+                              <th>Category</th>
+                              <th>count</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                              <%mergedCategories.forEach((category,index)=>{%>
+                            <tr>
+                              <td><%=index+1%></td>
+                              <td>
+                                <span class="pl-2"><%=category.name%></span>
+                              </td>
+                              <td><%=category.totalQuantity%></td>   
+                                <%})%>
+    
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
+            </div>
+            <div class="row ">
             </div>
           </div>
           <!-- content-wrapper ends -->
@@ -226,49 +253,100 @@
     <!-- plugins:js -->
 <%-include('../partials/adminFooter')%>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <script>
-      const ctx = document.getElementById('sales-chart').getContext('2d');
-      let salesChart = new Chart(ctx, {
-          type: 'line',
-          data: {
-              labels: [], // Will be updated dynamically
-              datasets: [{
-                  label: 'Sales',
-                  data: [], // Will be updated dynamically
-                  backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                  borderColor: 'rgba(54, 162, 235, 1)',
-                  borderWidth: 1
-              }]
-          },
-          options: {
-              responsive: true,
-              scales: {
-                  x: {
-                      beginAtZero: true
-                  },
-                  y: {
-                      beginAtZero: true
-                  }
-              }
-          }
-      });
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('myChart').getContext('2d');
+            let salesChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels:'<%=yearlyData.labels%>', // Initial data
+                    datasets: [{
+                        label: 'Sales',
+                        data: '<%=yearlyData.data%>', // Initial data
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: 'rgba(54, 162, 235, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(54, 162, 235, 1)',
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            grid: {
+                                display: true,
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: 'white',
+                                font: {
+                                    size: 14,
+                                    family: 'Arial',
+                                    weight: 'bold'
+                                }
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                display: true,
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: 'white',
+                                font: {
+                                    size: 14,
+                                    family: 'Arial',
+                                    weight: 'bold'
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            labels: {
+                                color: 'white',
+                                font: {
+                                    size: 16,
+                                    family: 'Arial',
+                                    weight: 'bold'
+                                },
+                                padding: 20
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                            titleColor: 'white',
+                            bodyColor: 'white'
+                        }
+                    }
+                }
+            });
 
       const salesData = {
           yearly: {
-              labels: ['2018', '2019', '2020', '2021', '2022', '2023'],
-              data: [12000, 15000, 10000, 17000, 20000, 25000]
+              labels: '<%=yearlyData.labels%>',
+              data: '<%= yearlyData.data %>'
           },
           monthly: {
-              labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-              data: [1000, 2000, 1500, 3000, 2500, 3500, 4000, 4500, 3500, 3000, 2000, 5000]
+              labels: '<%= monthlyData.labels %>',
+              data: '<%= monthlyData.data %>'
           },
           weekly: {
-              labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
-              data: [500, 1000, 750, 1250]
+              labels:' <%= weeklyData.labels %>',
+              data: '<%= weeklyData.data %>'
           }
       };
+
 
       function updateChart(filter) {
           salesChart.data.labels = salesData[filter].labels;
@@ -285,6 +363,7 @@
           });
       });
 
-      // Initialize chart with yearly data
+      // Initial load
       updateChart('yearly');
-  </script>
+  });
+</script>

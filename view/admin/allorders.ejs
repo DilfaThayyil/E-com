@@ -1,4 +1,18 @@
 <%-include('../partials/adminHeader')%>
+
+<style>
+  .dropdown-item:hover {
+    background-color: transparent;
+}
+
+  .dropdown-item:hover {
+    color: #ffffff; 
+    background-color: #f4f5f727; 
+}
+
+</style>
+
+
     <div class="container-scroller">
       <!-- partial:partials/_sidebar.html -->
       <%-include('../partials/adminNavbar')%>
@@ -20,7 +34,6 @@
                     <table class="table table-hover">
                       <thead>
                         <tr>
-                          <th>No</th>
                           <th>Product</th>
                           <th>Order placed on</th>
                           <th>Customer</th>
@@ -31,32 +44,28 @@
                       </thead>
                       <tbody>
                        
-                        <% let index = 0; %>
                         <% orders.forEach((order) => { %>
                           <% if (order.products && order.products.length > 0) { %>
                               <% order.products.forEach((product) => { %>
                                 
                         <tr>
-                          <td><%=++index%></td>
                           <td><%=product.products.Name%></td>
                           <% const formattedDate = new Date(order.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }); %>
                           <td><%= formattedDate%></td>
                           <td><%=order.userid.Name%></td>
                           <td><%=order.userid.Email%></td>
-                          <%if(product.Status=='placed'){%>
-                            <td><i class="text-primary"><%=product.Status%></i></td>
-                          <%}else if(product.Status=='shipped'){%>
-                            <td><i class="text-warning"><%=product.Status%></i></td>
-                          <%}else if(product.Status=='delivered'){%>
+                          <%if(product.Status=='placed' || product.Status=='shipped' || product.Status=='delivered'){%>
                             <td><i class="text-success"><%=product.Status%></i></td>
-                          <%}else if(product.Status=='cancelled'){%>
+                          <%}else if(product.Status=='cancelled' || product.Status=='returned'){%>
+                            <td><i class="text-danger"><%=product.Status%></i></td>
+                          <%}else if(product.Status=='request return'){%>
                             <td><i class="text-danger"><%=product.Status%></i></td>
                           <%}%>
                           
                           <td>
                             <%if(product.Status!=='cancelled' && product.Status!=='returned' && product.Status!=='request return' && product.Status!=='delivered'){%>
                             <div class="dropdown">
-                              <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Status
                               </button>
                               <div class="dropdown-menu te" href="#" aria-labelledby="dropdownMenuButton">

@@ -16,11 +16,6 @@ const ProductSchema= new mongoose.Schema({
         min:0,
         required:true
     },
-    DiscountPrice:{
-        type:Number,
-        min:0,
-        required:true
-    },
     Category: {
         type:mongoose.Schema.ObjectId,
         ref: 'Category',

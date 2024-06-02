@@ -183,6 +183,7 @@
                                             <button id="returnRequestButton" class="btn btn-success " onclick="returnRequest('<%=order._id%>','<%=product.products._id%>')">Return</button>
                                             <%}%>
                                         </div>  
+                                        
                                        
                                     </div>
                                     
@@ -202,14 +203,15 @@
                                     <p style="max-width: 200px;"><%=order.address%></p>
                                 </b></p></div>
                                 <div class="flex-sm-col text-right col"> <p class="mb-1"><b>Total  :</b></p> </div>
-                                <div class="flex-sm-col col-auto"> <p class="mb-1">&#8377;<%=order.total%></p> </div>
+                                <%const subtotal = order.total-50%>
+                                <div class="flex-sm-col col-auto"> <p class="mb-1">&#8377;<%=subtotal%></p> </div>
                             </div>
 
                             <a href="/downloadInvoice/<%=order._id%>" class="btn btn-primary btn-round" download="invoice.pdf">Download Invoice</a>                     
                                   
                             <div class="row justify-content-between">
                                 <div class="flex-sm-col text-right col"><p class="mb-1"><b>Delivery Charges</b></p></div>
-                                <div class="flex-sm-col col-auto"><p class="mb-1">Free</p></div>
+                                <div class="flex-sm-col col-auto"><p class="mb-1">₹50</p></div>
                             </div>
                         </div>
                     </div>

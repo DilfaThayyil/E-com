@@ -35,27 +35,76 @@ app.use(express.static(path.join(__dirname, "public")));
 
 
 
-const dashboard =async(req,res)=>{
-    try{
-        
-   
+const dashboard = async (req, res) => {
+    try {
+
+
+        const totalUsers = await User.countDocuments({});
+
+        const metrics = await Order.aggregate([
+            { $unwind: '$products' },
+            {
+                $lookup: {
+                    from: 'products',
+                    localField: 'products.products',
+                    foreignField: '_id',
+                    as: 'productDetails'
+                }
+            },
+            { $unwind: '$productDetails' },
+            {
+                $match:{
+                    'products.Status' : 'delivered'
+                }
+            },
+            {
+                $group: {
+                    _id: null,
+                    overallSalesCount: { $sum: 1 },
+                    overallOrderAmount: { $sum: '$products.total' },
+                    overallDiscount: {
+                        $sum: {
+                            $subtract: [
+                                { $multiply: ['$productDetails.Price', '$products.quantity'] },
+                                '$products.total'
+                            ]
+                        }
+                    }
+                }
+            }
+        ]);
+
+
         const categoryQuantities = await Order.aggregate([
             { $unwind: "$products" },
-            { $lookup: { from: 'products', localField: 'products.products', foreignField: '_id', as: 'productInfo' } },
+            {
+                $lookup: {
+                    from: 'products',
+                    localField: 'products.products',
+                    foreignField: '_id',
+                    as: 'productInfo'
+                }
+            },
             { $unwind: "$productInfo" },
-            { $lookup: { from: 'categories', localField: 'productInfo.Category', foreignField: '_id', as: 'categoryInfo' } },
+            {
+                $lookup: {
+                    from: 'categories',
+                    localField: 'productInfo.Category',
+                    foreignField: '_id',
+                    as: 'categoryInfo'
+                }
+            },
             { $unwind: "$categoryInfo" },
             {
                 $group: {
                     _id: "$categoryInfo._id",
-                    name: { $first: "$categoryInfo.Name" }, // Assuming the category has a Name field
+                    name: { $first: "$categoryInfo.Name" },
                     totalQuantity: { $sum: "$products.quantity" }
                 }
             }
         ]);
 
         const allCategories = await Category.find({});
-
         const mergedCategories = allCategories.map(category => {
             const found = categoryQuantities.find(cq => cq._id.toString() === category._id.toString());
             return {
@@ -64,18 +113,17 @@ const dashboard =async(req,res)=>{
                 totalQuantity: found ? found.totalQuantity : 0
             };
         });
-
         mergedCategories.sort((a, b) => b.totalQuantity - a.totalQuantity);
-        
+
         const mostSoldProducts = await Order.aggregate([
             { $unwind: "$products" },
             { $group: { _id: "$products.products", totalQuantity: { $sum: "$products.quantity" } } },
             { $sort: { totalQuantity: -1 } },
-            { $limit: 10 }
+            { $limit: 5 }
         ]);
-        const allProduct = await Product.find({});
 
-        const mergedProducts = allProduct.map(product => {
+        const allProducts = await Product.find({});
+        const mergedProducts = allProducts.map(product => {
             const found = mostSoldProducts.find(cq => cq._id.toString() === product._id.toString());
             return {
                 _id: product._id,
@@ -84,15 +132,120 @@ const dashboard =async(req,res)=>{
                 totalQuantity: found ? found.totalQuantity : 0
             };
         });
+        mergedProducts.sort((a, b) => b.totalQuantity - a.totalQuantity)
+        const top5MergedProducts = mergedProducts.slice(0, 5)
 
-        mergedProducts.sort((a, b) => b.totalQuantity - a.totalQuantity);
+        const yearlySales = await Order.aggregate([
+            {
+                $match: {
+                    'products.Status': 'delivered',
+                },
+            },
+            {
+                $group: {
+                    _id: {
+                        year: { $year: '$date' },
+                    },
+                    totalSale: { $sum: '$total' },
+                    totalOrders: { $sum: 1 },
+                },
+            },
+            {
+                $sort: {
+                    '_id.year': 1,
+                },
+            },
+        ]);
 
 
-        console.log(mostSoldProducts,categoryQuantities,mergedCategories,mergedProducts)
-        res.render('dashboard',{mostSoldProducts,mergedProducts,mergedCategories})
-    }catch(err){
+        const weeklySales = await Order.aggregate([
+            {
+                $match: {
+                    'products.Status': 'delivered',
+                },
+            },
+            {
+                $group: {
+                    _id: {
+                        week: { $week: '$date' },
+                        year: { $year: '$date' },
+                    },
+                    totalSale: { $sum: '$total' },
+                    totalOrders: { $sum: 1 },
+                },
+            },
+            {
+                $sort: {
+                    '_id.year': 1,
+                    '_id.week': 1,
+                },
+            },
+        ]);
+
+        const ordersData = await Order.find(); 
+        const monthlyData = transformDataForBarGraph(ordersData);
+
+
+        const yearlyData = {
+            labels: yearlySales.map(sale => String(sale._id.year).slice(-2)),
+            data: yearlySales.map(sale => sale.totalSale)
+        };
+        let week=[1,2,3,4]
+
+        const weeklyData = {
+            labels:week,
+            data: weeklySales.map(sale => sale.totalSale)
+        };
+
+        const monthlyDataForFrontend = {
+            labels: monthlyData.map(data => data.month),
+            data: monthlyData.map(data => data.sales)
+        };
+
+        console.log(yearlyData.data)
+
+        res.render('dashboard', {
+            mostSoldProducts,
+            top5MergedProducts,
+            mergedProducts,
+            mergedCategories,
+            metrics,
+            totalUsers,
+            yearlyData,
+            weeklyData,
+            monthlyData: monthlyDataForFrontend,
+            ordersData
+        });
+    } catch (err) {
         console.log(err);
     }
+};
+
+function transformDataForBarGraph(ordersData) {
+    const monthlyData = Array.from({ length: 12 }, (_, index) => ({
+        month: getMonthName(index),
+        sales: 0,
+        orders: 0
+    }));
+
+    ordersData.forEach(order => {
+        const month = new Date(order.date).getMonth();
+
+        const deliveredProducts = order.products.filter(product => product.Status === 'delivered');
+
+        monthlyData[month].sales += deliveredProducts.reduce((total, product) => total + product.total, 0);
+        monthlyData[month].orders += deliveredProducts.length;
+    });
+
+    return monthlyData;
+}
+
+
+function getMonthName(monthIndex) {
+    const months = [
+       'J',"F","M","A","M","J"
+    ];
+    return months[monthIndex];
 }
 
 
@@ -168,8 +321,17 @@ const allProducts = async (req, res) => {
 
 const allUsers = async(req,res)=>{
     try{
+        const perPage = 5; 
+      const page = parseInt(req.query.page) || 1; 
+
+      const totalUsers = await User.countDocuments();
+      const totalPages = Math.ceil(totalUsers / perPage);
+
         const users = await User.find()
-        res.render('allusers',{users})
+        .skip((page - 1) * perPage)
+        .limit(perPage)
+        .exec();
+        res.render('allusers',{users,totalPages,currentPage:page})
     }catch(err){
         console.log(err);
     }
@@ -229,7 +391,7 @@ const allOrders = async(req,res)=>{
             }
             const user = await User.findById(order.userid);
             const productDetails = await Product.findById(productId);
-            
+            console.log("order : ",order);
             res.render('orderDetails', {order,product,user,productDetails}); 
         } catch (error) {
             console.error('Error fetching order details:', error);

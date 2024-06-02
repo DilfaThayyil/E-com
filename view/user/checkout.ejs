@@ -438,7 +438,6 @@
             const selectedValue = document.getElementById("addressSelect").value;
 		    let  total=document.getElementById('discount').textContent.trim()
             total = parseFloat(total)
-            total += 50 //adding up the shipping charge
             const couponid = document.getElementById('checkout-discount-input').value
             const paymentMethod = document.getElementById('payment').value
             if(isNaN(total)){
@@ -477,6 +476,7 @@
                         window.location.href=`/vieworder/${data.order._id}`
                     })
                 }else if(data.Razorpay){
+            
                     const options ={
                         "key": "rzp_test_QmkTPpR7YwgsmH", // Enter the Key ID generated from the Dashboard
                         "amount": data.Razorpay.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
@@ -486,7 +486,7 @@
                         "image": "https://example.com/your_logo",
                         "order_id": data.Razorpay.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
                         "handler": function (response){
-                            verifyPayment(response,data.Razorpay)
+                            verifyPayment(response,data.Razorpay,data.order)
                             },
                             "prefill": {
                                 "name": "Gaurav Kumar",
@@ -520,14 +520,13 @@
     
     
     
-        function verifyPayment(payment, order) {
-            console.log(payment);
+        function verifyPayment(payment, order,userOrder) {
             fetch('/verifyPayment', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ payment, order })
+                body: JSON.stringify({ payment, order,userOrder })
             })
             .then(response => response.json())
             .then(response => {
@@ -538,9 +537,9 @@
                         showConfirmButton: false,
                         timer: 2000 // Set the duration for the alert
                     });
-                    const orderid = order.receipt;
+                    
                     setTimeout(() => {
-                        window.location.href = `/vieworder/${orderid}`;
+                        window.location.href = `/vieworder/${response.orderId}`;
                     }, 2000);
                 }
             })

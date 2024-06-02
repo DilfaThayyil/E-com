@@ -28,7 +28,6 @@
                                 <table class="table table-hover">
                                     <thead>
                                         <tr>
-                                            <th>No.</th>
                                             <th>Name</th>
                                             <th>Mobile</th>
                                             <th>Email</th>
@@ -37,9 +36,8 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <% users.forEach((user, index) => { %>
+                                        <% users.forEach((user) => { %>
                                             <tr>
-                                                <td><%= index+1 %></td>
                                                 <td><%= user.Name %></td>
                                                 <td><%= user.PhoneNumber %></td>
                                                 <td><%= user.Email %></td>
@@ -61,6 +59,33 @@
                                 </table>
                             </div>
                         </div>
+                        <nav aria-label="Page navigation" style="margin-left: 30px;">
+                            <ul class="pagination">
+                                <% if (totalPages > 1) { %>
+                                    <% if (currentPage > 1) { %>
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page=<%= currentPage - 1 %>" aria-label="Previous">
+                                              <span aria-hidden="true">&laquo;</span>
+                                            </a>
+                                        </li>
+                                    <% } %>
+                        
+                                    <% for (let i = 1; i <= totalPages; i++) { %>
+                                        <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                                            <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                                        </li>
+                                    <% } %>
+                        
+                                    <% if (currentPage < totalPages) { %>
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page=<%= currentPage + 1 %>" aria-label="Next">
+                                                <span aria-hidden="true">&raquo;</span>
+                                            </a>
+                                        </li>
+                                    <% } %>
+                                <% } %>
+                            </ul>
+                        </nav>
                     </div>
                 </div>
             </div>
