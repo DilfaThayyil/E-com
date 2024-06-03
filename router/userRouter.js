@@ -52,10 +52,12 @@ userRouter.post('/changePassword',userController.changePassword)
 
 userRouter.post('/applyCoupon',orderController.applyCoupon)
 
-userRouter.get('/wishlist',middleware.notLoged,userController.wishlist)
-userRouter.post('/addtowishlist/:id',middleware.notLoged,userController.addToWishlist)
-userRouter.delete('/removeFromWish/:id',userController.removeFromWish)
+userRouter.get('/wishlist',middleware.notLoged,productController.wishlist)
+userRouter.post('/addtowishlist/:id',middleware.notLoged,productController.addToWishlist)
+userRouter.delete('/removeFromWish/:id',productController.removeFromWish)
 
+userRouter.get('/contactUs',userController.contactUs)
+userRouter.get('/aboutUs',userController.aboutUs)
 
 
 

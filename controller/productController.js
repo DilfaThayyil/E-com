@@ -8,6 +8,7 @@ const nodemailer = require('nodemailer');
 const Order = require('../model/orderSchema')
 const Coupon = require('../model/couponSchema')
 const Offer = require('../model/offerSchema')
+const Wishlist = require('../model/wishlistSchema')
 
 
 
@@ -98,10 +99,97 @@ const sortedProducts = async(req,res)=>{
 }
 
 
+const wishlist = async(req,res)=>{
+    try{
+        const userId = req.session.user
+        const wishlist = await Wishlist.findOne({userid:userId}).populate({
+            path:"products.productId",
+            model:"Products",
+            populate: [
+                { path: 'offer' },
+                { 
+                    path: 'Category',
+                    populate: { path: 'offer' }
+                }
+            ]
+        })
+        if(!wishlist){
+            return res.render('wishlist',{wishlist:null})
+        }
+        res.render('wishlist',{wishlist})
+    }catch(err){
+        console.log(err)
+    }
+}
+
+
+const addToWishlist =async(req,res)=>{
+    try{
+        const productId = req.params.id
+        const userId = req.session.user
+        const check = await Product.findById(productId).populate({
+            path: 'Category',
+            populate: { path: 'offer' }
+        }).populate('offer');
+        
+        if(!userId){
+            return res.json({error:'User not authenticated'})
+        }
+        const userWishlist = await Wishlist.findOne({userid:userId})
+        let product = {
+            productId : productId
+        }
+
+        if(!userWishlist){
+            const newWishlist = new Wishlist({
+                userid : userId,
+                products : [product]
+            })
+            await newWishlist.save()
+        }else{
+            const productIndex = userWishlist.products.findIndex(product => product.productId.toString() === productId);
+            if(productIndex === -1){
+                userWishlist.products.push(product)
+            }
+            
+            await userWishlist.save()
+        }
+        res.json({message:'Product added to wishlist successfully'})
+    }catch(err){
+        console.log(err)
+    }
+}
+
+const removeFromWish = async(req,res)=>{
+    try{
+        const productId = req.params.id
+        const result = await Wishlist.updateOne(
+            { "products.productId": productId },
+            { $pull: { products: { productId: productId } } }
+        )
+
+        if(result.deletedCount > 0){
+            res.json({message:"Product removed from wishlist successfully"})
+        }else{
+            res.json({error: "Product not found in wishlist"})
+        }
+    }catch(err){
+        console.log(err)
+    }
+}
+
+
+
+
+
+
 
 module.exports={
     allProducts,
     singleProduct,
     categorybased,
-    sortedProducts
+    sortedProducts,
+    wishlist,
+    addToWishlist,
+    removeFromWish
 }

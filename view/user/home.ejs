@@ -16,7 +16,7 @@
                                     <a href="/allproducts">Shop</a>
                                 </li>
                                 <li >
-                                    <a href="/contact">Contact</a>
+                                    <a href="/contactUs">Contact</a>
                                 </li>
                                 <li >
                                     <a href="/aboutUs">About Us</a>
@@ -33,14 +33,14 @@
                         </button>
                     </div><!-- End .header-left -->
         
-                    <div class="header-center">
-                        <a href="index.html" class="logo">
-                            <img src="/user/assets/images/demos/demo-18/logo.png" alt="Molla Logo" width="82" height="25">
+                    <div class="header-center" hidden>
+                        <a href="" class="logo">
+                            <img src="/user/assets/images/DivineStyle.png" alt="Molla Logo" width="82" height="25">
                         </a>
                     </div><!-- End .header-center -->
         
                     <div class="header-right">
-                        <div class="header-search header-search-extended header-search-visible">
+                        <div class="header-search header-search-extended header-search-visible" hidden>
                             <a href="#" class="search-toggle" role="button"><i class="icon-search"></i></a>
                             <form>
                                 <div class="header-search-wrapper">
@@ -52,13 +52,13 @@
                             </form>
                         </div><!-- End .header-search -->
                         
-                        <a href="/wishlist" class="wishlist-link" >
-                            <i class="icon-heart-o"></i>
-                            <span class="wishlist-count">0</span>
+                        <a href="/wishlist" class="" >
+                            <i class="far fa-heart" style="font-size: x-large; margin-top: 8px;"></i>
+                            <!-- <span class="wishlist-count">0</span > -->
                         </a>
         
                         <div class="dropdown cart-dropdown">
-                            <a href="/cart" class="dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false" data-display="static">
+                            <a href="/cart" class="dropdown-toggle" role="button" aria-haspopup="true"  data-display="static">
                                 <i class="icon-shopping-cart"></i>
                                 <!-- <span class="cart-count"></span> -->
                             </a>
@@ -265,7 +265,6 @@
                 </div><!-- End .row -->
 
                 <hr class="mt-0 mb-4">
-                <h2 class="title text-center brands">Shop by Brands</h2><!-- End .title -->
 
                 <div class="owl-carousel mt-3 mb-4 owl-simple" data-toggle="owl" 
                     data-owl-options='{
@@ -295,7 +294,7 @@
                                 "dots": false
                             }
                         }
-                    }'>
+                    }' hidden>
                     <a href="#" class="brand">
                         <img src="/user/assets/images/brands/1.png" alt="Brand Name">
                     </a>
@@ -390,68 +389,67 @@
             <div class="footer-middle">
                 <div class="container">
                     <div class="row">
-                        <div class="col-sm-6 col-lg-3">
-                            <div class="widget widget-about">
-                                <img src="/user/assets/images/demos/demo-18/logo-footer.png" class="footer-logo" alt="Footer Logo" width="82" height="25">
-                                <p>Praesent dapibus, neque id cursus ucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. </p>
+                <div class="col-sm-6 col-lg-3">
+                    <div class="widget widget-about">
+                        <img src="/user/assets/images/DivineStyle.png" class="footer-logo" alt="Footer Logo" width="105" height="25">
+                        <p class="text-white">Your ultimate fashion destination for exquisite casual, formal, ethnic, and party wear. Discover and order your perfect outfit for any occasion with ease.</p>
 
-                                <div class="social-icons">
-                                    <a href="#" class="social-icon" title="Facebook" target="_blank"><i class="icon-facebook-f"></i></a>
-                                    <a href="#" class="social-icon" title="Twitter" target="_blank"><i class="icon-twitter"></i></a>
-                                    <a href="#" class="social-icon" title="Instagram" target="_blank"><i class="icon-instagram"></i></a>
-                                    <a href="#" class="social-icon" title="Youtube" target="_blank"><i class="icon-youtube"></i></a>
-                                    <a href="#" class="social-icon" title="Pinterest" target="_blank"><i class="icon-pinterest"></i></a>
-                                </div><!-- End .soial-icons -->
-                            </div><!-- End .widget about-widget -->
-                        </div><!-- End .col-sm-6 col-lg-3 -->
+                        <div class="social-icons" hidden>
+                            <a href="" class="social-icon" target="_blank" title="Facebook"><i class="icon-facebook-f"></i></a>
+                            <a href="" class="social-icon" target="_blank" title="Twitter"><i class="icon-twitter"></i></a>
+                            <a href="" class="social-icon" target="_blank" title="Instagram"><i class="icon-instagram"></i></a>
+                            <a href="" class="social-icon" target="_blank" title="Youtube"><i class="icon-youtube"></i></a>
+                            <a href="" class="social-icon" target="_blank" title="Pinterest"><i class="icon-pinterest"></i></a>
+                        </div><!-- End .soial-icons -->
+                    </div><!-- End .widget about-widget -->
+                </div><!-- End .col-sm-6 col-lg-3 -->
 
-                        <div class="col-sm-6 col-lg-3">
-                            <div class="widget">
-                                <h4 class="widget-title">Useful Links</h4><!-- End .widget-title -->
+                <div class="col-sm-6 col-lg-3">
+                    <div class="widget">
+                        <h4 class="widget-title">Useful Links</h4><!-- End .widget-title -->
 
-                                <ul class="widget-list">
-                                    <li><a href="about.html">About Molla</a></li>
-                                    <li><a href="#">How to shop on Molla</a></li>
-                                    <li><a href="#">FAQ</a></li>
-                                    <li><a href="contact.html">Contact us</a></li>
-                                    <li><a href="login.html">Log in</a></li>
-                                </ul><!-- End .widget-list -->
-                            </div><!-- End .widget -->
-                        </div><!-- End .col-sm-6 col-lg-3 -->
+                        <ul class="widget-list">
+                            <li><a href="/aboutUs">About Divine Styles</a></li>
+                            <li><a href="/contactUs">Contact us</a></li>
+                            <li><a href="/allProducts">Shop</a></li>
+                            <li><a href="/login">Log in</a></li>
+                            <li><a href="/register">Sign Up</a></li>
 
-                        <div class="col-sm-6 col-lg-3">
-                            <div class="widget">
-                                <h4 class="widget-title">Customer Service</h4><!-- End .widget-title -->
+                        </ul><!-- End .widget-list -->
+                    </div><!-- End .widget -->
+                </div><!-- End .col-sm-6 col-lg-3 -->
 
-                                <ul class="widget-list">
-                                    <li><a href="#">Payment Methods</a></li>
-                                    <li><a href="#">Money-back guarantee!</a></li>
-                                    <li><a href="#">Returns</a></li>
-                                    <li><a href="#">Shipping</a></li>
-                                    <li><a href="#">Terms and conditions</a></li>
-                                    <li><a href="#">Privacy Policy</a></li>
-                                </ul><!-- End .widget-list -->
-                            </div><!-- End .widget -->
-                        </div><!-- End .col-sm-6 col-lg-3 -->
+                <div class="col-sm-6 col-lg-3">
+                    <div class="widget">
+                        <h4 class="widget-title">Customer Service</h4><!-- End .widget-title -->
 
-                        <div class="col-sm-6 col-lg-3">
-                            <div class="widget">
-                                <h4 class="widget-title">My Account</h4><!-- End .widget-title -->
+                        <ul class="widget-list">
+                            <li>Many Payment Methods</li>
+                            <li>Money-back guarantee!</li>
+                            <li>Returns available</li>
+                            <li>Shipping available</li>
+                            <li>Terms and conditions apply</li>
+                            <li>Privacy Policy</li>
+                        </ul><!-- End .widget-list -->
+                    </div><!-- End .widget -->
+                </div><!-- End .col-sm-6 col-lg-3 -->
 
-                                <ul class="widget-list">
-                                    <li><a href="#">Sign In</a></li>
-                                    <li><a href="cart.html">View Cart</a></li>
-                                    <li><a href="#">My Wishlist</a></li>
-                                    <li><a href="#">Track My Order</a></li>
-                                    <li><a href="#">Help</a></li>
-                                </ul><!-- End .widget-list -->
-                            </div><!-- End .widget -->
-                        </div><!-- End .col-sm-6 col-lg-3 -->
-                    </div><!-- End .row -->
+                <div class="col-sm-6 col-lg-3">
+                    <div class="widget">
+                        <h4 class="widget-title">My Account</h4><!-- End .widget-title -->
+
+                        <ul class="widget-list">
+                            <li><a href="/cart">View Cart</a></li>
+                            <li><a href="/wishlist">My Wishlist</a></li>
+                            <li><a href="/userProfile">Track My Order</a></li>
+                         </ul><!-- End .widget-list -->
+                    </div><!-- End .widget -->
+                </div><!-- End .col-sm-6 col-lg-3 -->
+            </div><!-- End .row -->
                 </div><!-- End .container -->
             </div><!-- End .footer-middle -->
 
-            <div class="footer-bottom">
+            <div class="footer-bottom" hidden>
                 <div class="container">
                     <p class="footer-copyright">Copyright © 2019 Molla Store. All Rights Reserved.</p><!-- End .footer-copyright -->
                     <figure class="footer-payments">
@@ -469,28 +467,6 @@
 
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script>
-
-       
-    const search = () => {
-        const searchBox = document.getElementById("search-item").value.toUpperCase()
-        const storeItems = document.getElementById("product-list")
-        const product = document.querySelectorAll(".product")
-        const pname = document.getElementsByTagName("h3")
-
-        for(let i=0;i<pname.length;i++){
-            let match = product[i].getElementsByTagName('h3')[0]
-
-            if(match){
-                let textValue = match.textContent || match.innerHTML
-                if(textValue.toUpperCase().indexOf(searchBox) > -1){
-                    product[i].style.display = ""
-                }else{
-                    product[i].style.display = "none"
-                }
-            }
-        }
-    }
-    
 
 
     const addToCart = async (productId,quantity) => {

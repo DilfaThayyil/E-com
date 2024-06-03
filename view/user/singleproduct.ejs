@@ -5,7 +5,7 @@
 
     <div class="page-wrapper">
         <main class="main">
-            <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
+            <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0" hidden>
                 <div class="container d-flex align-items-center">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="/">Home</a></li>
@@ -52,7 +52,7 @@
                                 <div class="product-details">
                                     <h1 class="product-title"><%=product.Name%></h1><!-- End .product-title -->
 
-                                    <div class="ratings-container">
+                                    <div class="ratings-container" hidden>
                                         <div class="ratings">
                                             <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val -->
                                         </div><!-- End .ratings -->
@@ -266,11 +266,27 @@
                                 <div class="product-cat">
                                     <a href="#"><%=recommend.Category.Name%></a>
                                 </div><!-- End .product-cat -->
-                                <h3 class="product-title"><a href="product.html"><%=recommend.Name%></a></h3><!-- End .product-title -->
+                                <h3 class="product-title"><a href="<%=recommend._id%>"><%=recommend.Name%></a></h3><!-- End .product-title -->
                                 <div class="product-price">
-                                    ₹<%=recommend.DiscountPrice%>
+                                    <s style="font-size: small;"> ₹<%= product.Price %></s>&nbsp; &nbsp;
+                                
+                                    <% 
+                                        const productPrice = parseFloat(product.Price) || 0;
+                                        const productOffer = product.offer ? parseFloat(product.offer.percentage) || 0 : 0;
+                                        const categoryOffer = product.Category && product.Category.offer ? parseFloat(product.Category.offer.percentage) || 0 : 0;
+                                
+                                        let finalPrice = productPrice;
+                                
+                                        if (product.offer) {
+                                            finalPrice = Math.floor(productPrice - (productPrice * productOffer / 100));
+                                        } else if (product.Category && product.Category.offer) {
+                                            finalPrice = Math.floor(productPrice - (productPrice * categoryOffer / 100));
+                                        }
+                                    %>
+                                
+                                    ₹<%= finalPrice %>
                                 </div><!-- End .product-price -->
-                                <div class="ratings-container">
+                                <div class="ratings-container" hidden>
                                     <div class="ratings">
                                         <div class="ratings-val" style="width: 20%;"></div><!-- End .ratings-val -->
                                     </div><!-- End .ratings -->

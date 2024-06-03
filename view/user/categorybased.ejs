@@ -11,7 +11,7 @@
         			<h1 class="page-title">All Products<span>Shop</span></h1>
         		</div><!-- End .container -->
         	</div><!-- End .page-header -->
-            <nav aria-label="breadcrumb" class="breadcrumb-nav mb-2">
+            <nav aria-label="breadcrumb" class="breadcrumb-nav mb-2" hidden>
                 <div class="container">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="/">Home</a></li>
@@ -69,15 +69,17 @@
                                         </a>
 
                                         <div class="product-action-vertical">
-                                            <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
+                                            <a onclick="addToWishlist('<%=product._id%>')" class="btn-product-icon btn-wishlist btn-expandable" ><span>add to wishlist</span></a>
                                         </div><!-- End .product-action -->
 
                                         <div class="product-action action-icon-top">
                                             <%if(product.Quantity>=1){%>
-                                                <a href="/cart" class="btn-product btn-cart"><span>add to cart</span></a>
-                                            <%}else{%>
-                                                <a  class="btn-product btn-cart"><span>Out of stock</span></a>
-                                            <%}%>
+                                          
+                                                <a onclick="addToCart('<%=product._id%>')" class="btn-product btn-cart"><span>add to cart</span></a>
+                                                <%}else{%>
+                                                <a href="#" class="btn-product btn-cart"><span>out of stock</span></a>
+                                            
+                                            <%}%> 
                                         </div><!-- End .product-action -->
                                     </figure><!-- End .product-media -->
 
@@ -167,7 +169,7 @@
 
     <%-include('../partials/footer')%>
     <%-include('../partials/footerbar')%>
-
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
 
 
@@ -205,9 +207,44 @@
     }
 
 
+    const addToCart = async (productId,quantity) => {
+        try {
+            const quantity = 1
+            console.log(quantity);
+            const response = await fetch(`/addtocart/${productId}/${quantity}`, {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json' 
+            },
+            
+            });
+            const data = await response.json();
+            if (data.error) {
+                swal({
+                title: "Error!",
+                text: data.error,
+                icon: "error",
+                button: "OK",
+            });
+            } else if (data.message) {
+            swal({
+                title: "Success!",
+                text: data.message,
+                icon: "success",
+                button: "OK",
+            }).then((value) => {
+                window.location.reload(); 
+            });
+                
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
 
 
-        const productListElement = document.getElementById('product-list');
+
+    const productListElement = document.getElementById('product-list');
     const selectElement = document.getElementById('select');
 
 selectElement.addEventListener('change', () => {
@@ -277,6 +314,40 @@ selectElement.addEventListener('change', () => {
             console.error('Error fetching products:', error);
         });
 });
+
+
+    const addToWishlist = async (productId) => {
+        try {
+            const response = await fetch(`/addtowishlist/${productId}`, {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json' 
+            },
+            
+            });
+            const data = await response.json();
+            if (data.error) {
+                swal({
+                title: "Error!",
+                text: data.error,
+                icon: "error",
+                button: "OK",
+            });
+            } else if (data.message) {
+            swal({
+                title: "Success!",
+                text: data.message,
+                icon: "success",
+                button: "OK",
+            }).then((value) => {
+                window.location.reload(); 
+            });
+                
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
 
 
     </script>

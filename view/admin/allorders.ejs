@@ -54,12 +54,12 @@
                           <td><%= formattedDate%></td>
                           <td><%=order.userid.Name%></td>
                           <td><%=order.userid.Email%></td>
-                          <%if(product.Status=='placed' || product.Status=='shipped' || product.Status=='delivered'){%>
+                          <%if(product.Status=='placed' || product.Status=='shipped'){%>
+                            <td><i class="text-warning"><%=product.Status%></i></td>
+                          <%}else if(product.Status=='cancelled' || product.Status=='returned' || product.Status=='request return'){%>
+                            <td><i class="text-danger"><%=product.Status%></i></td>
+                          <%}else if(product.Status=='delivered'){%>
                             <td><i class="text-success"><%=product.Status%></i></td>
-                          <%}else if(product.Status=='cancelled' || product.Status=='returned'){%>
-                            <td><i class="text-danger"><%=product.Status%></i></td>
-                          <%}else if(product.Status=='request return'){%>
-                            <td><i class="text-danger"><%=product.Status%></i></td>
                           <%}%>
                           
                           <td>

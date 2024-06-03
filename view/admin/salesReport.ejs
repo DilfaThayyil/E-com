@@ -155,7 +155,7 @@
                                 row.insertCell(0).textContent = order.userid.Name;
                                 row.insertCell(1).textContent = order._id;
                                 row.insertCell(2).textContent = product.name;
-                                row.insertCell(3).textContent = product.discountPrice;
+                                row.insertCell(3).textContent = product.price;
                                 row.insertCell(4).textContent = product.status;
                                 row.insertCell(5).textContent = product.quantity;
                                 row.insertCell(6).textContent = product.total;
@@ -211,7 +211,7 @@
               const orderDate = new Date(order.date);
               const formattedDate = orderDate.toISOString().split('T')[0];
 
-              csv += `${order.userid.Name} ,${order._id},${product.name},${product.price},${product.Status},${product.quantity},${product.total},${formattedDate}\n`;
+              csv += `${order.userid.Name} ,${order._id},${product.name},${product.price},${product.status},${product.quantity},${product.total},${formattedDate}\n`;
             });
           });
 

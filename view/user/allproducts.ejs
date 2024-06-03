@@ -11,7 +11,7 @@
         			<h1 class="page-title">All Products<span>Shop</span></h1>
         		</div><!-- End .container -->
         	</div><!-- End .page-header -->
-            <nav aria-label="breadcrumb" class="breadcrumb-nav mb-2">
+            <nav aria-label="breadcrumb" class="breadcrumb-nav mb-2" hidden>
                 <div class="container">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="/">Home</a></li>
@@ -81,6 +81,7 @@
                                                 <a onclick="addToCart('<%=product._id%>')" class="btn-product btn-cart"><span>add to cart</span></a>
                                                 <%}else{%>
                                                 <a href="#" class="btn-product btn-cart"><span>out of stock</span></a>
+
                                             <%}%>     
 
                                         </div><!-- End .product-action -->
@@ -111,7 +112,7 @@
                                             ₹<%= finalPrice %>
                                         </div><!-- End .product-price -->
                                         
-                                        <div class="ratings-container">
+                                        <div class="ratings-container" hidden>
                                             <div class="ratings">
                                                 <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val -->
                                             </div><!-- End .ratings -->
@@ -124,7 +125,7 @@
 
                         </div><!-- End .row -->
 
-                        <div class="load-more-container text-center">
+                        <div class="load-more-container text-center" hidden>
                             <a href="#" class="btn btn-outline-darker btn-load-more">More Products <i class="icon-refresh"></i></a>
                         </div><!-- End .load-more-container -->
                     </div><!-- End .products -->
@@ -187,6 +188,7 @@
 
 
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
 <script>
 
 

@@ -11,16 +11,7 @@
         			<h1 class="page-title">My Account</h1>
         		</div><!-- End .container -->
         	</div><!-- End .page-header -->
-            <nav aria-label="breadcrumb" class="breadcrumb-nav mb-3">
-                <div class="container">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="/">Home</a></li>
-                        <li class="breadcrumb-item"><a href="/allproducts">Shop</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">My Account</li>
-                    </ol>
-                </div><!-- End .container -->
-            </nav><!-- End .breadcrumb-nav -->
-
+            
             <div class="page-content">
             	<div class="dashboard">
 	                <div class="container">
@@ -170,8 +161,8 @@
                                     
 
 									<div class="tab-pane fade mb-5" id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
-										<section class="vh-100 gradient-custom-2 mt-5 orders-section">
-											<div class="container py-5 mt-5">
+										<section class="vh-100 gradient-custom-2  orders-section">
+											<div class="container ">
 												<% orders.forEach(order => { %>
 													<div class="row align-items-center h-100 mb-5">
 														<div class="col-md-10 col-lg-8 col-xl-6">
@@ -213,7 +204,7 @@
 									
 
 								    <div class="tab-pane fade" id="tab-coupons" role="tabpanel" aria-labelledby="tab-coupons-link">
-								    	<%if(coupon){%>
+								    	<!-- <%if(coupon){%>
                                             <%coupon.forEach(coupon=>{%>
                 
                                         <div class="card mt-5 mx-3" style="width: 87%;">
@@ -231,7 +222,35 @@
                                           <%}else{%>
                                             <h3><p>No coupons available yet.</p></h3>                                        
 								    	    <a href="/" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
-                                          <%}%>
+                                          <%}%> -->
+
+
+                                          <% if (coupon && coupon.length > 0) { %>
+                                            <div class="container ">
+                                              <div class="row">
+                                                <% coupon.forEach(coupon => { %>
+                                                  <div class="col-md-6 col-lg-4 ">
+                                                    <div class="card h-100 shadow-sm">
+                                                      <div class="card-body">
+                                                        <h5 class="card-title font-weight-bold text-primary">Coupon: <%= coupon.name %></h5>
+                                                        <p class="card-text"><strong>Code:</strong> <%= coupon.code %></p>
+                                                        <p class="card-text"><strong>Discount:</strong> <%= coupon.discountAmount %></p>
+                                                        <p class="card-text"><strong>Minimum Spend:</strong> <%= coupon.minAmount %></p>
+                                                        <p class="card-text"><strong>Description:</strong> <%= coupon.description %></p>
+                                                        <p class="card-text"><strong>Expiry Date:</strong> <%= coupon.expiryDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).replace(/\//g, '-') %></p>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                <% }) %>
+                                              </div>
+                                            </div>
+                                          <% } else { %>
+                                            <div class="text-center mt-5">
+                                              <h3>No coupons available yet.</h3>
+                                              <a href="/allProducts" class="btn btn-outline-primary mt-3"><span>GO SHOP</span><i class="icon-long-arrow-right ml-2"></i></a>
+                                            </div>
+                                          <% } %>
+                                          
 								    </div><!-- .End .tab-pane -->
 
 

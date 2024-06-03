@@ -350,7 +350,7 @@ const category = async(req,res)=>{
 const allOrders = async(req,res)=>{
     try{
     
-      const perPage = 2; 
+      const perPage = 4; 
       const page = parseInt(req.query.page) || 1; 
 
       const totalOrders = await Order.countDocuments();
