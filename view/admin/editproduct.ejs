@@ -72,7 +72,7 @@
                           <label for="exampleInputConfirmPassword1">Category</label>
                           <select class="form-control "  id="productCategory" name="category" required>
                             <% category.forEach(category => { %>
-                              <option value="<%= category._id %>" <%= (category._id.toString() === product.Category.toString()) ? 'selected' : '' %>><%= category.Name %></option>
+                              <option value="<%= category._id %>" <%= (category._id.toString() === product.Category._id.toString()) ? 'selected' : '' %>><%= category.Name %></option>
                             <% }); %>
                           </select>
                       </div>
@@ -81,10 +81,7 @@
                           <label for="exampleInputEmail1">Price</label>
                           <input type="number" class="form-control" id="productprice" min="1" placeholder="Price" value="<%=product.Price%>" name="price">
                       </div>
-                      <div class="form-group">
-                        <label for="exampleInputEmail1">Discount Price</label>
-                        <input type="number" class="form-control" id="dis" min="1" placeholder="Discount Price" value="<%=product.DiscountPrice%>" name="discountprice">
-                    </div>
+                      
                       <div class="form-group">
                           <label for="exampleInputPassword1">Stock</label>
                           <input type="number" class="form-control" id="qnt" min="1"  placeholder="Quantity" value="<%=product.Quantity%>" name="quantity">
@@ -251,13 +248,12 @@
           let productName = document.getElementById('productname').value.trim();
           let productCategory = document.getElementById('productCategory').value.trim();
           let productPrice = document.getElementById('productprice').value.trim();
-          let productDiscountPrice = document.getElementById('dis').value.trim();
           let productQuantity = document.getElementById('qnt').value.trim();
           let productDescription = document.getElementById('des').value.trim();
           let errorElement = document.getElementById('error');
           
          
-          if (productName.length < 3 || productCategory === "" || productPrice === "" || productDiscountPrice === "" || productQuantity === "" || productDescription.length < 10) {
+          if (productName.length < 3 || productCategory === "" || productPrice === "" || productQuantity === "" || productDescription.length < 10) {
               errorElement.style.display = 'block'; // Show error message
           } else {
               errorElement.style.display = 'none'; // Hide error message

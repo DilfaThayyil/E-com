@@ -44,10 +44,10 @@
                       <div class="form-group">
                         <label for="exampleInputEmail1">Minimum Amount</label>
                         <input type="number" class="form-control" id="minimum" min="1"  value="<%=coupon.minAmount%>" name="minimum">
-                    </div>
+                      </div>
                       <div class="form-group">
                           <label for="exampleInputPassword1">Expiry Date</label>
-                          <input type="date" class="form-control" id="date"  value="<%=coupon.expiryDate%>" name="date">
+                          <input type="date" class="form-control" id="date"  value="<%=coupon.expiryDate.toISOString().split('T')[0]%>" name="date">
                       </div>
                       <div class="form-group">
                           <label for="exampleInputConfirmPassword1">Description</label>

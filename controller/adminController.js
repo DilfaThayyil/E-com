@@ -454,14 +454,15 @@ const approveReturnRequest = async (req, res) => {
 
 
 
+
 const editProduct = async(req,res)=>{
     try{
-        const product_id = req.params.id
-        const product = await Product.findOne({_id:product_id}).populate('Category')
-        const category= await Category.find({Status:'active'})
-        res.render('editproduct',{product,category})
+        const productId = req.params.id
+        const product = await Product.findById(productId).populate('Category').exec()
+        const category = await Category.find({Status:'active'})
+        res.render('editProduct',{product,category})
     }catch(err){
-        console.log(err);
+        console.log(err)
     }
 }
 
@@ -495,8 +496,8 @@ const editProductSubmit = async (req, res) => {
         );
         const product = await Product.updateOne({ _id: productId }, updatedData);
         if (product) {
-         
-          res.redirect("/admin/allproducts");
+            req.flash('success','product edited successfully')
+            res.redirect("/admin/allproducts");
         }
         }
       })
@@ -781,9 +782,16 @@ const imagedelete = async (req, res) => {
 
     const coupon = async(req,res)=>{
         try{
+            const perPage = 5
+            const page = parseInt(req.query.page) || 1
+            const totalCoupons = await Coupon.countDocuments()
+            const totalPages = Math.ceil(totalCoupons / perPage)
             const coupons = await Coupon.find()
+            .skip((page - 1) * perPage)
+            .limit(perPage)
+            .exec();
             const successMessage = req.flash('success')
-            res.render('coupons',{coupons,message:successMessage})
+            res.render('coupons',{coupons,message:successMessage,totalPages,currentPage: page})
         }catch(err){
             console.log(err)
         }
@@ -858,7 +866,7 @@ const imagedelete = async (req, res) => {
     const editCoupon = async(req,res)=>{
         try{
             const couponId = req.params.id
-            const coupon = await Coupon.findOne({_id:couponId})
+            const coupon = await Coupon.findById(couponId)
             res.render('editcoupon',{coupon})
         }catch(err){
             console.log(err)
@@ -869,12 +877,13 @@ const imagedelete = async (req, res) => {
     const editCouponSubmit = async (req,res)=>{
         try{
             const couponId = req.params.id
-            const updatedCoupon = await Coupon.findOne({_id:couponId})
+            const updatedCoupon = await Coupon.findById(couponId)
             const existingCoupon = await Coupon.findOne({name:req.body.name });
             if (existingCoupon && existingCoupon._id.toString() !== couponId) {
             req.flash('error', 'Coupon name already exists');
             return res.redirect('/admin/editCoupon/' + couponId); 
             }
+           
             if(updatedCoupon){
                 await Coupon.findByIdAndUpdate({_id:couponId},{
                 name: req.body.name,

@@ -8,7 +8,7 @@ const Products=require('../model/products')
 
 
 
-
+// Product Image Multer
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, 'public/uploads'); 
@@ -46,12 +46,15 @@ const storage = multer.diskStorage({
   
 
 
-adminRouter.get('/',adminController.dashboard)
 
+// Admin authentication
 adminRouter.get('/login',adminMiddleware.isLoged,adminController.login)
 adminRouter.post('/loginsubmit',adminController.loginSubmit)
 
+// Admin dashboard
+adminRouter.get('/',adminController.dashboard)
 
+// Product
 adminRouter.get('/allproducts',adminController.allProducts)
 adminRouter.get('/addproducts',adminController.addProducts)
 adminRouter.post('/addProductsSubmit',adminController.addProductsSubmit)
@@ -61,12 +64,12 @@ adminRouter.get('/editproduct/:id',adminController.editProduct)
 adminRouter.post('/editProductSubmit/:id',adminController.editProductSubmit)
 adminRouter.post('/deleteimage/:imgid/:index/:proid',adminController.imagedelete)
 
-
+// User
 adminRouter.get('/allusers',adminController.allUsers)
 adminRouter.get('/blockuser/:id',adminController.blockUser)
 adminRouter.get('/unblockuser/:id',adminController.unBlockUser)
 
-
+// Category
 adminRouter.get('/category',adminController.category)
 adminRouter.get('/addcategory',adminController.addCategory)
 adminRouter.post('/addCategorySubmit',adminController.addCategorySubmit)
@@ -75,14 +78,14 @@ adminRouter.get('/editcategory/:id',adminController.editCategory)
 adminRouter.post('/editcategorysubmit/:id',adminController.editCategorySubmit)
 adminRouter.delete('/deleteCategory/:id',adminController.deleteCategory)
 
-
+// Order
 adminRouter.get('/allorders',adminController.allOrders)
 adminRouter.post('/cancelOrder/:orderId',adminController.cancelOrder);
 adminRouter.post('/updateStatus',adminController.updateStatus)
 adminRouter.get('/orderDetails/:orderId/:productId',adminController.orderDetails)
 adminRouter.post('/approveReturnRequest/:orderId/:productId',adminController.approveReturnRequest)
 
-
+// Coupon
 adminRouter.get('/coupon',adminController.coupon)
 adminRouter.get('/addCoupons',adminController.addCoupons)
 adminRouter.post('/addCouponSubmit',adminController.addCouponSubmit)
@@ -91,11 +94,11 @@ adminRouter.get('/editCoupon/:id',adminController.editCoupon)
 adminRouter.post('/editCouponSubmit/:id',adminController.editCouponSubmit)
 adminRouter.delete('/deleteCoupon/:id',adminController.deleteCoupon)
 
-
+// Sales report
 adminRouter.get('/salesReport',adminController.salesReport)
 adminRouter.post('/salesReportGenerate',adminController.salesReportGenerate)
 
-
+// Offer
 adminRouter.get('/offer',adminController.allOffers)
 adminRouter.get('/addOffer',adminController.addOffer)
 adminRouter.post('/addOfferSubmit',adminController.addOfferSubmit)

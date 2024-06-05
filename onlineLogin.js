@@ -43,7 +43,7 @@ require('dotenv').config()
       if(user){
         req.session.user=user._id
         req.session.name=user.Name
-        res.redirect('/')
+        return res.redirect('/')
       }else{
         const bcryptPassword=  await bcrypt.hash(profile.id,10)
         let name=profile.name.split(' ')[0]

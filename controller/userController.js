@@ -370,14 +370,43 @@ const resetPasswordSubmit=async(req,res)=>{
 const userProfile = async(req,res)=>{
     try{
         const userid = req.session.user
-        let orders = await Order.find({userid:userid}).populate({
-            path:"products.products",
-            model:"Products"
-        })
+
+        //orders pagination
+        const ordersPerpage = 1; 
+        const ordersPage = parseInt(req.query.ordersPage) || 1; 
+        const totalOrders = await Order.countDocuments({userid: userid});
+        const totalOrdersPages = Math.ceil(totalOrders / ordersPerpage);
+        let orders = await Order.find({userid:userid})
+            .populate({
+                path:"products.products",
+                model:"Products"
+            })
+            .skip((ordersPage - 1) * ordersPerpage)
+            .limit(ordersPerpage)
+            .sort({date: -1})
+            .exec()
+
+        //coupons pagination    
+       const couponsPerPage = 2
+       const couponsPage = parseInt(req.query.couponsPage) || 1
+       const totalCoupons = await Coupon.countDocuments()
+       const totalCouponsPages = Math.ceil(totalCoupons / couponsPerPage)
         const coupon = await Coupon.find()
-        orders = orders.sort((a, b) => b.date - a.date)
+            .skip((couponsPage - 1) * couponsPerPage)
+            .limit(couponsPerPage)
+            .exec()
+
+
         const user = await User.findOne({_id:userid})
-        res.render('profile',{orders,user,coupon})
+        res.render('profile',{
+            orders,
+            ordersCurrentPage:ordersPage,
+            totalOrdersPages,
+            coupon,
+            couponsCurrentPage:couponsPage,
+            totalCouponsPages,
+            user
+        })
     }catch(err){
         console.log(err);
     }
@@ -413,7 +442,7 @@ const editAddress = async (req, res) => {
 
         try {
             await User.findOneAndUpdate(
-                { _id: userid, 'Addresses._id': addressId }, // Search by user ID and address ID
+                { _id: userid, 'Addresses._id': addressId }, 
                 {
                     $set: {
                         'Addresses.$.name': name,
