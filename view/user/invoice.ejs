@@ -1,0 +1,180 @@
+<%-include('../partials/header')%>
+
+
+    <div class="main-content">
+        <div class="page-content">
+            <div class="container-fluid">
+                <!-- start page title  -->
+                <div class="row">
+                    <div class="col-8">
+                        <div class="page-title-box d-flex align-items-center justify-content-between">
+                            <h4 class="mt-6 ">Invoice Detail</h4>
+                            <div class="page-title-right">
+                                <!-- <ol class="breadcrumb m-0">
+                                    <li class="breadcrumb-item"><a href="javascript: void(0);">Invoices</a></li>
+                                    <li class="breadcrumb-item active">Invoice Detail</li>
+                                </ol> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+                <div class="row d-flex justify-content-center">
+                    <div class="col-lg-9">
+                        <div class="card">
+                            <div class="card-body col-md-12">
+                                <div class="invoice-title">
+                                    <%
+                                    function generateCustomInvoiceId() {
+                                        const date = new Date();
+                                        const year = date.getFullYear();
+                                        const month = (`0${date.getMonth() + 1}`).slice(-2);
+                                        const day = (`0${date.getDate()}`).slice(-2);
+                                        const random = Math.floor(Math.random() * 10000);
+                                        return `Inv-${year}${month}${day}-${random}`;
+                                    }
+                                    %>
+                                    <%
+                                    const invoiceNo = generateCustomInvoiceId();
+                                    %>
+                                    <h4 class="float-end font-size-15">Invoice <%= invoiceNo %> <span class="badge bg-success font-size-12 ms-2">Paid</span></h4>
+                                    <div class="">
+                                        <img src="/user/assets/images/DivineStyle.png" alt="logo" width="300px" height="300px"/>
+                                    </div>
+                                    <div class="text-muted">
+                                        <p class="mb-1">3184 Spruce Drive Pittsburgh, PA 15201</p>
+                                        <a href="https://betterbuys.cloud/" class="mb-1"><i class="mdi mdi-email-outline me-1"></i> https://betterbuys.cloud/</a>
+                                        <p><i class="mdi mdi-phone-outline me-1"></i> 012-345-6789</p>
+                                    </div>
+                                </div>
+
+                                <hr class="my-4">
+
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="text-muted">
+                                            <h5 class="font-size-16 mb-3">Billed To:</h5>
+                                            <h5 class="font-size-15 mb-2"><%= oorder.address.split(',')[0]%></h5>
+                                            <p class="mb-1"><%= oorder.address.split(',')[2]%>,
+                                                <%= oorder.address.split(',')[3] %>,<br>
+                                                <%= oorder.address.split(',')[6] %>,
+                                                <%= oorder.address.split(',')[5] %>,
+                                                <%= oorder.address.split(',')[4] %></p>
+                                            <p class="mb-1"><%= oorder.address.split(',')[7] %></p>
+                                            <p><%= oorder.address.split(',')[1] %></p>
+                                        </div>
+                                    </div>
+                                    <!-- end col -->
+                                    <div class="col-sm-6">
+                                        <div class="text-muted text-sm-end">
+                                            <div>
+                                                <h5 class="font-size-15 mb-1">Invoice No:</h5>
+                                                <p><%= invoiceNo %></p>
+                                            </div>
+                                            <div class="mt-4">
+                                                <h5 class="font-size-15 mb-1">Invoice Date:</h5>
+                                                <p><%= oorder.date.toLocaleDateString() %></p>
+                                            </div>
+                                            <div class="mt-4">
+                                                <h5 class="font-size-15 mb-1">Order No:</h5>
+                                                <p><%= oorder._id %></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- end col -->
+                                </div>
+                                <!-- end row -->
+
+                                <div class="py-2">
+                                    <h5 class="font-size-15">Order Summary</h5>
+
+                                    <div class="table-responsive">
+                                        <table class="table align-middle table-nowrap table-centered mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 70px;">No.</th>
+                                                    <th>Item</th>
+                                                    <th>Price</th>
+                                                    <th>Quantity</th>
+                                                    <th class="text-end" style="width: 120px;">Total</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <% let subTotal = 0; %>
+                                                <% oorder.products.forEach((item, index) => { %>
+                                                <% const product = item.products; %>
+                                                <% const total = product.Price * item.quantity; %>
+                                                <% subTotal += total; %>
+                                                <tr>
+                                                    <th scope="row"><%= index + 1 %></th>
+                                                    <td>
+                                                        <div>
+                                                            <h5 class="text-truncate font-size-14 mb-1"><%= product.Name %></h5>
+                                                            <p class="text-muted mb-0"><%= product.Category.Name %></p>
+                                                        </div>
+                                                    </td>
+                                                    <td>₹ <%= product.Price %>.00</td>
+                                                    <td><%= item.quantity %></td>
+                                                    <td class="text-end">₹ <%= total %>.00</td>
+                                                </tr>
+                                                
+                                                
+                                                
+                                                <%let finalPrice
+                                                const productPrice = parseFloat(product.Price) || 0;
+                                                const productOffer = product.offer ? parseFloat(product.offer.percentage) || 0 : 0;
+                                                const categoryOffer = product.Category && product.Category.offer ? parseFloat(product.Category.offer.percentage) || 0 : 0;  
+                                                if (product.offer) {
+                                                    finalPrice = Math.floor(productPrice - (productPrice * productOffer / 100));
+                                                } else if (product.Category && product.Category.offer) {
+                                                    finalPrice = Math.floor(productPrice - (productPrice * categoryOffer / 100));
+                                                }                                      
+                                                %>
+                                                
+                                                <tr>
+                                                    <th scope="row" colspan="4" class="border-0 text-end">
+                                                       
+                                                    </th>
+                                                        <%if(product.offer){%>
+                                                            <td class="border-0 text-end"> <strong><%=product.offer.percentage%>%</strong> Offer</td>
+                                                        <%}else if(product.Category && product.Category.offer){%>
+                                                            <td class="border-0 text-end"> <strong><%=product.Category.offer.percentage%>%</strong> Offer</td>
+                                                        <%}%>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row" colspan="4" class="text-end"></th>
+                                                    <td class="text-end">₹ <%= finalPrice %>.00</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row" colspan="4" class="border-0 text-end">
+                                                        </th>
+                                                    <td class="border-0 text-end">Shipping Charge:   <strong>₹ 50.00</strong></td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row" colspan="4" class="border-0 text-end"></th>
+                                                    <%finalPrice += 50%>
+                                                    <td class="border-0 text-end"><h4 class="m-0 fw-semibold">₹ <%= finalPrice %>.00</h4></td>
+                                                </tr>
+                                                <%})%>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="d-print-none mt-4">
+                                        <div class="float-end">
+                                            <a href="javascript:window.print()" class="btn btn-dark me-1"><i class="fa fa-print"></i></a>
+                                            <!-- <a href="#" class="btn btn-primary w-md">Send</a> -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- end col -->
+                </div><!-- end row -->
+            </div> <!-- container-fluid -->
+        </div>
+        <!-- End Page-content -->
+    </div>
+
+    
+<%-include('../partials/footer')%>

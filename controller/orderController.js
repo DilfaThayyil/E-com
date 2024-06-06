@@ -12,6 +12,9 @@ const Razorpay = require('razorpay')
 const {key_id,key_secret} = process.env
 const crypto = require('crypto')
 const easyinvoice = require('easyinvoice');
+const { name } = require('ejs')
+const fs = require('fs');
+const path = require('path');
 
 
 
@@ -233,24 +236,24 @@ const cancelOrder = async(req,res)=>{
 }
 
 
-const orderSummary= async (req,res)=>{
-    try{
+// const orderSummary= async (req,res)=>{
+//     try{
   
-    const orderid=req.params.id
-    const user = await User.findOne({ _id: req.session.user});
-    const orders = await Order.find({ _id:orderid})
-      .populate({
-          path: 'products.products',
-          model: 'Products'
-      })
-      .exec();
+//     const orderid=req.params.id
+//     const user = await User.findOne({ _id: req.session.user});
+//     const orders = await Order.find({ _id:orderid})
+//       .populate({
+//           path: 'products.products',
+//           model: 'Products'
+//       })
+//       .exec();
   
-      res.render("viewOrder",{orders,user,orderid})
+//       res.render("viewOrder",{orders,user,orderid})
   
-    }catch(err){
-      console.log(err);
-    }
-}
+//     }catch(err){
+//       console.log(err);
+//     }
+// }
   
 
 
@@ -345,80 +348,103 @@ const applyCoupon = async (req, res) => {
 
 
 
-const invoiceDownload = async (req, res) => {
-    try {
-        const orderId = req.params.id;
-        const order = await Order.findOne({ _id: orderId }).populate({
-          path: 'products.products',
-          model: 'Products'
-        })
+// const invoiceDownload = async (req, res) => {
+//     try {
+//         const orderId = req.params.id;
+//         const order = await Order.findOne({ _id: orderId }).populate({
+//           path: 'products.products',
+//           model: 'Products'
+//         })
 
-        if (!order) {
-            return res.status(404).send('Order not found');
+//         if (!order) {
+//             return res.status(404).send('Order not found');
+//         }
+
+//         const products = order.products.map(item => ({
+//           quantity: item.quantity,
+//           description: `${item.products.Name} <br><img src="/singleProduct/${item.products.Images[0]}" width="50" height="50">`,
+//           price: item.products.Price,
+//           total: item.total
+//         }));
+      
+
+//         const data = {
+//             "documentTitle": "INVOICE",
+//             "currency": "IND",
+//             "taxNotation": "GST",
+//             "marginTop": 25,
+//             "marginRight": 25,
+//             "marginLeft": 25,
+//             "marginBottom": 25,
+//             "logo": "https://www.easyinvoice.cloud/img/logo.png",
+//             "sender": {
+//                 "company": "E-comm"
+//             },
+//             "client": {
+//                 "company": order.address
+//             },
+//             "invoiceNumber": `INV-${orderId}`,
+//             "invoiceDate": new Date(order.date).toLocaleDateString('en-US'),
+//             "products": products,
+//             "bottomNotice": "Kindly pay your invoice within 15 days.",
+//             "settings": {
+//                 "background": "https://public.easyinvoice.cloud/img/watermark-draft.jpg"
+//             },
+//             "translate": {
+//                 "invoiceNumber": "Invoice No",
+//                 "invoiceDate": "Invoice Date",
+//                 "products": "Product",
+//                 "quantity": "Qty",
+//                 "price": "Price",
+//                 "total": "Total"
+//             }
+//         };
+
+//         const result = await easyinvoice.createInvoice(data);
+
+//         if (!result.pdf || !result.pdf.length) {
+//             throw new Error('Failed to generate PDF document.');
+//         }
+
+//         const fileName = `invoice-${orderId}.pdf`;
+
+//         res.setHeader('Content-Type', 'application/pdf');
+//         res.setHeader('Content-Disposition', `attachment; filename=${fileName}`);
+//         res.setHeader('Content-Length', result.pdf.length);
+//         res.send(Buffer.from(result.pdf, 'base64'));
+//     } catch (err) {
+//         console.error(err);
+//         res.status(500).send('Internal Server Error');
+//     }
+// }
+
+
+const invoiceDownload = async(req, res) => {
+  try {
+    const orderId = req.params.id
+    const oorder = await Order.findById(orderId).populate({
+      path:"products.products",
+      model:"Products",
+      populate: [
+        { path: 'offer' },
+        { 
+            path: 'Category',
+            populate: { path: 'offer' }
         }
+    ]
+  })
+    res.render('invoice',{oorder})
+  } catch (err) {
+      console.log(err);
+  }
+};
 
-        const products = order.products.map(item => ({
-            quantity: item.quantity,
-            description: item.products.Name,
-            price: item.products.Price, 
-            total: item.total
-        }));
 
-        const data = {
-            "documentTitle": "INVOICE",
-            "currency": "USD",
-            "taxNotation": "vat",
-            "marginTop": 25,
-            "marginRight": 25,
-            "marginLeft": 25,
-            "marginBottom": 25,
-            "logo": "https://www.easyinvoice.cloud/img/logo.png",
-            "sender": {
-                "company": "E-comm"
-            },
-            "client": {
-                "company": order.address
-            },
-            "invoiceNumber": `INV-${orderId}`,
-            "invoiceDate": new Date(order.date).toLocaleDateString('en-US'),
-            "products": products,
-            "bottomNotice": "Kindly pay your invoice within 15 days.",
-            "settings": {
-                "background": "https://public.easyinvoice.cloud/img/watermark-draft.jpg"
-            },
-            "translate": {
-                "invoiceNumber": "Invoice No",
-                "invoiceDate": "Invoice Date",
-                "products": "Product",
-                "quantity": "Qty",
-                "price": "Price",
-                "total": "Total"
-            }
-        };
-
-        const result = await easyinvoice.createInvoice(data);
-
-        if (!result.pdf || !result.pdf.length) {
-            throw new Error('Failed to generate PDF document.');
-        }
-
-        const fileName = `invoice-${orderId}.pdf`;
-
-        res.setHeader('Content-Type', 'application/pdf');
-        res.setHeader('Content-Disposition', `attachment; filename=${fileName}`);
-        res.setHeader('Content-Length', result.pdf.length);
-        res.send(Buffer.from(result.pdf, 'base64'));
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Internal Server Error');
-    }
-}
 
 module.exports={
     placeOrder,
     viewOrder,
     cancelOrder,
-    orderSummary,
     returnRequest,
     applyCoupon,
     generateRazorpay,
