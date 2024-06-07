@@ -510,8 +510,9 @@ const editProductSubmit = async (req, res) => {
 
 const addProducts = async(req,res)=>{
     try{
+        const msg = req.flash('err')
         const category =await Category.find()
-        res.render('addproducts',{category})
+        res.render('addproducts',{category,msg})
     }catch(err){
         console.log(err);
     }
@@ -800,7 +801,8 @@ const imagedelete = async (req, res) => {
 
     const addCoupons = async(req,res)=>{
         try{
-            res.render('addCoupons')
+            const msg = req.flash('err')
+            res.render('addCoupons',{msg})
         }catch(err){
             console.log(err)
         }   
@@ -810,12 +812,18 @@ const imagedelete = async (req, res) => {
     const addCouponSubmit = async(req,res)=>{
         try{
             const {couponName,couponCode,discountAmount,MinAmount,couponDescription,exprDate} = req.body
+            console.log(req.body)
             const check = await Coupon.findOne({name:couponName})
             if(check){
                 const message = "Coupon name already exists"
                 req.flash('err',message)
                 res.redirect('/admin/addCoupons')
-            }else{
+            }
+            if (Number(MinAmount) <= Number(discountAmount)) {
+                const message = "Minimum amount should be greater than discount amount";
+                req.flash('err', message);
+                res.redirect('/admin/addCoupons');
+            }
                 const coupon = new Coupon({
                     name:couponName,
                     code:couponCode,
@@ -827,7 +835,7 @@ const imagedelete = async (req, res) => {
                 await coupon.save()
                 req.flash('success','Coupon added successfully')
                 res.redirect('/admin/coupon')
-            }
+            
         }catch(err){
             console.log(err)
         }

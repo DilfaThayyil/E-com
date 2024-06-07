@@ -27,6 +27,8 @@
                 <h4 class="card-title">Add Coupon</h4>
                 
                 <form class="forms-sample" method="post" action="/admin/addCouponSubmit" onsubmit="return validateForm()">
+
+                  <p class="text-danger"><%=msg%></p>
                   <div class="form-group">
                       <label for="couponName">Coupon Name</label>
                       <input type="text" class="form-control" id="couponName" placeholder="Coupon Name" name="couponName">
@@ -99,6 +101,7 @@
             let discountAmount = document.getElementById("discountAmount").value;
             let couponDescription = document.getElementById("couponDescription").value;
             let expiryDate = document.getElementById("exprDate").value;
+            let errorElement = document.getElementById('error');
 
              
             if (couponName.trim() === "") {

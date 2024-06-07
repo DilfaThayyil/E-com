@@ -27,6 +27,8 @@
                 <h4 class="card-title">Add Products</h4>
                 
                 <form class="forms-sample" method="post" action="/admin/addProductsSubmit" enctype="multipart/form-data" onsubmit="return validateForm()">
+
+                  <p class="text-danger"><%=msg%></p>
                   <div class="form-group">
                       <label for="productname">Product name</label>
                       <input type="text" class="form-control" id="productName" placeholder="Product name" name="productname">
@@ -134,7 +136,8 @@
               document.getElementById("imagesError").textContent = "Product images are required.";
                 errorElement.style.display = 'block';
                 return false;
-          } else if (productImages.length < 4 || productImages.length > 4) {
+              
+          } else if (productImages.length < 4 ){
                 document.getElementById("imagesError").textContent = "Exactly 4 images are required.";
                 errorElement.style.display = 'block';
                 return false;
