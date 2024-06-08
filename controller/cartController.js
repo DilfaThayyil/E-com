@@ -165,12 +165,12 @@ const updateCart = async (req, res) => {
         cartProduct.totalPrice = newQuantity * productPrice;
         const productprice=newQuantity * productPrice;
         await userCart.save();
-        const totalPrice = userCart.products.reduce((total, product) => {
+        let total = userCart.products.reduce((total, product) => {
             return total + product.totalPrice;
         }, 0);
-        subtotal = totalPrice
+        subtotal = total
         let shipping = 50
-        totalPrice = totalPrice+shipping
+        totalPrice = total+shipping
         res.json({success:true, cart: userCart, productprice ,subtotal, totalPrice}); 
     } catch (error) {
         console.error(error);

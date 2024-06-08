@@ -200,7 +200,12 @@
                     title: 'Success',
                     text: 'Return request approved successfully',
                     confirmButtonText: 'OK'
-                    });
+                    }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.reload();
+                    }
+                });
+                    
                   } else {
                     Swal.fire({
                     icon: 'error',
