@@ -9,6 +9,47 @@
     background-color: #fff;
     color: #2A3038;
   }
+
+  /* CSS for image previews */
+  .image-container {
+    position: relative;
+    margin-right: 10px;
+    margin-bottom: 10px;
+  }
+
+  .image-container img {
+    max-width: 100px;
+    height: auto;
+    display: block;
+  }
+
+  .image-container .remove-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: red;
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding: 5px 10px;
+    font-size: 12px;
+    border-radius: 50%;
+  }
+
+  /* Ensuring images are responsive */
+  @media (max-width: 768px) {
+    .image-container img {
+      max-width: 80px;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .image-container img {
+      max-width: 60px;
+    }
+  }
+
+
 </style>
 
 
@@ -64,7 +105,8 @@
                     <span id="imagesError" class="text-danger"></span>
             
                     <!-- Image preview container -->
-                    <div id="image-preview-container" class="mt-3"></div>
+                    <div id="image-preview-container" class="mt-3 d-flex flex-wrap">
+                    </div>
                 </div>          
 
                   <button type="submit" class="btn btn-primary mr-2">Submit</button>
@@ -149,29 +191,41 @@
         }  
 
 
-      document.getElementById('productImages').addEventListener('change', function(event) {
+        document.getElementById('productImages').addEventListener('change', function(event) {
       document.getElementById('image-preview-container').innerHTML = '';
 
       let files = event.target.files;
 
       for (let i = 0; i < files.length; i++) {
-          let file = files[i];
+        let file = files[i];
 
-          let reader = new FileReader();
+        let reader = new FileReader();
 
-          reader.onload = (function(file) {
-              return function(event) {
-                let img = document.createElement('img');
-                    img.className = 'img-thumbnail';
-                    img.style.maxHeight = '160px';
-                    img.style.maxWidth = '160px'; 
-                    img.src = event.target.result;
-                  
-                  document.getElementById('image-preview-container').appendChild(img);
-              };
-          })(file);
+        reader.onload = (function(file) {
+          return function(event) {
+            let container = document.createElement('div');
+            container.className = 'image-container';
 
-          reader.readAsDataURL(file);
+            let img = document.createElement('img');
+            img.src = event.target.result;
+
+            let removeBtn = document.createElement('button');
+            removeBtn.textContent = '×';
+            removeBtn.className = 'remove-btn';
+            removeBtn.onclick = function() {
+              container.remove();
+              // Optional: Update the file input to remove the removed image from the files list
+              // Note: This requires handling the file input element to remove the file programmatically.
+            };
+
+            container.appendChild(img);
+            container.appendChild(removeBtn);
+
+            document.getElementById('image-preview-container').appendChild(container);
+          };
+        })(file);
+
+        reader.readAsDataURL(file);
       }
     });
 
