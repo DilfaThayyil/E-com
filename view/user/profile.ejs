@@ -95,7 +95,7 @@
                                                             <div class="card-body">
                                                                 <h3 class="card-title text-center">My Wallet </h3><!-- End .card-title -->
                                                                 <br>
-                                                                <h5>Total Balance: &nbsp; ₹ &nbsp; <%= user.wallet %></h5><br>
+                                                                <h5>Total Balance: &nbsp; ₹ &nbsp; <%= user.wallet.toFixed(2) %></h5><br>
                                                                 <button type="button" class="btn btn-primary btn-block btn-lg" data-toggle="modal" data-target="#myModal">
                                                                     View Transactions
                                                                 </button>

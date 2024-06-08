@@ -31,10 +31,6 @@ app.use(express.static(path.join(__dirname, "public")));
 
 
 
-        
-
-
-
 const dashboard = async (req, res) => {
     try {
 
@@ -431,18 +427,27 @@ const approveReturnRequest = async (req, res) => {
         }
 
         const product = order.products.find(p => p._id.equals(productId));
-
         if (!product) {
             return res.status(404).json({ message: 'Product not found in order' });
         }
-
         product.Status = 'returned';
+        await order.save();
         
         const updatequantity=await Product.findById(product.products)
         updatequantity.Quantity+=product.quantity
-
         await updatequantity.save()
-        await order.save();
+
+        const user = await User.findById(order.userid)
+        const refundAmount = product.total
+        user.wallet += refundAmount
+        const transaction = {
+            amount : refundAmount,
+            description : 'Product returned',
+            date : new Date(),
+            status : 'in'
+        }
+        user.walletHistory.push(transaction)
+        await user.save()
 
 
         res.status(200).json({ success: true, message: 'Return request approved successfully' });
