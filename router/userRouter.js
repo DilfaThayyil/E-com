@@ -59,6 +59,8 @@ userRouter.delete('/removeFromWish/:id',productController.removeFromWish)
 userRouter.get('/contactUs',userController.contactUs)
 userRouter.get('/aboutUs',userController.aboutUs)
 
+userRouter.post('/retryPayment',orderController.retryPayment)
+
 
 
 

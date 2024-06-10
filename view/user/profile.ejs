@@ -212,43 +212,7 @@
 									</div>
 
 
-                                    <!-- <div class="tab-pane fade" id="tab-coupons" role="tabpanel" aria-labelledby="tab-coupons-link">
-                                        <div class="container my-4">
-                                            <% if (coupon && coupon.length > 0) { %>
-                                                <% coupon.forEach(coupon => { %>
-                                                    <div class="card mb-4 mx-auto shadow-sm" style="width: 90%;">
-                                                        <div class="card-body">
-                                                            <h5 class="card-title">Coupon Name: <%= coupon.name %></h5>
-                                                            <p class="card-text"><strong>Code:</strong> <%= coupon.code %></p>
-                                                            <p class="card-text"><strong>Discount Amount:</strong> ₹<%= coupon.discountAmount %></p>
-                                                            <p class="card-text"><strong>Minimum Amount:</strong> ₹<%= coupon.minAmount %></p>
-                                                            <p class="card-text"><strong>Description:</strong> <%= coupon.description %></p>
-                                                            <p class="card-text"><strong>Expiry Date:</strong> <%= coupon.expiryDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).replace(/\//g, '-') %></p>
-                                                        </div>
-                                                    </div>
-                                                <% }) %>
-                                            <% } else { %>
-                                                <div class="text-center">
-                                                    <h3>No coupons available yet.</h3>
-                                                    <a href="/" class="btn btn-outline-primary-2 mt-4">
-                                                        <span>GO SHOP</span>
-                                                        <i class="icon-long-arrow-right"></i>
-                                                    </a>
-                                                </div>
-                                            <% } %>
-                                            
-                                        </div>
-                                        <nav aria-label="Page navigation">
-                                            <ul class="pagination">
-                                                <% for (let i = 1; i <= totalCouponsPages; i++) { %>
-                                                    <li class="page-item <%= couponsCurrentPage === i ? 'active' : '' %>">
-                                                        <a class="page-link" href="/userProfile?couponsPage=<%= i %>#tab-coupons"><%= i %></a>
-                                                    </li>
-                                                <% } %>
-                                            </ul>
-                                        </nav>
-                                    </div> -->
-
+                                    
 
 
 
@@ -303,161 +267,155 @@
 									
 
 								    <div class="tab-pane fade" id="tab-address" role="tabpanel" aria-labelledby="tab-address-link">
-								    	<div class="row">
-											<% if (user && user.Addresses && user.Addresses.length > 0) { %>
-												<% user.Addresses.forEach(Address => { %>
-								    		<div class="col-lg-6">
-												
-								    			<div class="card card-dashboard">
-													
-								    				<div class="card-body">
-														
-								    					<h3 class="card-title">Billing Address</h3><!-- End .card-title -->
-                                                        
-														<p><strong>Name : </strong><%=Address.name%></p>
-														<p><strong>Phone : </strong><%=Address.phone%></p>
-														<p><strong>Email : </strong><%=Address.email%></p>
-														<p><strong>Address : </strong><%=Address.address%></p>
-														<p><strong>Pincode : </strong><%=Address.pincode%></p>
-														<p><strong>State : </strong><%=Address.state%></p>
-														<p><strong>City : </strong><%=Address.city%></p>
-														
-
-														<div class="">
-															<button class=" edit-button" data-toggle="modal" data-target="#editAddressModal<%=Address._id%>">
-																<i class="icon-edit"></i> Edit </button>
-															<a href="#" class="delete-button" onclick="removeAddress('<%=Address._id%>')">
-																<i class="fa-solid fa-trash"></i> Delete
-															</a>														
-														</div>
-
-														<div class="modal fade" id="editAddressModal<%=Address._id%>" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
-															<div class="modal-dialog" role="document">
-																<div class="modal-content">
-																	<div class="modal-header">
-																		<h5 class="modal-title" id="editModalLabel<%=Address._id%>">Edit Address</h5>
-																		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-																			<span aria-hidden="true">&times;</span>
-																		</button>
-																	</div>
-																	<div class="modal-body">
-																		<div class="form-group">
-																			<label for="editName">Name</label>
-																			<input type="text" class="form-control" id="editname-<%=Address._id%>" value="<%=Address.name%>" name="name" required>
-																			<span id="nameValidationMessage" class=" text-danger p-3 validation-message"></span>
-																		</div>
-																		<div class="form-group">
-																			<label for="editPhone">Phone</label>
-																			<input type="text" class="form-control" id="editphone-<%=Address._id%>" value="<%=Address.phone%>" name="phone" required>
-																			<span id="phoneValidationMessage" class=" text-danger p-3 validation-message"></span>
-																		</div>
-																		<div class="form-group">
-																			<label for="editEmail">Email</label>
-																			<input type="email" class="form-control" id="editemail-<%=Address._id%>" value="<%=Address.email%>" name="email" required>
-																			<span id="emailValidationMessage" class=" text-danger p-3 validation-message"></span>
-																		</div>
-																		<div class="form-group">
-																			<label for="editAddress">Address</label>
-																			<input type="text" class="form-control" id="editaddress-<%=Address._id%>" value="<%=Address.address%>" name="address" required>
-																			<span id="addressValidationMessage" class=" text-danger p-3 validation-message"></span>
-																		</div>
-																		<div class="form-group">
-																			<label for="editPincode">Pincode</label>
-																			<input type="text" class="form-control" id="editpincode-<%=Address._id%>" value="<%=Address.pincode%>" name="pincode" required>
-																			<span id="pincodeValidationMessage" class=" text-danger p-3 validation-message"></span>
-																		</div>
-																		<div class="form-group">
-																			<label for="editState">State</label>
-																			<input type="text" class="form-control" id="editstate-<%=Address._id%>" value="<%=Address.state%>" name="state" required>
-																			<span id="stateValidationMessage" class=" text-danger p-3 validation-message"></span>
-																		</div>
-																		<div class="form-group">
-																			<label for="editCity">City</label>
-																			<input type="text" class="form-control" id="editcity-<%=Address._id%>" value="<%=Address.city%>" name="city" required>
-																			<span id="cityValidationMessage" class=" text-danger p-3 validation-message"></span>
-																		</div>
-																		<button  class="btn btn-primary" onclick="editAddressForm('<%=Address._id%>')">Save Changes</button>
-																	</div>
-																</div>
-															</div>
-														</div>
-														
-								    				</div><!-- End .card-body -->
-													
-								    			</div><!-- End .card-dashboard -->
-												
-								    		</div><!-- End .col-lg-6 -->
-											<%})%>
-											<%}%>
-											<div>
-												<a href="#" class="btn btn-primary btn-rounded mb-4 mt-3 add-address-button" data-toggle="modal" data-target="#modalAddAddress">
-													<i class="fa-solid fa-plus"></i> Add Address
-												</a>
-											</div>
-
-										  <form action="/profileAddAddress" method="POST" onsubmit="return validateForm()">	
-											<div class="modal fade" id="modalAddAddress" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"aria-hidden="true">
-												<div class="modal-dialog" role="document">
-												  <div class="modal-content">
-													<div class="modal-header text-center">
-													  <h4 class="modal-title w-100 font-weight-bold">Enter the details</h4>
-													  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-														<span aria-hidden="true">&times;</span>
-													  </button>
-													</div>
-													<div class="modal-body mx-3">
-													  <div class="md-form mb-5">
-														<label data-error="wrong" data-success="right" for="formname">Name</label>
-														<input type="text" id="formname" class="form-control validate" name="name">
-														<span id="nameError" class="text-danger"></span>
-													  </div>
-						
-													  <div class="md-form mb-5">
-														<label data-error="wrong" data-success="right" for="formphone">Phone</label>
-														<input type="text" id="formphone" class="form-control validate" name="phone">
-														<span id="phoneError" class="text-danger"></span>
-													  </div>
-						
-													  <div class="md-form mb-5">
-														<label data-error="wrong" data-success="right" for="formemail">Email</label>
-														<input type="text" id="formemail" class="form-control validate" name="email">
-														<span id="emailError" class="text-danger"></span>
-													  </div>
-						
-													  <div class="md-form mb-5">
-														<label data-error="wrong" data-success="right" for="formaddress">Address</label>
-														<input type="text" id="formaddress" class="form-control validate" name="address">
-														<span id="addressError" class="text-danger"></span>
-													  </div>
-													  <div class="md-form mb-5">
-														<label data-error="wrong" data-success="right" for="formpincode">Pincode</label>
-														<input type="text" id="formpincode" class="form-control validate" name="pincode">
-														<span id="pincodeError" class="text-danger"></span>
-													  </div>
-						
-													  <div class="md-form mb-5">
-														<label data-error="wrong" data-success="right" for="formstate">State</label>
-														<input type="text" id="formstate" class="form-control validate" name="state">
-														<span id="stateError" class="text-danger"></span>
-													  </div>
-						
-													  <div class="md-form mb-5">
-														<label data-error="wrong" data-success="right" for="formcity">City</label>
-														<input type="text" id="formcity" class="form-control validate" name="city">
-														<span id="cityError" class="text-danger"></span>
-													  </div>
-						
-													</div>
-													<div class="modal-footer d-flex justify-content-center">
-													  <button type="submit" class="btn btn-primary">Submit</button>
-													</div>
-												  </div>
-												</div>
-											</div>
-										  </form>
-								    		
-								    	</div><!-- End .row -->
-								    </div><!-- .End .tab-pane -->
+                                        <div class="row">
+                                            <% if (addresses && addresses.length > 0) { %>
+                                                <% addresses.forEach(Address => { %>
+                                                    <div class="col-lg-6">
+                                                        <div class="card card-dashboard">
+                                                            <div class="card-body">
+                                                                <h3 class="card-title">Billing Address</h3>
+                                                                <p><strong>Name : </strong><%= Address.name %></p>
+                                                                <p><strong>Phone : </strong><%= Address.phone %></p>
+                                                                <p><strong>Email : </strong><%= Address.email %></p>
+                                                                <p><strong>Address : </strong><%= Address.address %></p>
+                                                                <p><strong>Pincode : </strong><%= Address.pincode %></p>
+                                                                <p><strong>State : </strong><%= Address.state %></p>
+                                                                <p><strong>City : </strong><%= Address.city %></p>
+                                                                <div class="">
+                                                                    <button class="edit-button" data-toggle="modal" data-target="#editAddressModal<%= Address._id %>">
+                                                                        <i class="icon-edit"></i> Edit
+                                                                    </button>
+                                                                    <a href="#" class="delete-button" onclick="removeAddress('<%= Address._id %>')">
+                                                                        <i class="fa-solid fa-trash"></i> Delete
+                                                                    </a>
+                                                                </div>
+                                                                <div class="modal fade" id="editAddressModal<%= Address._id %>" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+                                                                    <div class="modal-dialog" role="document">
+                                                                        <div class="modal-content">
+                                                                            <div class="modal-header">
+                                                                                <h5 class="modal-title" id="editModalLabel<%= Address._id %>">Edit Address</h5>
+                                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                    <span aria-hidden="true">&times;</span>
+                                                                                </button>
+                                                                            </div>
+                                                                            <div class="modal-body">
+                                                                                <div class="form-group">
+                                                                                    <label for="editName">Name</label>
+                                                                                    <input type="text" class="form-control" id="editname-<%= Address._id %>" value="<%= Address.name %>" name="name" required>
+                                                                                    <span id="nameValidationMessage" class="text-danger p-3 validation-message"></span>
+                                                                                </div>
+                                                                                <div class="form-group">
+                                                                                    <label for="editPhone">Phone</label>
+                                                                                    <input type="text" class="form-control" id="editphone-<%= Address._id %>" value="<%= Address.phone %>" name="phone" required>
+                                                                                    <span id="phoneValidationMessage" class="text-danger p-3 validation-message"></span>
+                                                                                </div>
+                                                                                <div class="form-group">
+                                                                                    <label for="editEmail">Email</label>
+                                                                                    <input type="email" class="form-control" id="editemail-<%= Address._id %>" value="<%= Address.email %>" name="email" required>
+                                                                                    <span id="emailValidationMessage" class="text-danger p-3 validation-message"></span>
+                                                                                </div>
+                                                                                <div class="form-group">
+                                                                                    <label for="editAddress">Address</label>
+                                                                                    <input type="text" class="form-control" id="editaddress-<%= Address._id %>" value="<%= Address.address %>" name="address" required>
+                                                                                    <span id="addressValidationMessage" class="text-danger p-3 validation-message"></span>
+                                                                                </div>
+                                                                                <div class="form-group">
+                                                                                    <label for="editPincode">Pincode</label>
+                                                                                    <input type="text" class="form-control" id="editpincode-<%= Address._id %>" value="<%= Address.pincode %>" name="pincode" required>
+                                                                                    <span id="pincodeValidationMessage" class="text-danger p-3 validation-message"></span>
+                                                                                </div>
+                                                                                <div class="form-group">
+                                                                                    <label for="editState">State</label>
+                                                                                    <input type="text" class="form-control" id="editstate-<%= Address._id %>" value="<%= Address.state %>" name="state" required>
+                                                                                    <span id="stateValidationMessage" class="text-danger p-3 validation-message"></span>
+                                                                                </div>
+                                                                                <div class="form-group">
+                                                                                    <label for="editCity">City</label>
+                                                                                    <input type="text" class="form-control" id="editcity-<%= Address._id %>" value="<%= Address.city %>" name="city" required>
+                                                                                    <span id="cityValidationMessage" class="text-danger p-3 validation-message"></span>
+                                                                                </div>
+                                                                                <button class="btn btn-primary" onclick="editAddressForm('<%= Address._id %>')">Save Changes</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                <% }) %>
+                                            <% } %>
+                                            <div>
+                                                <a href="#" class="btn btn-primary btn-rounded mb-4 mt-3 add-address-button" data-toggle="modal" data-target="#modalAddAddress">
+                                                    <i class="fa-solid fa-plus"></i> Add Address
+                                                </a>
+                                            </div>
+                                            <form action="/profileAddAddress" method="POST" onsubmit="return validateForm()">
+                                                <div class="modal fade" id="modalAddAddress" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header text-center">
+                                                                <h4 class="modal-title w-100 font-weight-bold">Enter the details</h4>
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body mx-3">
+                                                                <div class="md-form mb-5">
+                                                                    <label data-error="wrong" data-success="right" for="formname">Name</label>
+                                                                    <input type="text" id="formname" class="form-control validate" name="name">
+                                                                    <span id="nameError" class="text-danger"></span>
+                                                                </div>
+                                                                <div class="md-form mb-5">
+                                                                    <label data-error="wrong" data-success="right" for="formphone">Phone</label>
+                                                                    <input type="text" id="formphone" class="form-control validate" name="phone">
+                                                                    <span id="phoneError" class="text-danger"></span>
+                                                                </div>
+                                                                <div class="md-form mb-5">
+                                                                    <label data-error="wrong" data-success="right" for="formemail">Email</label>
+                                                                    <input type="text" id="formemail" class="form-control validate" name="email">
+                                                                    <span id="emailError" class="text-danger"></span>
+                                                                </div>
+                                                                <div class="md-form mb-5">
+                                                                    <label data-error="wrong" data-success="right" for="formaddress">Address</label>
+                                                                    <input type="text" id="formaddress" class="form-control validate" name="address">
+                                                                    <span id="addressError" class="text-danger"></span>
+                                                                </div>
+                                                                <div class="md-form mb-5">
+                                                                    <label data-error="wrong" data-success="right" for="formpincode">Pincode</label>
+                                                                    <input type="text" id="formpincode" class="form-control validate" name="pincode">
+                                                                    <span id="pincodeError" class="text-danger"></span>
+                                                                </div>
+                                                                <div class="md-form mb-5">
+                                                                    <label data-error="wrong" data-success="right" for="formstate">State</label>
+                                                                    <input type="text" id="formstate" class="form-control validate" name="state">
+                                                                    <span id="stateError" class="text-danger"></span>
+                                                                </div>
+                                                                <div class="md-form mb-5">
+                                                                    <label data-error="wrong" data-success="right" for="formcity">City</label>
+                                                                    <input type="text" id="formcity" class="form-control validate" name="city">
+                                                                    <span id="cityError" class="text-danger"></span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer d-flex justify-content-center">
+                                                                <button type="submit" class="btn btn-primary">Submit</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                            <!-- Addresses Pagination -->
+                                            <nav aria-label="Page navigation">
+                                                <ul class="pagination">
+                                                    <% for (let i = 1; i <= totalAddressesPages; i++) { %>
+                                                        <li class="page-item <%= addressesCurrentPage === i ? 'active' : '' %>">
+                                                            <a class="page-link" href="/userProfile?addressesPage=<%= i %>#tab-address"><%= i %></a>
+                                                        </li>
+                                                    <% } %>
+                                                </ul>
+                                            </nav>
+                                        </div>
+                                    </div>
+                                    
 
 								    
 									<div class="tab-pane fade" id="tab-changePassword" role="tabpanel" aria-labelledby="tab-changePassword-link">

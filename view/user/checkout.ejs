@@ -498,8 +498,14 @@
                             },
                             "theme": {
                                 "color": "#3399cc"
-                            }
+                            },
+                            "modal": {
+                    "ondismiss": function() {
+                        // Redirect to view order page if the payment window is closed
+                        window.location.href = `/vieworder/${data.order._id}`;
                     }
+                }
+            };
                     
                     let rzp1 = new Razorpay(options);
                     rzp1.open()
@@ -509,7 +515,7 @@
                         text: 'An error occurred while processing the order.',
                         icon: 'error',
                         confirmButtonText: 'OK'
-                    });
+                    })
                         
                 }
             })

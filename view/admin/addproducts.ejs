@@ -192,43 +192,50 @@
 
 
         document.getElementById('productImages').addEventListener('change', function(event) {
-      document.getElementById('image-preview-container').innerHTML = '';
+        let imagePreviewContainer = document.getElementById('image-preview-container');
+        imagePreviewContainer.innerHTML = '';
 
-      let files = event.target.files;
+        let files = Array.from(event.target.files);
+        let dataTransfer = new DataTransfer();
 
-      for (let i = 0; i < files.length; i++) {
-        let file = files[i];
+        files.forEach((file, index) => {
+            dataTransfer.items.add(file);
 
-        let reader = new FileReader();
+            let reader = new FileReader();
 
-        reader.onload = (function(file) {
-          return function(event) {
-            let container = document.createElement('div');
-            container.className = 'image-container';
+            reader.onload = (function(file, index) {
+                return function(event) {
+                    let container = document.createElement('div');
+                    container.className = 'image-container';
 
-            let img = document.createElement('img');
-            img.src = event.target.result;
+                    let img = document.createElement('img');
+                    img.src = event.target.result;
 
-            let removeBtn = document.createElement('button');
-            removeBtn.textContent = '×';
-            removeBtn.className = 'remove-btn';
-            removeBtn.onclick = function() {
-              container.remove();
-              // Optional: Update the file input to remove the removed image from the files list
-              // Note: This requires handling the file input element to remove the file programmatically.
-            };
+                    let removeBtn = document.createElement('button');
+                    removeBtn.textContent = '×';
+                    removeBtn.className = 'remove-btn';
+                    removeBtn.onclick = function() {
+                        container.remove();
+                        files.splice(index, 1);
+                        updateFileInput(files);
+                    };
 
-            container.appendChild(img);
-            container.appendChild(removeBtn);
+                    container.appendChild(img);
+                    container.appendChild(removeBtn);
 
-            document.getElementById('image-preview-container').appendChild(container);
-          };
-        })(file);
+                    imagePreviewContainer.appendChild(container);
+                };
+            })(file, index);
 
-        reader.readAsDataURL(file);
-      }
+            reader.readAsDataURL(file);
+        });
+
+        function updateFileInput(files) {
+            let newDataTransfer = new DataTransfer();
+            files.forEach(file => newDataTransfer.items.add(file));
+            document.getElementById('productImages').files = newDataTransfer.files;
+        }
     });
-
 
   
 </script>

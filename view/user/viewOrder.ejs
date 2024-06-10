@@ -181,8 +181,48 @@
                                             <button class="btn btn-danger" onclick="cancelOrder('<%=order._id%>','<%=product.products._id%>')">Cancel</button>
                                             <%}else if(product.Status === 'delivered'){%>
                                             <button id="returnRequestButton" class="btn btn-success " onclick="returnRequest('<%=order._id%>','<%=product.products._id%>')">Return</button>
+                                            <%}else if(product.Status === 'pending'){%>
+                                            <button class="btn btn-secondary retry-payment" data-order-id="<%= order._id %>"  data-product-id="<%= product.products._id %>">Retry Payment</button>
                                             <%}%>
-                                        </div>  
+                                        </div>
+
+                                        <!--modal-->
+                                        <div id="paymentModal" class="modal fade" tabindex="-1" role="dialog">
+                                            <div class="modal-dialog" role="document">
+                                              <div class="modal-content">
+                                                <div class="modal-header">
+                                                  <h5 class="modal-title">Retry Payment</h5>
+                                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                  </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                  <p>Select a payment method:</p>
+                                                  <div id="paymentOptions">
+                                                        <div>
+                                                            <input type="radio" id="razorpay" name="paymentOption" value="razorpay">
+                                                            <label for="razorpay">Razorpay</label>
+                                                        </div>
+                                                    <%if(order.total <= user.wallet){%>
+                                                        <div>
+                                                            <input type="radio" id="wallet" name="paymentOption" value="wallet">
+                                                            <label for="wallet">Wallet</label>
+                                                        </div>
+                                                    <%}else if(order.total <= 1000){%>
+                                                        <div>
+                                                            <input type="radio" id="cod" name="paymentOption" value="cod">
+                                                            <label for="cod">Cash on Delivery</label>
+                                                        </div>
+                                                    <%}%>
+                                                  </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                  <button type="button" class="btn btn-primary" id="confirmPayment">Confirm</button>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                            
                                         
                                        
                                     </div>
@@ -235,9 +275,12 @@
 <%-include('../partials/footerbar')%>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 
 <script>
+
+    
     function cancelOrder(orderid,productid){
         event.preventDefault();
         Swal.fire({
@@ -348,6 +391,138 @@
             }
         });
     }
+
+
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Attach click event listener to the retry payment buttons
+        document.querySelectorAll('.retry-payment').forEach(button => {
+            button.addEventListener('click', function () {
+                const orderId = this.getAttribute('data-order-id');
+                $('#paymentModal').modal('show');            });
+        });
+        
+        document.getElementById('confirmPayment').addEventListener('click', function () {
+            const selectedPaymentOption = document.querySelector('input[name="paymentOption"]:checked').value;
+            processPayment(selectedPaymentOption);
+        });
+    });
+
+    
+
+    function processPayment(selectedPaymentOption) {
+        const orderId = document.querySelector('.retry-payment').getAttribute('data-order-id');
+        const productId = document.querySelector('.retry-payment').getAttribute('data-product-id'); 
+        const paymentData = {
+            orderId: orderId,
+            paymentOption: selectedPaymentOption,
+            productId: productId
+        };
+
+        fetch('/retryPayment', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(paymentData)
+        })
+        .then(response => response.json())
+            .then(data => {
+                console.log('Backend response:', data);
+
+                if (data.success) {
+                    Swal.fire({
+                        title: 'Order Placed Successfully!',
+                        icon: 'success',
+                        showConfirmButton: false,
+                        timer: 2000 
+
+                    }).then(()=>{
+                        $('#paymentModal').modal('hide');
+                        // Reload the page after the modal is hidden
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 500); // Adjust timeout as necessary
+                    });
+                }else if(data.Razorpay){
+            
+                    const options ={
+                        "key": "rzp_test_QmkTPpR7YwgsmH", // Enter the Key ID generated from the Dashboard
+                        "amount": data.Razorpay.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                        "currency": "INR",
+                        "name": "Divine Styles",
+                        "description": "Test Transaction",
+                        "image": "https://example.com/your_logo",
+                        "order_id": data.Razorpay.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+                        "handler": function (response){
+                            verifyPayment(response,data.Razorpay,data.order)
+                            },
+                            "prefill": {
+                                "name": "Gaurav Kumar",
+                                "email": "gaurav.kumar@example.com",
+                                "contact": "9000090000"
+                            },
+                            "notes": {
+                                "address": "Razorpay Corporate Office"
+                            },
+                            "theme": {
+                                "color": "#3399cc"
+                            },
+                            "modal": {
+                    "ondismiss": function() {
+                        $('#paymentModal').modal('hide');
+                        // Reload the page if the payment window is closed
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 500); // Adjust timeout as necessary
+                    }
+                }
+            };
+                    let rzp1 = new Razorpay(options);
+                    rzp1.open()
+                } else {
+                    Swal.fire({
+                        title: 'Order Processing Failed',
+                        text: 'An error occurred while processing the order.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    })
+                        
+                }
+            })
+            .catch(error => {
+            console.error('Error:', error);
+        });
+        }    
+    
+    
+    
+        function verifyPayment(payment, order,userOrder) {
+            fetch('/verifyPayment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ payment, order,userOrder })
+            })
+            .then(response => response.json())
+            .then(response => {
+                if (response.payment) {
+                    Swal.fire({
+                        title: 'Order Placed Successfully!',
+                        icon: 'success',
+                        showConfirmButton: false,
+                        timer: 2000 // Set the duration for the alert
+                    });
+                    
+                    setTimeout(() => {
+                        window.location.href = `/vieworder/${response.orderId}`;
+                    }, 2000);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
 
 
 

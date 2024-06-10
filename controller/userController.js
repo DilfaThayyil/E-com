@@ -230,28 +230,7 @@ const logout = async(req,res)=>{
 
 
 
-const profileAddAddress = async(req,res)=>{
-    try{
-        const {name,phone,email,address,pincode,state,city} = req.body
-        const userid = req.session.user
-        const user = await User.findById(userid)
 
-        user.Addresses.push({
-            name,
-            phone,
-            email,
-            address,
-            pincode,
-            state,
-            city
-        })
-        await user.save()
-        console.log(' address added');
-        res.redirect('/userProfile')
-    }catch(err){
-        console.log(err);
-    }
-}
 
 
 
@@ -387,17 +366,23 @@ const userProfile = async(req,res)=>{
             .exec()
 
         //coupons pagination    
-       const couponsPerPage = 2
-       const couponsPage = parseInt(req.query.couponsPage) || 1
-       const totalCoupons = await Coupon.countDocuments()
-       const totalCouponsPages = Math.ceil(totalCoupons / couponsPerPage)
+        const couponsPerPage = 2
+        const couponsPage = parseInt(req.query.couponsPage) || 1
+        const totalCoupons = await Coupon.countDocuments()
+        const totalCouponsPages = Math.ceil(totalCoupons / couponsPerPage)
         const coupon = await Coupon.find()
             .skip((couponsPage - 1) * couponsPerPage)
             .limit(couponsPerPage)
             .exec()
 
 
-        const user = await User.findOne({_id:userid})
+            const addressesPerPage = 2;
+            const addressesPage = parseInt(req.query.addressesPage) || 1;
+            const user = await User.findById(userid);
+            const totalAddresses = user.Addresses.length;
+            const totalAddressesPages = Math.ceil(totalAddresses / addressesPerPage);
+            const addresses = user.Addresses.slice((addressesPage - 1) * addressesPerPage, addressesPage * addressesPerPage);
+
         res.render('profile',{
             orders,
             ordersCurrentPage:ordersPage,
@@ -405,7 +390,11 @@ const userProfile = async(req,res)=>{
             coupon,
             couponsCurrentPage:couponsPage,
             totalCouponsPages,
-            user
+            user,
+            addresses,
+            addressesCurrentPage: addressesPage,
+            totalAddressesPages
+            
         })
     }catch(err){
         console.log(err);
@@ -429,6 +418,30 @@ const editProfile = async(req,res)=>{
         console.log(err)
     }
 }
+
+const profileAddAddress = async(req,res)=>{
+    try{
+        const {name,phone,email,address,pincode,state,city} = req.body
+        const userid = req.session.user
+        const user = await User.findById(userid)
+
+        user.Addresses.push({
+            name,
+            phone,
+            email,
+            address,
+            pincode,
+            state,
+            city
+        })
+        await user.save()
+        console.log('address added');
+        res.redirect('/userProfile')
+    }catch(err){
+        console.log(err);
+    }
+}
+
 
 const editAddress = async (req, res) => {
     try {

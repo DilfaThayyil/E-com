@@ -60,6 +60,8 @@
                             <td><i class="text-danger"><%=product.Status%></i></td>
                           <%}else if(product.Status=='delivered'){%>
                             <td><i class="text-success"><%=product.Status%></i></td>
+                          <%}else{%>
+                            <td><i class="text-secondary"><%=product.Status%></i></td>
                           <%}%>
                           
                           <td>
