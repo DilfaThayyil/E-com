@@ -15,15 +15,31 @@ const Wishlist = require('../model/wishlistSchema')
 
 const allProducts = async (req,res)=>{
     try{
+        const limit = 4
+        const page = parseInt(req.query.page) || 1;
+        const skip = (page - 1) * limit;
         const products = await Product.find({Status:"active"}).populate({
             path: 'Category',
             populate: { path: 'offer' }
-        }).populate('offer')
+        })
+        .populate('offer')
+        .skip(skip)
+        .limit(limit)
         const offer = await Offer.find()
         const product = products.filter(product => product.Category.Status !== "blocked");
         const category = await Category.find({Status:"active"})
+        const totalProducts = await Product.countDocuments({ Status: "active" });
+
         
-        res.render('allproducts',{product,category,message:req.query.message,offer})
+        res.render('allproducts',{
+            product,
+            category,
+            message:req.query.message,
+            offer,
+            currentPage: page,
+            totalPages: Math.ceil(totalProducts / limit),
+            limit: limit
+        })
     }catch(err){
         console.log(err);
     }

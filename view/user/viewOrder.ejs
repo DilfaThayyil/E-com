@@ -396,7 +396,6 @@
 
 
     document.addEventListener('DOMContentLoaded', function () {
-        // Attach click event listener to the retry payment buttons
         document.querySelectorAll('.retry-payment').forEach(button => {
             button.addEventListener('click', function () {
                 const orderId = this.getAttribute('data-order-id');
@@ -439,11 +438,11 @@
                         timer: 2000 
 
                     }).then(()=>{
+                        console.log('Hiding modal and redirecting...');
                         $('#paymentModal').modal('hide');
-                        // Reload the page after the modal is hidden
-                        setTimeout(() => {
-                            window.location.reload();
-                        }, 500); // Adjust timeout as necessary
+                setTimeout(() => {
+                    window.location.href = `/vieworder/${data.order._id}`;
+                }, 500); 
                     });
                 }else if(data.Razorpay){
             
@@ -471,11 +470,7 @@
                             },
                             "modal": {
                     "ondismiss": function() {
-                        $('#paymentModal').modal('hide');
-                        // Reload the page if the payment window is closed
-                        setTimeout(() => {
-                            window.location.reload();
-                        }, 500); // Adjust timeout as necessary
+                        window.location.href = `/vieworder/${data.order._id}`;
                     }
                 }
             };
@@ -513,7 +508,7 @@
                         title: 'Order Placed Successfully!',
                         icon: 'success',
                         showConfirmButton: false,
-                        timer: 2000 // Set the duration for the alert
+                        timer: 2000 
                     });
                     
                     setTimeout(() => {

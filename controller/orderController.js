@@ -147,11 +147,9 @@ const placeOrder = async (req, res) => {
         const userid = req.session.user
         const { selectedValue,total,couponid ,paymentMethod} = req.body;
         
-        console.log(req.body)
         
         if(couponid){
           const coupon = await Coupon.findOne({code:couponid})
-          console.log(coupon)
           if(coupon){
             coupon.usedUser.push({user_id:userid})
             await coupon.save()
@@ -225,21 +223,23 @@ const placeOrder = async (req, res) => {
         const minimumAmount = 100;
         const adjustedAmount = Math.max(totalPrice, minimumAmount);
   
-        await newOrder.save();  // Save the order before generating Razorpay payment
-        await Cart.deleteOne({ userid: userid });
-  
-        generateRazorpay(newOrder._id, adjustedAmount).then((response) => {
-          res.json({ Razorpay: response, order: newOrder });
+        await newOrder.save()
+        await Cart.deleteOne({userid:userid})
+        generateRazorpay(newOrder._id,adjustedAmount).then((response)=>{
+          
+          console.log('razorpay order saved');
+          res.json({ Razorpay: response ,order: newOrder });
         }).catch(async (error) => {
           console.error('Razorpay payment failed:', error);
           newOrder.paymentStatus = 'pending';
           await newOrder.save();
           res.json({ success: false, error: 'Payment failed, please retry.', order: newOrder });
         });
-      }  } catch (error) {
+      }
+    } catch (error) {
       console.error('Error placing order:', error);
       res.status(500).json({ success: false, error: 'An error occurred while placing the order.' });
-  }
+    }
 };
 
 
@@ -255,10 +255,12 @@ const verifyPayment = async(req,res)=>{
     if(hmac===payment.razorpay_signature){
       userOrder.paymentStatus="Razorpay"
       const saveOrder=new Order(userOrder)
-       await saveOrder.save()        
-        const cart= await Cart.deleteOne({userid:userId})
-        res.json({payment:true,orderId:saveOrder._id})
-      }
+      await saveOrder.save()        
+      await Cart.deleteOne({userid:userId})
+      res.json({ payment: true, orderId: saveOrder._id });  // Change: Sending orderId in response
+    } else {
+      res.json({ payment: false });
+    }
    
   }catch(err){
   console.log(err);
@@ -487,18 +489,6 @@ const retryPayment = async (req, res) => {
     }
     pendingProduct.Status = 'placed';
 
-    
-    
-    // const newOrder = new Order({
-    //   userid: userid,
-    //   address: order.address,
-    //   total: order.total,
-    //   date: new Date(),
-    //   products: order.products,
-    //   status: 'placed',
-    //   paymentMode: paymentOption
-    // });
-
 
     if (paymentOption === 'wallet') {
       order.paymentStatus = 'wallet'
@@ -536,14 +526,6 @@ const retryPayment = async (req, res) => {
 
         await order.save();
         return res.json({ Razorpay: response, order: order });
-          // const order={
-          //   userid: userid,
-          //   address: order.address,
-          //   total: order.total,
-          //   date: new Date(),
-          //   products: order.products,
-          //   paymentMode:paymentOption
-          // }
         })
 
     }

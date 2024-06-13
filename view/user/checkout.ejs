@@ -473,7 +473,7 @@
                         timer: 2000 
 
                     }).then(()=>{
-                        window.location.href=`/vieworder/${data.order._id}`
+                        window.location.href=`/viewOrder/${data.order._id}`
                     })
                 }else if(data.Razorpay){
             
@@ -498,14 +498,8 @@
                             },
                             "theme": {
                                 "color": "#3399cc"
-                            },
-                            "modal": {
-                    "ondismiss": function() {
-                        // Redirect to view order page if the payment window is closed
-                        window.location.href = `/vieworder/${data.order._id}`;
+                            }
                     }
-                }
-            };
                     
                     let rzp1 = new Razorpay(options);
                     rzp1.open()
@@ -515,7 +509,7 @@
                         text: 'An error occurred while processing the order.',
                         icon: 'error',
                         confirmButtonText: 'OK'
-                    })
+                    });
                         
                 }
             })
@@ -545,7 +539,7 @@
                     });
                     
                     setTimeout(() => {
-                        window.location.href = `/vieworder/${response.orderId}`;
+                        window.location.href = `/viewOrder/${response.orderId}`;
                     }, 2000);
                 }
             })

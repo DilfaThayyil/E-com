@@ -67,6 +67,8 @@
                       <div class="form-group">
                           <label for="exampleInputUsername1">Product name</label>
                           <input type="text" class="form-control" id="productname" placeholder="Product name" value="<%=product.Name%>" name="name" >
+                          <span id="nameError" class="text-danger"></span>
+
                       </div>
                       <div class="form-group">
                           <label for="exampleInputConfirmPassword1">Category</label>
@@ -80,15 +82,21 @@
                       <div class="form-group">
                           <label for="exampleInputEmail1">Price</label>
                           <input type="number" class="form-control" id="productprice" min="1" placeholder="Price" value="<%=product.Price%>" name="price">
+                          <span id="priceError" class="text-danger"></span>
+
                       </div>
                       
                       <div class="form-group">
                           <label for="exampleInputPassword1">Stock</label>
                           <input type="number" class="form-control" id="qnt" min="1"  placeholder="Quantity" value="<%=product.Quantity%>" name="quantity">
+                          <span id="stockError" class="text-danger"></span>
+
                       </div>
                       <div class="form-group">
                           <label for="exampleInputConfirmPassword1">Description</label>
                           <input type="text" class="form-control" id="des" placeholder="Description" value="<%=product.Description%>" name="description">
+                          <span id="descriptionError" class="text-danger"></span>
+
                       </div>
                       <div class="form-group row">
                         <label for="productDate" class="col-sm-3 col-form-label" hidden>Images</label>
@@ -98,9 +106,9 @@
                         <!-- Image preview container -->
                         <div id="image-preview-container" class="mt-3"></div>
                     </div>
-                    <div id="error" style="color: red; display: none;">Please fill out all required fields</div>
 
                       <button type="submit" class=" btn-primary mr-2">Submit</button>
+                      <div id="error" style="color: red; display: none;">Please fill out all required fields</div>
                   
                   </form>
                   <form action="/admin/update/<%= product._id %>" method="POST" enctype="multipart/form-data">
@@ -251,10 +259,14 @@
           let productQuantity = document.getElementById('qnt').value.trim();
           let productDescription = document.getElementById('des').value.trim();
           let errorElement = document.getElementById('error');
-          
+          let productImages = document.getElementById('productimages')
          
           if (productName.length < 3 || productCategory === "" || productPrice === "" || productQuantity === "" || productDescription.length < 10) {
               errorElement.style.display = 'block'; // Show error message
+          
+          } else if (productImages.length < 4 ){
+                document.getElementById("imagesError").textContent = "Exactly 4 images are required.";
+                errorElement.style.display = 'block';
           } else {
               errorElement.style.display = 'none'; // Hide error message
               this.submit(); // Submit the form

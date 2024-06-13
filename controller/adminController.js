@@ -822,12 +822,12 @@ const imagedelete = async (req, res) => {
             if(check){
                 const message = "Coupon name already exists"
                 req.flash('err',message)
-                res.redirect('/admin/addCoupons')
+                return res.redirect('/admin/addCoupons')
             }
             if (Number(MinAmount) <= Number(discountAmount)) {
                 const message = "Minimum amount should be greater than discount amount";
                 req.flash('err', message);
-                res.redirect('/admin/addCoupons');
+                return res.redirect('/admin/addCoupons');
             }
                 const coupon = new Coupon({
                     name:couponName,
