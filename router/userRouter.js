@@ -59,7 +59,11 @@ userRouter.delete('/removeFromWish/:id',productController.removeFromWish)
 userRouter.get('/contactUs',userController.contactUs)
 userRouter.get('/aboutUs',userController.aboutUs)
 
+// retry failed payment 
 userRouter.post('/retryPayment',orderController.retryPayment)
+
+// 404
+userRouter.get('/page404',userController.page404)
 
 
 

@@ -3,7 +3,129 @@
 <%-include('../partials/navbar')%>
 <%-include('../partials/mobileNavbar')%>
        
+
+<style>
+
+    .search-container {
+        display: flex;
+        align-items: center;
+        background-color: #f1f1f1;
+        border-radius: 25px;
+        padding: 5px 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 400px;
+        margin: 11px auto; 
+    }
     
+    .search-container i {
+        color: #888;
+        margin-right: 10px;
+        font-size: 18px;
+    }
+    
+    .search-container input[type="text"] {
+        border: none;
+        outline: none;
+        background: none;
+        font-size: 16px;
+        width: 100%;
+        color: #333;
+        padding: 5px 0;
+    }
+    
+    .search-container input[type="text"]::placeholder {
+        color: #e9c074;
+    }
+    
+    .search-container:hover{
+        background-color: #e2e2e2;
+        border-color: #aaa;
+    }
+    
+    .toolbox-right {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        margin-bottom: 5px;
+    }
+    
+    .filter-condition {
+        display: flex;
+        align-items: center;
+    }
+    
+    .filter-condition span {
+        margin-right: 10px;
+        font-size: 16px;
+        color: #333;
+    }
+    
+    .filter-condition select {
+        appearance: none;
+        background-color: #f1f1f1;
+        border: 1px solid #ccc;
+        border-radius: 25px;
+        padding: 10px 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        font-size: 16px;
+        color: #333;
+        outline: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+    
+    .filter-condition select:hover {
+        background-color: #e2e2e2;
+        border-color: #aaa;
+    }
+    
+    .filter-condition select:focus {
+        border-color: #666;
+    }
+    
+    .filter-condition select option {
+        background-color: #fff;
+        color: #333;
+    }
+    
+    .toolbox-left {
+        display: flex;
+        align-items: center;
+    }
+    
+    .sidebar-toggler {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #f3f3f3; 
+        border: none;
+        border-radius: 25px;
+        padding: 10px 20px;
+        font-size: 16px;
+        text-decoration: none;
+        outline: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .sidebar-toggler i {
+        margin-right: 10px; 
+    }
+    
+    .sidebar-toggler:hover {
+        background-color: #e2e2e2;
+        border-color: #aaa;
+    }
+    
+    .sidebar-toggler:focus {
+        box-shadow: 0 0 0 3px #e9c074(0, 123, 255, 0.5); 
+    }
+    
+    
+</style>
+
+
     <div class="page-wrapper">
         <main class="main">
         	<div class="page-header text-center" style="background-image: url('/user/assets/images/page-header-bg.jpg')">
@@ -28,18 +150,10 @@
         				</div><!-- End .toolbox-left -->
 
                         <div class="search-container">
-                            <form>
                                 <i class="fas fa-search"></i>
                                 <input type="text" name="" id="search-item" placeholder="Search products"
                                 onkeyup="search()">
-                            </form>
                         </div><!-- End .search-container -->
-
-                        <div class="toolbox-center" hidden>
-                            <div class="toolbox-info">
-                                Showing <span>12 of 56</span> Products
-                            </div><!-- End .toolbox-info -->
-                        </div><!-- End .toolbox-center -->
 
         				<div class="toolbox-right">
         					<div class="filter-condition" >
@@ -120,9 +234,16 @@
 
                         </div><!-- End .row -->
 
-                        <div class="load-more-container text-center">
-                            <a href="#" class="btn btn-outline-darker btn-load-more">More Products <i class="icon-refresh"></i></a>
-                        </div><!-- End .load-more-container -->
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination">
+                                <% for (let i = 1; i <= totalPages; i++) { %>
+                                <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                                    <a class="page-link" href="?page=<%= i %>&limit=<%= limit %>"><%= i %></a>
+                                </li>
+                                <% } %>
+                            </ul>
+                        </nav>
+                        
                     </div><!-- End .products -->
 
                     <div class="sidebar-filter-overlay"></div><!-- End .sidebar-filter-overlay -->

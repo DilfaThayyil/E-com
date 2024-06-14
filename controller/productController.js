@@ -34,7 +34,6 @@ const allProducts = async (req,res)=>{
         res.render('allproducts',{
             product,
             category,
-            message:req.query.message,
             offer,
             currentPage: page,
             totalPages: Math.ceil(totalProducts / limit),
@@ -75,13 +74,28 @@ const singleProduct = async(req,res)=>{
 
 const categorybased = async(req,res)=>{
     try{
+        const limit = 4
+        const page = parseInt(req.query.page) || 1
+        const skip = (page - 1) * limit
         const categoryid = req.params.id
         const totalProducts = await Product.find({Category:categoryid}).populate({
             path: 'Category',
             populate: { path: 'offer' }
-        }).populate('offer')
+        })
+        .populate('offer')
+        .skip(skip)
+        .limit(limit)
+        const offer = await Offer.find()
         const category = await Category.find({Status:"active"})
-        res.render('categorybased', { category,totalProducts});
+        const products = await Product.countDocuments({Category:categoryid})
+        res.render('categorybased', {
+            category,
+            offer,
+            totalProducts,
+            currentPage: page,
+            totalPages: Math.ceil(products / limit),
+            limit: limit
+        });
     }catch(err){
         console.log(err);
     }

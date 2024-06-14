@@ -11,21 +11,40 @@ const Offer = require('../model/offerSchema')
 
 
 
+// HOME PAGE
 
 const home = async(req,res)=>{
     try{
         const user=req.session.name
+        const limit = 4
+        const page = parseInt(req.query.page) || 1
+        const skip = (page - 1) * limit
         const products = await Product.find({Status:'active'}).populate({
             path: 'Category',
             populate: { path: 'offer' }
-        }).populate('offer')
+        })
+        .populate('offer')
+        .skip(skip)
+        .limit(limit)
         const offer = await Offer.find()
         const product = products.filter(product => product.Category.Status !== "blocked");
-        res.render('home',{product,user,offer})
+        const totalProducts = await Product.countDocuments({ Status: "active" });
+
+        res.render('home',{
+            product,
+            user,
+            offer,
+            currentPage: page,
+            totalPages: Math.ceil(totalProducts / limit),
+            limit: limit
+        })
     }catch(err){
         console.log(err);
     }
 }
+
+
+// lOGIN PAGE
 
 const login = (req,res)=>{
     try{
@@ -36,6 +55,8 @@ const login = (req,res)=>{
     }
 }
 
+// SIGNUP PAGE
+
 const register = (req,res)=>{
     try{
         const msg = req.flash('err')
@@ -45,6 +66,8 @@ const register = (req,res)=>{
         console.log(err);
     }
 }
+
+// SIGNUP SUBMISSION
 
 const registerSubmit = async (req,res)=>{
     try{
@@ -77,6 +100,9 @@ const registerSubmit = async (req,res)=>{
         console.log(err);
     }
 }
+
+
+// LOGIN SUBMISSION
 
 const loginSubmit = async (req, res) => {
     try {
@@ -149,8 +175,9 @@ transporter.sendMail(mailOptions, function(error, info) {
     }
 });
 
-
 }
+
+// OTP PAGE
 
 const otppage = async(req,res)=>{
     try{
@@ -163,7 +190,7 @@ const otppage = async(req,res)=>{
 }
 
 
-
+// OTP SUBMISSION
 
 const otpSubmit = async (req, res) => {
     try {
@@ -207,6 +234,9 @@ const otpSubmit = async (req, res) => {
     }
 };
 
+
+// RESEND OTP
+
 const resendotp = async (req,res)=>{
     try{
         const user = req.session.userData
@@ -217,6 +247,8 @@ const resendotp = async (req,res)=>{
     }
 }
 
+
+// LOGOUT 
 
 const logout = async(req,res)=>{
     try{
@@ -232,7 +264,7 @@ const logout = async(req,res)=>{
 
 
 
-
+// FORGOT PASSWORD
 
 const forgotPassword = async(req,res)=>{
     try{
@@ -313,6 +345,7 @@ async function storeResetToken(email, resetToken) {
 }
 
 
+// RESET PASSWORD
 
 const resetPassword=async(req,res)=>{
     try{
@@ -323,6 +356,7 @@ const resetPassword=async(req,res)=>{
     }
 }
 
+// RESET PASSWORD SUBMISSION
 
 const resetPasswordSubmit=async(req,res)=>{
     try{
@@ -345,6 +379,8 @@ const resetPasswordSubmit=async(req,res)=>{
     }
 }
 
+
+// USER PROFILE
 
 const userProfile = async(req,res)=>{
     try{
@@ -407,6 +443,7 @@ const userProfile = async(req,res)=>{
         console.log(err);
     }
 }
+
 
 
 const editProfile = async(req,res)=>{
@@ -562,6 +599,14 @@ const aboutUs = async(req,res)=>{
 }
 
 
+const page404 = async(req,res)=>{
+    try{
+        res.render('404')
+    }catch(err){
+        console.log(err)
+    }
+}
+
   
     
 
@@ -585,5 +630,6 @@ module.exports={
     removeAddress,
     changePassword,
     contactUs,
-    aboutUs
+    aboutUs,
+    page404
 }
