@@ -9,7 +9,7 @@ const Order = require('../model/orderSchema')
 const Coupon = require('../model/couponSchema')
 require('dotenv').config()
 const Razorpay = require('razorpay')
-const {key_id,key_secret} = process.env
+const {KEY_ID,KEY_SECRET} = process.env
 const crypto = require('crypto')
 const easyinvoice = require('easyinvoice');
 const { name } = require('ejs')
@@ -22,8 +22,8 @@ const path = require('path');
 
 
 const instance = new Razorpay({
-  key_id:key_id,
-  key_secret:key_secret
+  key_id:KEY_ID,
+  key_secret:KEY_SECRET
 })
 
 

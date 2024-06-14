@@ -26,38 +26,33 @@
             <div class="card col-lg-4 mx-auto">
               <div class="card-body px-5 py-5">
                 <h3 class="card-title text-left mb-3">Admin Login</h3>
-                <form action="/admin/loginsubmit" method="post" name="loginForm" onsubmit="return validateForm()">
+                <form id="loginForm" action="/admin/loginsubmit" method="post" name="loginForm" onsubmit="return validateForm()">
                   <div class="form-group">
                     <label>Username or email *</label>
-                    <input type="text" class="form-control p_input" name="email">
+                    <input type="email" class="form-control" id="email" name="email" required>
+                    <span id="email-error" style="color: red;"></span>
+
                   </div>
                   <div class="form-group">
                     <label>Password *</label>
-                    <input type="password" class="form-control p_input" name="password">
+                    <div class="input-group">
+                      <input type="password" class="form-control" id="password" name="password" required>
+                      <div id="password-error" style="color: red;"></div>
+                    </div>
+                    <div class="form-check mb-4">
+                      <input class="form-check-input" type="checkbox" id="showPasswordCheckbox" onclick="togglePasswordVisibility()" style="margin-top: 7px;">
+                      <label class="form-check-label" for="showPasswordCheckbox" style="margin-left: 5px;">Show Password</label>
+                  </div>
                   </div>
                   <div class="form-group">
-                    <p class="text-danger" id="errorMsg"></p>
+                    <p class="text-danger" id="error"></p>
                   </div>
                   <div class="text-center">
                     <button type="submit" class="btn btn-primary btn-block enter-btn">Login</button>
                   </div>
                 </form>
                 
-                <script>
-                  function validateForm() {
-                    var email = document.forms["loginForm"]["email"].value;
-                    var password = document.forms["loginForm"]["Password"].value;
-                    var errorMsg = document.getElementById("errorMsg");
                 
-                    if (email == "" || password == "") {
-                      errorMsg.textContent = "Please fill in all fields";
-                      return false;
-                    }
-                    // Add more validation rules as needed
-                
-                    return true;
-                  }
-                </script>
                 
               </div>
             </div>
@@ -69,6 +64,82 @@
       <!-- page-body-wrapper ends -->
     </div>
     <!-- container-scroller -->
+
+<script>
+
+      function togglePasswordVisibility() {
+        let passwordInput = document.getElementById('password');
+        let toggleIcon = document.getElementById('toggle-icon');
+
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            toggleIcon.classList.remove('fa-eye');
+            toggleIcon.classList.add('fa-eye-slash');
+        } else {
+            passwordInput.type = "password";
+            toggleIcon.classList.remove('fa-eye-slash');
+            toggleIcon.classList.add('fa-eye');
+        }
+      }
+
+      document.getElementById('toggle-password').addEventListener('click', function () {
+        togglePasswordVisibility();
+    })
+
+    document.addEventListener("DOMContentLoaded", function() {
+	    function preventSpace(event) {
+        if (event.keyCode === 32) {
+            event.preventDefault();
+        }
+      }
+	    document.getElementById("email").addEventListener("keydown", preventSpace);
+	    document.getElementById("password").addEventListener("keydown", preventSpace);
+
+      document.getElementById("loginForm").addEventListener("submit", function(event) {
+        let email = document.getElementById("email").value.trim();
+        let password = document.getElementById("password").value.trim();
+        let errorElement = document.getElementById("error");
+
+		    let hasUppercase = /[A-Z]/.test(password);
+        let hasLowercase = /[a-z]/.test(password);
+        let hasNumber = /\d/.test(password);
+        let hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+        if (email === "" || password === "") {
+            errorElement.innerText = "Email and password are required";
+            errorElement.style.display = "block";
+            event.preventDefault(); 
+
+        } else if (password.length < 8) {
+            errorElement.innerText = "Password must be at least 8 characters long";
+            errorElement.style.display = "block";
+            event.preventDefault(); 
+
+		    } else if (!hasUppercase || !hasLowercase || !hasNumber || !hasSpecialChar) {
+            errorElement.innerText = "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character";
+            errorElement.style.display = "block";
+            event.preventDefault();
+        } else {
+            errorElement.style.display = "none";
+			      moveCursorToNextInput(event.target);
+        }
+      });
+    })  
+    function moveCursorToNextInput(currentInput) {
+        let form = currentInput.closest('form');
+        let inputs = Array.from(form.querySelectorAll('input'));
+        let index = inputs.indexOf(currentInput);
+        let nextInput = inputs[index + 1];
+
+        if (nextInput) {
+            nextInput.focus();
+        }
+    }
+
+
+</script>
+
+
     <!-- plugins:js -->
     <script src="/admin/assets/vendors/js/vendor.bundle.base.js"></script>
     <!-- endinject -->

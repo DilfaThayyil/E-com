@@ -10,6 +10,7 @@ const Order = require('../model/orderSchema')
 require('dotenv').config()
 const Coupon = require('../model/couponSchema')
 const offer = require('../model/offerSchema')
+const {adminEmail,adminPassword} = process.env
 
 
 
@@ -29,6 +30,47 @@ app.use(express.static(path.join(__dirname, "public")));
 
 
 
+
+const login = (req,res)=>{
+    try{
+        let msg=req.flash('err')
+        res.render('login',{msg})
+    }catch(err){
+        console.log(err);
+    }
+}
+
+const loginSubmit = async(req,res)=>{
+    try{
+        const {email,password} = req.body
+        if(email == process.env.adminEmail){
+            if(password == process.env.adminPassword){
+                req.session.admin = email
+                res.redirect('/admin')
+            }else{
+                let err= "Password is incorrect"
+               req.flash('err',err)
+               res.redirect('/admin/login')
+            }
+        }else{
+            let err= "email is incorrect"
+            req.flash('err',err)
+            res.redirect('/admin/login')
+        }
+    }catch(err){
+        console.log(err)
+    }
+}
+
+
+const logout = async(req,res)=>{
+    try{
+        req.session.admin = null
+        res.redirect('/admin/login')
+    }catch(err){
+        console.log(err)
+    }
+}
 
 
 const dashboard = async (req, res) => {
@@ -245,44 +287,6 @@ function getMonthName(monthIndex) {
 }
 
 
-const login = (req,res)=>{
-    try{
-        let msg=req.flash('err')
-        res.render('login',{msg})
-    }catch(err){
-        console.log(err);
-    }
-}
-
-const logout = async(req,res)=>{
-    try{
-         req.session.admin = null
-         res.redirect('/admin')
-    }catch(err){
-        console.log(err)
-    }
-}
-
-const loginSubmit = async(req,res)=>{
-    try{
-        const {email,password} = req.body
-        if(email == process.env.adminEmail){
-            if(password == process.env.adminPassword){
-                res.redirect('/admin')
-            }else{
-                let err= "Password is incorrect"
-               req.flash('err',err)
-               res.redirect('/admin/login')
-            }
-        }else{
-            let err= "email is incorrect"
-            req.flash('err',err)
-            res.redirect('/admin/login')
-        }
-    }catch(err){
-        console.log(err)
-    }
-}
 
 
 

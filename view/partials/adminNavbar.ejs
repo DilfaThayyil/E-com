@@ -1,7 +1,26 @@
+<style>
+  .logo {
+      text-align: center;
+      font-family: 'Lobster', cursive;
+      color: whitesmoke;
+  }
+  .logo .divine {
+      font-size: 1.7em;
+  }
+  .logo .styles {
+      font-size: 1.1em;
+      margin-top: -10px; /* Adjust as needed to bring 'Styles' closer to 'Divine' */
+  }
+</style>
+
+
+
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
     <div class="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top">
-      <a class="sidebar-brand brand-logo" href="index.html"><img src="/admin/assets/images/logo.svg" alt="logo" /></a>
-      <a class="sidebar-brand brand-logo-mini" href="index.html"><img src="/admin/assets/images/logo-mini.svg" alt="logo" /></a>
+      <div class="logo">
+        <span class="divine">DIVINE</span>
+        <span class="styles">Styles</span>
+      </div>
     </div>
     <ul class="nav">
       <li class="nav-item profile">
@@ -12,7 +31,7 @@
               <span class="count bg-success"></span>
             </div>
             <div class="profile-name">
-              <h5 class="mb-0 font-weight-normal">Admin</h5>
+              <h5 class="mb-0 font-weight-normal" >ADMIN</h5>
               
             </div>
           </div>
@@ -82,6 +101,14 @@
             <i class="mdi mdi-ticket-confirmation"></i>
           </span>
           <span class="menu-title">Offers</span>
+        </a>
+      </li>
+      <li class="nav-item menu-items">
+        <a class="nav-link" href="/admin/logout">
+          <span class="menu-icon">
+            <i class="mdi mdi-logout"></i>
+          </span>
+          <span class="menu-title">Logout</span>
         </a>
       </li>
     </ul>
