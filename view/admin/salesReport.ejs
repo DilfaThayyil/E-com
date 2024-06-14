@@ -49,10 +49,10 @@
                     
                     <div id="customDateInputs" style="display: none;" class="mt-3">
                         <label for="startDate">Start date</label>
-                        <input type="date" id="startDate" class="form-control">
+                        <input type="date" id="startDate" class="form-control" onchange="validateDates()">
                   
                         <label for="endDate" class="mt-3">End date</label>
-                        <input type="date" id="endDate" class="form-control">
+                        <input type="date" id="endDate" class="form-control" onchange="validateDates()">
                     </div>
             
                     <button class="btn btn-danger mt-3" onclick="generate()">Generate</button>
@@ -103,6 +103,50 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <script>
+
+
+
+      document.addEventListener('DOMContentLoaded', (event) => {
+          // Set max date to today for both start and end date inputs
+          const today = new Date().toISOString().split('T')[0];
+          document.getElementById('startDate').setAttribute('max', today);
+          document.getElementById('endDate').setAttribute('max', today);
+      });
+
+      function validateDates() {
+        const startDate = document.getElementById('startDate').value;
+        const endDate = document.getElementById('endDate').value;
+        const today = new Date().toISOString().split('T')[0];
+
+          if (startDate > today) {
+              Swal.fire({
+                  icon: 'error',
+                  title: 'Error',
+                  text: 'Start date cannot be in the future.',
+              });
+              document.getElementById('startDate').value = '';
+          }
+          if (endDate > today) {
+              Swal.fire({
+                  icon: 'error',
+                  title: 'Error',
+                  text: 'End date cannot be in the future.',
+              });
+              document.getElementById('endDate').value = '';
+          }
+          if (startDate && endDate && startDate > endDate) {
+              Swal.fire({
+                  icon: 'error',
+                  title: 'Error',
+                  text: 'Start date cannot be after end date.',
+              });
+              document.getElementById('startDate').value = '';
+              document.getElementById('endDate').value = '';
+          }
+      }
+
+
+
 
 
         function toggleDateInputs() {

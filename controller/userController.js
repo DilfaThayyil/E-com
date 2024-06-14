@@ -383,7 +383,14 @@ const userProfile = async(req,res)=>{
             const totalAddressesPages = Math.ceil(totalAddresses / addressesPerPage);
             const addresses = user.Addresses.slice((addressesPage - 1) * addressesPerPage, addressesPage * addressesPerPage);
 
+
+            const datePart = new Date().toISOString().slice(0,10).replace(/-/g,"");
+            const randomPart = Math.random().toString(36).substring(2, 10).toUpperCase();
+            const randomId = `ORD${datePart}${randomPart}`
+
+
         res.render('profile',{
+            randomId,
             orders,
             ordersCurrentPage:ordersPage,
             totalOrdersPages,

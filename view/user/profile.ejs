@@ -170,7 +170,7 @@
 																<div class="card-header p-4 order-header">
 																	<div class="d-flex justify-content-between align-items-center">
 																		<div>
-																			<h4 class="order-id">Order ID: <%= order._id %></h4>
+																			<h4 class="order-id">Order ID: <%=randomId%></h4>
 																			<p class="text-muted mb-0 order-date"> Placed On <span class="fw-bold text-body"> <%= order.date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).replace(/\//g, '-') %></span> </p>
 																			<% order.products.slice(0, 1).forEach((product, index) => { %>
 																				<div class="d-flex flex-row mb-4 pb-2 mt-4 order-products">
