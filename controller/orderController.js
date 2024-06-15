@@ -224,15 +224,12 @@ const placeOrder = async (req, res) => {
         const adjustedAmount = Math.max(totalPrice, minimumAmount);
   
         await newOrder.save()
-        await Cart.deleteOne({userid:userid})
+       
         generateRazorpay(newOrder._id,adjustedAmount).then((response)=>{
-          
           console.log('razorpay order saved');
           res.json({ Razorpay: response ,order: newOrder });
         }).catch(async (error) => {
           console.error('Razorpay payment failed:', error);
-          newOrder.paymentStatus = 'pending';
-          await newOrder.save();
           res.json({ success: false, error: 'Payment failed, please retry.', order: newOrder });
         });
       }
@@ -247,17 +244,21 @@ const placeOrder = async (req, res) => {
 const verifyPayment = async(req,res)=>{
   try{
     const userId = req.session.user
-    const {payment,order,userOrder} = req.body
-    const orderId = order.receipt
+    console.log('hjjjjjjjjjjjjjjjjjj')
+    const {payment,order} = req.body
+    const userOrder=await Order.findById(order._id)
+    console.log(payment)
     let hmac= crypto.createHmac('sha256','XEwHXRnbP4kAiT17e5nWBbLk')
     hmac.update(payment.razorpay_order_id+'|'+payment.razorpay_payment_id)
     hmac=hmac.digest('hex')
     if(hmac===payment.razorpay_signature){
       userOrder.paymentStatus="Razorpay"
-      const saveOrder=new Order(userOrder)
-      await saveOrder.save()        
+      userOrder.products.forEach((product)=>{
+        product.Status = "placed"
+      })
+      await userOrder.save()        
       await Cart.deleteOne({userid:userId})
-      res.json({ payment: true, orderId: saveOrder._id });  // Change: Sending orderId in response
+      res.json({ payment: true, orderId: userOrder._id });  // Change: Sending orderId in response
     } else {
       res.json({ payment: false });
     }
@@ -266,6 +267,27 @@ const verifyPayment = async(req,res)=>{
   console.log(err);
   }
 }
+
+
+
+const verifyPaymentFailed = async (req, res) => {
+  try {
+      const { order } = req.body;
+      const userOrder = await Order.findById(order._id);
+
+      if (userOrder) {
+          userOrder.paymentStatus = "pending";
+          await userOrder.save();
+          res.json({ success: true });
+      } else {
+          res.status(404).json({ success: false, error: 'Order not found.' });
+      }
+  } catch (err) {
+      console.log(err);
+      res.status(500).json({ success: false, error: 'An error occurred while updating the payment status.' });
+  }
+};
+
 
 
 
@@ -547,5 +569,6 @@ module.exports={
     generateRazorpay,
     verifyPayment,
     invoiceDownload,
-    retryPayment
+    retryPayment,
+    verifyPaymentFailed
 }

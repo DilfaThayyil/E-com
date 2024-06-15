@@ -476,7 +476,7 @@
                         window.location.href=`/viewOrder/${data.order._id}`
                     })
                 }else if(data.Razorpay){
-            
+                    console.log(data.Razorpay)
                     const options ={
                         "key": "rzp_test_QmkTPpR7YwgsmH", // Enter the Key ID generated from the Dashboard
                         "amount": data.Razorpay.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
@@ -486,7 +486,8 @@
                         "image": "https://example.com/your_logo",
                         "order_id": data.Razorpay.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
                         "handler": function (response){
-                            verifyPayment(response,data.Razorpay,data.order)
+                            
+                            verifyPayment(response,data.order)
                             },
                             "prefill": {
                                 "name": "Gaurav Kumar",
@@ -498,7 +499,12 @@
                             },
                             "theme": {
                                 "color": "#3399cc"
+                            },
+                            "modal": {
+                        "ondismiss": function () {
+                            paymentFailed(data.order);  // Handle payment failure
                             }
+                        }
                     }
                     
                     let rzp1 = new Razorpay(options);
@@ -520,13 +526,13 @@
     
     
     
-        function verifyPayment(payment, order,userOrder) {
+        function verifyPayment(payment, order) {
             fetch('/verifyPayment', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ payment, order,userOrder })
+                body: JSON.stringify({ payment, order })
             })
             .then(response => response.json())
             .then(response => {
@@ -546,6 +552,30 @@
             .catch(error => console.error('Error:', error));
         }
 
+
+    function paymentFailed(order) {
+        fetch('/paymentFailed', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ order })
+        })
+        .then(response => response.json())
+        .then(response => {
+            if (response.success) {
+                Swal.fire({
+                    title: 'Payment Failed',
+                    text: 'The payment process was not completed successfully. Your order is pending.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                window.location.href = `/viewOrder/${order._id}`;
+                });
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
 
 
 

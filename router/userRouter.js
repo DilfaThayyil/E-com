@@ -30,6 +30,8 @@ userRouter.post('/addressSubmit',cartController.addressSubmit)
 userRouter.post('/placeOrder',orderController.placeOrder)
 userRouter.post('/verifyPayment',orderController.verifyPayment)
 
+userRouter.post('/paymentFailed',orderController.verifyPaymentFailed)
+
 userRouter.post('/forgotPassword',userController.forgotPassword)
 userRouter.get('/resetPassword',userController.resetPassword)
 userRouter.post('/resetPasswordSubmit',userController.resetPasswordSubmit)

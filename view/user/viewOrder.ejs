@@ -455,7 +455,7 @@
                         "image": "https://example.com/your_logo",
                         "order_id": data.Razorpay.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
                         "handler": function (response){
-                            verifyPayment(response,data.Razorpay,data.order)
+                            verifyPayment(response,data.order)
                             },
                             "prefill": {
                                 "name": "Gaurav Kumar",

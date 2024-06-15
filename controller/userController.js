@@ -387,7 +387,7 @@ const userProfile = async(req,res)=>{
         const userid = req.session.user
 
         //orders pagination
-        const ordersPerpage = 1; 
+        const ordersPerpage = 3; 
         const ordersPage = parseInt(req.query.ordersPage) || 1; 
         const totalOrders = await Order.countDocuments({userid: userid});
         const totalOrdersPages = Math.ceil(totalOrders / ordersPerpage);
