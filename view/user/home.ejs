@@ -9,20 +9,21 @@
                     <div class="header-left">
                         <nav class="main-nav">
                             <ul class="menu sf-arrows">
-                                <li class="megamenu-container active">
-                                    <a href="/">Home</a>
-                                </li>
+                                
                                 <li>
                                     <a href="/allproducts">Shop</a>
                                 </li>
-                                <li class="megamenu-container active">
+                                <li class="megamenu-container ">
                                     <a href="/contactUs">Contact</a>
                                 </li>
                                 <li >
                                     <a href="/aboutUs">About Us</a>
                                 </li>
-                                <li class="megamenu-container active">
-                                    <a href="/userProfile">My Account</a>
+                                <li class="megamenu-container">
+                                    <a href="/cart">Cart</a>
+                                </li>
+                                <li class="megamenu-container ">
+                                    <a href="/userProfile">Profile</a>
                                 </li>                                
                             </ul><!-- End .menu -->
                         </nav><!-- End .main-nav -->
@@ -56,30 +57,21 @@
                             <i class="far fa-heart" style="font-size: x-large; margin-top: 8px;"></i>
                             <!-- <span class="wishlist-count">0</span > -->
                         </a>
+                        
         
                         <div class="dropdown cart-dropdown">
-                            <a href="/cart" class="dropdown-toggle" role="button" aria-haspopup="true"  data-display="static">
-                                <i class="icon-shopping-cart"></i>
-                                <!-- <span class="cart-count"></span> -->
+                            <a  class="dropdown-toggle p-4" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa-regular fa-user fa-sm " style="color: rgb(252, 250, 249); "></i> <!-- Icon here -->
                             </a>
-                            
-                            <div class="dropdown">
-                                <a  class="dropdown-toggle p-4" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                  <i class="fa-regular fa-user fa-sm " style="color: #e9c074; "></i> <!-- Icon here -->
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right mt-2" aria-labelledby="dropdownMenu2" style="width: 40px;" >
-                                    
-                                 <% if(user){%>
-                                    <P><%=user%></P>
-                                    <a href="/userProfile">Profile</a>
-                                    <a href="/logout">Logout</a>
-                                    <%}else{%>
-                                        <a href="/login">Login</a>
-                                    <%}%>
 
-                                </div>
-                              </div>
-                                            
+                            <div class="dropdown-menu dropdown-menu-right mt-2" aria-labelledby="dropdownMenu2" style="width: 40px;" >
+                                <% if(user){%>
+                                   <P><%=user%></P>
+                                   <a href="/logout">Logout</a>
+                               <%}else{%>
+                                   <a href="/login">Login</a>
+                                <%}%>
+                            </div>
                         </div><!-- End .cart-dropdown -->
                     </div><!-- End .header-right -->
                 </div><!-- End .container -->

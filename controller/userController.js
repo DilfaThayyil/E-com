@@ -197,7 +197,6 @@ const otpSubmit = async (req, res) => {
         const { digit1, digit2, digit3, digit4 } = req.body;
         const otpnumber =  digit1 + digit2 + digit3 + digit4;
         const user = req.session.userData;
-        console.log(otpnumber);
         const check = await otpSchema.findOne({ email: user.Email });
         
         if (check.otp == otpnumber) {
@@ -269,13 +268,11 @@ const logout = async(req,res)=>{
 const forgotPassword = async(req,res)=>{
     try{
         const {email} = req.body
-        console.log(email);
         const resetToken = Math.floor(Math.random() * 9000) + 1000;
         const token = await storeResetToken(email, resetToken);
         let message = ''
         if (token) {
             sendResetLink(email, resetToken);
-            console.log("Reset link send");
             message = 'Reset link has been sent to your email.'
           setTimeout(()=>{
             res.redirect('/login')
@@ -336,7 +333,6 @@ async function storeResetToken(email, resetToken) {
         user.resetTokenExpires = Date.now() + 3600000; 
         await user.save();
 
-        console.log('Reset token stored successfully');
         return resetToken
     } catch (error) {
         console.error('Error storing reset token:', error);
@@ -371,7 +367,6 @@ const resetPasswordSubmit=async(req,res)=>{
             user.resetToken = null;
             user.resetTokenExpirationDate = null; 
             await user.save();
-            console.log("Password reset successfully")
             res.redirect('/login')
            
     }catch(err){
@@ -479,7 +474,6 @@ const profileAddAddress = async(req,res)=>{
             city
         })
         await user.save()
-        console.log('address added');
         res.redirect('/userProfile')
     }catch(err){
         console.log(err);
@@ -513,7 +507,6 @@ const editAddress = async (req, res) => {
                 }
             );
 
-            console.log('Address updated successfully');
             res.json({ message: 'Address updated successfully' });
         } catch (error) {
             console.error('Error updating address:', error);
@@ -539,7 +532,6 @@ const removeAddress=async (req,res)=>{
         }
 
         user.Addresses.pull({_id:addressid})
-        console.log("address removed successfully");
         res.json({message:"Address removed successfully"})
         await user.save()
     }catch(err){

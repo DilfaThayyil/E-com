@@ -240,7 +240,6 @@ const dashboard = async (req, res) => {
             data: monthlyData.map(data => data.sales)
         };
 
-        console.log(yearlyData.data)
 
         res.render('dashboard', {
             mostSoldProducts,
@@ -391,7 +390,6 @@ const allOrders = async(req,res)=>{
             }
             const user = await User.findById(order.userid);
             const productDetails = await Product.findById(productId);
-            console.log("order : ",order);
             res.render('orderDetails', {order,product,user,productDetails}); 
         } catch (error) {
             console.error('Error fetching order details:', error);
@@ -821,7 +819,6 @@ const imagedelete = async (req, res) => {
     const addCouponSubmit = async(req,res)=>{
         try{
             const {couponName,couponCode,discountAmount,MinAmount,couponDescription,exprDate} = req.body
-            console.log(req.body)
             const check = await Coupon.findOne({name:couponName})
             if(check){
                 const message = "Coupon name already exists"
@@ -976,7 +973,6 @@ const imagedelete = async (req, res) => {
                 return res.status(400).json({ error: 'Invalid period specified' });
         }
 
-        console.log(`Generating report from ${startDateTime} to ${endDateTime}`);
 
             const orders = await Order.aggregate([
                 {
@@ -1030,9 +1026,6 @@ const imagedelete = async (req, res) => {
                 },
             ])
 
-            console.log("Orders Count:", orders.length);
-            console.log("Start Date:", startDateTime);
-            console.log("End Date:", endDateTime);
 
             return res.json({
                 status: "success",

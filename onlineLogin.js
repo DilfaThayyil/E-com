@@ -37,7 +37,6 @@ require('dotenv').config()
         headers:{authorization:`Bearer ${access_token}`},
   
       })
-      console.log(profile);
 
       let user= await User.findOne({Email:profile.email})
       if(user){
@@ -47,7 +46,6 @@ require('dotenv').config()
       }else{
         const bcryptPassword=  await bcrypt.hash(profile.id,10)
         let name=profile.name.split(' ')[0]
-        console.log(name)
         const newUser= new User({
             Name:profile.name,
             Email:profile.email,

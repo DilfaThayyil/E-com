@@ -45,102 +45,7 @@ const generateRazorpay =(orderId , adjustedAmount)=>{
 }
 
 
-// const placeOrder = async (req, res) => {
-//     try {
-//         const userid = req.session.user
-//         const { selectedValue,total,couponid ,paymentMethod} = req.body;
-        
-//         console.log(req.body)
-        
-//         if(couponid){
-//           const coupon = await Coupon.findOne({code:couponid})
-//           console.log(coupon)
-//           if(coupon){
-//             coupon.usedUser.push({user_id:userid})
-//             await coupon.save()
-//           }
-//         }
 
-//         const cartData = await Cart.findOne({userid:userid}).populate({
-//             path:"products.productId",
-//             model:"Products"
-//         })
-
-//         const products = await Promise.all(cartData.products.map(async (cartProduct) => {
-//             const productDetails = await Product.findById(cartProduct.productId);
-//             productDetails.Quantity -= cartProduct.quantity;
-//             await productDetails.save();
-//             return {
-//                 products: cartProduct.productId,
-//                 name: productDetails.Name,
-//                 price: productDetails.Price,
-//                 quantity: cartProduct.quantity,
-//                 total: cartProduct.totalPrice,
-//                 orderStatus: cartProduct.status,
-//                 image:cartProduct.image,
-//                 reason: cartProduct.cancellationReason,
-//             };
-//         }));
-
-//         const newOrder = new Order({
-//           userid: userid,
-//           address: selectedValue,
-//           total: total,
-//           date: new Date(),
-//           products: products,
-//           status: 'placed',
-//           paymentMode:paymentMethod
-//       })
-
-//       if(paymentMethod === 'wallet'){
-//         newOrder.paymentStatus='wallet'
-//         await newOrder.save().then(async()=>{
-//           await Cart.deleteOne({userid:userid})
-//           res.json({ success: true, order: newOrder });
-//         })
-//         const user = await User.findOne({_id:userid})
-//         user.wallet=user.wallet-total
-//         const transaction = {
-//           amount : total,
-//           description: 'Product purchased',
-//           date : new Date(),
-//           status : 'out'
-//         }
-//         user.walletHistory.push(transaction)
-//         await user.save()
-
-//       }
-      
-//       if(paymentMethod === 'Cash on delivery'){
-//         newOrder.paymentStatus="COD"
-//         await newOrder.save()
-//         await Cart.deleteOne({userid:userid})
-//         res.json({ success: true, order: newOrder });
-
-//       }else if(paymentMethod === 'Razorpay'){
-//         const totalPrice = Math.round(newOrder.total*100)
-//         const minimumAmount = 100
-//         const adjustedAmount = Math.max(totalPrice,minimumAmount)
-//         generateRazorpay(newOrder._id,adjustedAmount).then(async(response)=>{
-//           await newOrder.save()
-//           await Cart.deleteOne({userid:userid})
-//         const  order={
-//             userid: userid,
-//             address: selectedValue,
-//             total: total,
-//             date: new Date(),
-//             products: products,
-//             status: 'placed',
-//             paymentMode:paymentMethod
-//         }
-//           res.json({ Razorpay: response ,order: order });
-//         })
-//       }
-//   } catch (error) {
-//       console.error('Error placing order:', error);
-//       res.status(500).json({ success: false, error: 'An error occurred while placing the order.' });
-//   }
-// };
 
 const placeOrder = async (req, res) => {
     try {
@@ -226,7 +131,6 @@ const placeOrder = async (req, res) => {
         await newOrder.save()
        
         generateRazorpay(newOrder._id,adjustedAmount).then((response)=>{
-          console.log('razorpay order saved');
           res.json({ Razorpay: response ,order: newOrder });
         }).catch(async (error) => {
           console.error('Razorpay payment failed:', error);
@@ -244,10 +148,8 @@ const placeOrder = async (req, res) => {
 const verifyPayment = async(req,res)=>{
   try{
     const userId = req.session.user
-    console.log('hjjjjjjjjjjjjjjjjjj')
     const {payment,order} = req.body
     const userOrder=await Order.findById(order._id)
-    console.log(payment)
     let hmac= crypto.createHmac('sha256','XEwHXRnbP4kAiT17e5nWBbLk')
     hmac.update(payment.razorpay_order_id+'|'+payment.razorpay_payment_id)
     hmac=hmac.digest('hex')
@@ -297,7 +199,6 @@ const viewOrder = async(req,res)=>{
         const userid = req.session.user
         const user = await User.findById(userid)
         const orderId = req.params.id
-        console.log(req.params.id);
         const order = await Order.findById(orderId).populate({
             path:"products.products",
             model:"Products",
@@ -358,24 +259,6 @@ const cancelOrder = async(req,res)=>{
 }
 
 
-// const orderSummary= async (req,res)=>{
-//     try{
-  
-//     const orderid=req.params.id
-//     const user = await User.findOne({ _id: req.session.user});
-//     const orders = await Order.find({ _id:orderid})
-//       .populate({
-//           path: 'products.products',
-//           model: 'Products'
-//       })
-//       .exec();
-  
-//       res.render("viewOrder",{orders,user,orderid})
-  
-//     }catch(err){
-//       console.log(err);
-//     }
-// }
   
 
 
@@ -409,12 +292,9 @@ const returnRequest = async (req, res) => {
 const applyCoupon = async (req, res) => {
   try {
     const userId = req.session.user;
-    console.log(req.session.user);
     const { couponCode, checkprice } = req.body;
-    console.log(req.body);
     
     const coupon = await Coupon.findOne({ code: couponCode });
-    console.log(coupon);
     
     if (!coupon) {
       return res.json({ error: 'Coupon not found' });
@@ -451,9 +331,7 @@ const applyCoupon = async (req, res) => {
       return res.json({ error: 'Coupon cannot be applied as it reduces the order price below ₹10' });
     }
 
-   console.log(totalPriceTotal, 
-    discountedPrice, 
-    appliedDiscount, )
+    
     res.json({ 
       success: `Coupon ${coupon.name} applied successfully`, 
       totalPriceTotal, 
@@ -493,13 +371,11 @@ const retryPayment = async (req, res) => {
   try {
     const userid = req.session.user
     const { orderId, paymentOption , productId } = req.body;
-    console.log(req.body)
 
     const order = await Order.findById(orderId)
     if (!order) {
       return res.status(404).json({ success: false, message: 'Order not found.' });
     }
-    console.log(order)
 
 
     const pendingProduct = order.products.find(product => 
