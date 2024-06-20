@@ -26,7 +26,7 @@ app.set('view engine','ejs')
 
 
 // connecting mongodb to server
-mongoose.connect("mongodb://localhost:27017/E-commerce").then(()=>{
+mongoose.connect("mongodb+srv://dilfathayyil:hnjWGAgmVdebjCo8@cluster0.tacmwjl.mongodb.net/").then(()=>{
     console.log("mongodb connected");
 }).catch((err)=>{
     console.log("failed to connect"+err);
