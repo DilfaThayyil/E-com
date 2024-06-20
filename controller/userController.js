@@ -305,7 +305,7 @@ function sendResetLink(email, resetToken) {
         to: email,
         subject: 'Password Reset Link',
         html: `<p>Click the following link to reset your password:</p>
-               <a href="http://localhost:3000/resetPassword?token=${resetToken}">Reset Password</a>`
+               <a href="https://divine-styles.cloud/resetPassword?token=${resetToken}">Reset Password</a>`
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
