@@ -467,7 +467,7 @@ const editProduct = async(req,res)=>{
         const productId = req.params.id
         const product = await Product.findById(productId).populate('Category').exec()
         const category = await Category.find({Status:'active'})
-        res.render('editproduct',{product,category})
+        res.render('editProduct',{product,category})
     }catch(err){
         console.log(err)
     }
