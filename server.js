@@ -25,8 +25,9 @@ app.set('view engine','ejs')
 
 
 
+
 // connecting mongodb to server
-mongoose.connect("mongodb+srv://dilfathayyil:hnjWGAgmVdebjCo8@cluster0.tacmwjl.mongodb.net/").then(()=>{
+mongoose.connect(process.env.MONGODB_URI).then(()=>{
     console.log("mongodb connected");
 }).catch((err)=>{
     console.log("failed to connect"+err);
