@@ -675,9 +675,11 @@ const blockCategory = async (req, res) => {
         const categoryId = req.body.categoryId; 
         const action = req.body.action; 
         const check = await Category.findById(categoryId);
+        const products = await Product.find({Category:categoryId})
         if (check) {
           
             check.Status = action === 'block' ? 'blocked' : 'active';
+            products.Status = action === 'block' ? 'blocked' : 'active'
             await check.save();
             res.json({ success: true });
         } else {
