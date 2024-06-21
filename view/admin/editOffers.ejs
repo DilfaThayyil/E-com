@@ -75,7 +75,7 @@
                         <div class="form-group row">
                             <label for="Couponcode" class="col-sm-3 col-form-label"> Starting Date</label>
                             <div class="col-sm-9">
-                                <input type="date" class="form-control" id="Couponcode" name="startingDate" value="<%=offers.startDate%>">
+                                <input type="date" class="form-control" id="startingDate" name="startingDate" value="<%=offers.startDate.toISOString().split('T')[0]%>">
                                 <small id="codeError" class="text-danger"></small>
                             </div>
                         </div>
@@ -83,7 +83,7 @@
                         <div class="form-group row">
                             <label for="MinAmount" class="col-sm-3 col-form-label">Ending Date</label>
                             <div class="col-sm-9">
-                                <input type="date" class="form-control" id="MinAmount" name="endDate" value="<%=offers.endDate%>">
+                                <input type="date" class="form-control" id="endDate" name="endDate" value="<%=offers.endDate.toISOString().split('T')[0]%>">
                                 <small id="minError" class="text-danger"></small>
                             </div>
                         </div>
