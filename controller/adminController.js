@@ -30,6 +30,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 
 
+//LOGIN
 
 const login = (req,res)=>{
     try{
@@ -39,6 +40,8 @@ const login = (req,res)=>{
         console.log(err);
     }
 }
+
+//LOGIN SUBMIT
 
 const loginSubmit = async(req,res)=>{
     try{
@@ -62,6 +65,7 @@ const loginSubmit = async(req,res)=>{
     }
 }
 
+//LOGOUT
 
 const logout = async(req,res)=>{
     try{
@@ -72,6 +76,8 @@ const logout = async(req,res)=>{
     }
 }
 
+
+//DASHBOARD
 
 const dashboard = async (req, res) => {
     try {
