@@ -87,7 +87,6 @@ const registerSubmit = async (req,res)=>{
                 PhoneNumber : mobileNumber,
                 password : bcryptPassword ,
                 ReferId:name+Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000
-
             }
             otp(email,name)
            if(Referral){
@@ -149,16 +148,14 @@ async function otp  (Email,Name){
         otp:Otp
     })
   let userotp = await otp.save()
-// Create a transporter object using SMTP transport
 let transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'dilfathayyil@gmail.com', // Your Gmail address
-        pass: 'ydwv upst yblp igrq' // Your Gmail password
+        user: 'dilfathayyil@gmail.com', 
+        pass: 'ydwv upst yblp igrq' 
     }
 });
 
-// Define email message options
 let mailOptions = {
     from: 'dilfathayyil@gmail.com',
     to: `${Email}`,
@@ -177,7 +174,6 @@ transporter.sendMail(mailOptions, function(error, info) {
 
 }
 
-// OTP PAGE
 
 const otppage = async(req,res)=>{
     try{
@@ -190,7 +186,6 @@ const otppage = async(req,res)=>{
 }
 
 
-// OTP SUBMISSION
 
 const otpSubmit = async (req, res) => {
     try {
@@ -234,7 +229,6 @@ const otpSubmit = async (req, res) => {
 };
 
 
-// RESEND OTP
 
 const resendotp = async (req,res)=>{
     try{
@@ -247,7 +241,6 @@ const resendotp = async (req,res)=>{
 }
 
 
-// LOGOUT 
 
 const logout = async(req,res)=>{
     try{
@@ -263,7 +256,6 @@ const logout = async(req,res)=>{
 
 
 
-// FORGOT PASSWORD
 
 const forgotPassword = async(req,res)=>{
     try{
@@ -287,7 +279,6 @@ const forgotPassword = async(req,res)=>{
 }
 
 
-// Create transporter
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -298,14 +289,13 @@ const transporter = nodemailer.createTransport({
 
 
 
-// Function to send reset link
 function sendResetLink(email, resetToken) {
     const mailOptions = {
         from: 'dilfathayyil@gmail.com',
         to: email,
         subject: 'Password Reset Link',
         html: `<p>Click the following link to reset your password:</p>
-               <a href="https://divine-styles.cloud/resetPassword?token=${resetToken}">Reset Password</a>`
+               <a href="http://localhost:3000/resetPassword?token=${resetToken}">Reset Password</a>`
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
@@ -341,7 +331,6 @@ async function storeResetToken(email, resetToken) {
 }
 
 
-// RESET PASSWORD
 
 const resetPassword=async(req,res)=>{
     try{
@@ -352,7 +341,6 @@ const resetPassword=async(req,res)=>{
     }
 }
 
-// RESET PASSWORD SUBMISSION
 
 const resetPasswordSubmit=async(req,res)=>{
     try{
@@ -375,7 +363,6 @@ const resetPasswordSubmit=async(req,res)=>{
 }
 
 
-// USER PROFILE
 
 const userProfile = async(req,res)=>{
     try{
